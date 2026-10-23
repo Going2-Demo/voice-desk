@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Ícone do Voice Desk">
+  <rect width="256" height="256" rx="58" fill="#0F6B5C"/>
+  <rect x="98" y="52" width="60" height="104" rx="30" fill="#fff"/>
+  <path d="M74 126v6a54 54 0 0 0 108 0v-6" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+  <path d="M128 186v28M104 214h48" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+  <path d="M196 96c10 14 10 38 0 52M216 80c18 24 18 54 0 80" fill="none" stroke="#9FE3D2" stroke-width="10" stroke-linecap="round"/>
+</svg>
