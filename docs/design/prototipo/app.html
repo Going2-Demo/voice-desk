@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="claro" data-plat="mac">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice Desk — protótipo do aplicativo</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="barra-proto" role="region" aria-label="Controles do protótipo (não fazem parte do produto)">
+    <a href="index.html">← Índice do protótipo</a>
+    <div class="grupo"><span id="lbl-plat">Plataforma:</span>
+      <div class="seg" role="group" aria-labelledby="lbl-plat">
+        <button type="button" data-proto="plat" data-v="mac" aria-pressed="true">Mac</button>
+        <button type="button" data-proto="plat" data-v="win" aria-pressed="false">Windows</button>
+      </div></div>
+    <div class="grupo"><span id="lbl-estado">Estado das telas:</span>
+      <div class="seg" role="group" aria-labelledby="lbl-estado">
+        <button type="button" data-proto="estado" data-v="normal" aria-pressed="true">Normal</button>
+        <button type="button" data-proto="estado" data-v="vazio" aria-pressed="false">Vazio</button>
+        <button type="button" data-proto="estado" data-v="carregando" aria-pressed="false">Carregando</button>
+        <button type="button" data-proto="estado" data-v="erro" aria-pressed="false">Erro</button>
+      </div></div>
+    <div class="grupo"><span id="lbl-tema">Tema:</span>
+      <div class="seg" role="group" aria-labelledby="lbl-tema">
+        <button type="button" data-proto="tema" data-v="claro" aria-pressed="true">Claro</button>
+        <button type="button" data-proto="tema" data-v="escuro" aria-pressed="false">Escuro</button>
+      </div></div>
+  </div>
+  <div class="palco">
+    <div class="janela" id="janela">
+      <div class="titulo-janela">
+        <div class="semaforo" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="nome">Voice Desk</div>
+        <div class="controles-win" aria-hidden="true"><span>—</span><span>☐</span><span>✕</span></div>
+      </div>
+      <div class="corpo-janela">
+        <nav class="lateral" id="lateral" aria-label="Navegação principal"></nav>
+        <main class="principal" id="principal" tabindex="-1"></main>
+      </div>
+    </div>
+  </div>
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+  <div id="modal-raiz"></div>
+  <script src="dados.js"></script>
+  <script src="app.js"></script>
+  <script src="telas-dados.js"></script>
+  <script src="telas-sistema.js"></script>
+</body>
+</html>
