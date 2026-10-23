@@ -1,0 +1,109 @@
+{
+  "evidence_id": "ev_89ac3bac9254e4f18a31eeed4be8ba7078983a09db7780533ef5a89d81530d2a",
+  "operation": "inspect_macho",
+  "provider": "native-macos",
+  "subject": {
+    "name": "VoiceInk",
+    "sha256": "cb0c14d5e6cab348c8840541d8e29f31d411e6d9ef5f7d83b60d26b8adcb8ea1",
+    "format": "mach-o"
+  },
+  "architectures": [
+    {
+      "name": "x86_64",
+      "size": 21778272
+    },
+    {
+      "name": "arm64",
+      "size": 21075680
+    }
+  ],
+  "build_metadata": [
+    {
+      "platform": "1",
+      "minimum_os": "14.4",
+      "sdk": "26.5",
+      "tools": [
+        {
+          "name": "3",
+          "version": "1267.0"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    "AVFAudio",
+    "AVFoundation",
+    "Accelerate",
+    "AppIntents",
+    "AppKit",
+    "ApplicationServices",
+    "AudioToolbox",
+    "CFNetwork",
+    "CTranscribe",
+    "Carbon",
+    "CloudKit",
+    "Combine",
+    "CoreAudio",
+    "CoreFoundation",
+    "CoreGraphics",
+    "CoreML",
+    "CoreMedia",
+    "CoreServices",
+    "CryptoKit",
+    "Foundation",
+    "IOKit",
+    "ImageIO",
+    "MediaRemoteAdapter",
+    "Metal",
+    "MetalKit",
+    "NaturalLanguage",
+    "OSLog",
+    "QuartzCore",
+    "ScreenCaptureKit",
+    "Security",
+    "ServiceManagement",
+    "Sparkle",
+    "Speech",
+    "SwiftData",
+    "SwiftUI",
+    "Symbols",
+    "Vision",
+    "_SwiftData_SwiftUI",
+    "dyld",
+    "libSystem.B.dylib",
+    "libc++.1.dylib",
+    "libobjc.A.dylib",
+    "libswiftAVFoundation.dylib",
+    "libswiftAccelerate.dylib",
+    "libswiftCore.dylib",
+    "libswiftCoreAudio.dylib",
+    "libswiftCoreFoundation.dylib",
+    "libswiftCoreGraphics.dylib",
+    "libswiftCoreImage.dylib",
+    "libswiftCoreLocation.dylib",
+    "libswiftCoreMIDI.dylib",
+    "libswiftCoreML.dylib",
+    "libswiftCoreMedia.dylib",
+    "libswiftDarwin.dylib",
+    "libswiftDispatch.dylib",
+    "libswiftIOKit.dylib",
+    "libswiftMetal.dylib",
+    "libswiftNaturalLanguage.dylib",
+    "libswiftOSLog.dylib",
+    "libswiftObjectiveC.dylib",
+    "libswiftObservation.dylib",
+    "libswiftQuartzCore.dylib",
+    "libswiftSpatial.dylib",
+    "libswiftUniformTypeIdentifiers.dylib",
+    "libswiftXPC.dylib",
+    "libswift_Concurrency.dylib",
+    "libswiftos.dylib",
+    "libswiftsimd.dylib",
+    "libz.1.dylib",
+    "whisper"
+  ],
+  "limitations": [
+    "Imports and exports combine dyld_info and nm; stripped or toolchain-hidden symbols may be absent.",
+    "vtool output is retained as provenance but only otool build metadata is normalized."
+  ]
+}

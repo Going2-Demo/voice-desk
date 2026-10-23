@@ -1,0 +1,43 @@
+{
+  "evidence_id": "ev_a3d53e51b34e3c58b5aef2d7ebe5fd49577b4d2e5dcc65a482f50ba27fa99219",
+  "operation": "inspect_artifact",
+  "coverage": {
+    "status": "complete-within-substeps",
+    "substeps_completed": 1,
+    "observations_retained": 448,
+    "observations_omitted": 0,
+    "relationships_retained": 217,
+    "relationships_omitted": 0,
+    "hypotheses_retained": 0,
+    "hypotheses_omitted": 0,
+    "unexplored_branches_retained": 1,
+    "unexplored_branches_omitted": 0,
+    "next_probes_retained": 1,
+    "next_probes_omitted": 0
+  },
+  "limitations": [
+    "Inspection derives bounded static hypotheses and next probes; it does not execute the artifact or claim format-specific semantics."
+  ],
+  "artifacts_by_kind": [
+    {
+      "kind": "container",
+      "count": 97
+    },
+    {
+      "kind": "executable",
+      "count": 10
+    },
+    {
+      "kind": "framework",
+      "count": 59
+    },
+    {
+      "kind": "plist",
+      "count": 7
+    },
+    {
+      "kind": "resource",
+      "count": 41
+    }
+  ]
+}
