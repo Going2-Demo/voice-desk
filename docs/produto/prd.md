@@ -1,18 +1,20 @@
 # PRD: Voice Desk
 
-> Status: rascunho para aprovação · Versão: 1 · Atualizado em: 2026-10-23
+> Status: rascunho para aprovação · Versão: 2 · Atualizado em: 2026-10-23
 > Modo: criado do zero a partir do resumo aprovado
-> Fontes: [resumo do produto](resumo.md) (aprovado no ENG-51), [relatório de engenharia reversa do VoiceInk 2.13](engenharia-reversa/relatorio.md), cards ENG-50 (card-mãe), ENG-51 e ENG-53
+> Fontes: [resumo do produto](resumo.md) (aprovado no ENG-51), [relatório de engenharia reversa do VoiceInk 2.13](engenharia-reversa/relatorio.md), cards ENG-50 (card-mãe), ENG-51 e ENG-53 (inclui as considerações do BD de 2026-10-23)
 
 ## 0. Como ler este documento
 
-Este PRD é o contrato da v1 do Voice Desk. Ele serve à Nina (design), ao Otávio (arquitetura), à Helena (quebra em histórias) e à Marta (testes). Diz **o que** o produto faz e **por quê**. A tecnologia fica com o Otávio. A organização é: épicos `E-xx` → funcionalidades `F-xx` (cada uma cabe numa história) → requisitos `RF-xx.y` com consequência testável. A origem `ER-xx` aponta para o [mapa de funcionalidades do relatório](engenharia-reversa/relatorio.md#3-mapa-de-funcionalidades). Itens não confirmados pelo BD estão marcados com `[PREMISSA]` e listados na seção 11.
+Este PRD é o contrato da v1 do Voice Desk. Ele serve à Nina (design), ao Otávio (arquitetura), à Helena (quebra em histórias) e à Marta (testes). Diz **o que** o produto faz e **por quê**. A tecnologia fica com o Otávio. A organização é: épicos `E-xx` → funcionalidades `F-xx` (cada uma cabe numa história) → requisitos `RF-xx.y` com consequência testável. A origem `ER-xx` aponta para o [mapa de funcionalidades do relatório](engenharia-reversa/relatorio.md#3-mapa-de-funcionalidades). Nos requisitos, "o usuário" é qualquer pessoa que instalou o Voice Desk; as jornadas e as métricas usam o BD como referência. Itens não confirmados pelo BD estão marcados com `[PREMISSA]` e listados na seção 11.
 
 ## 1. Visão
 
-O Voice Desk é um app de **ditado por voz para desktop, no Mac e no Windows**. O BD aciona um atalho em qualquer programa, fala e solta. O texto aparece onde o cursor estava, já com o vocabulário dele e, se o modo pedir, refinado por IA: formal num e-mail, quase literal num chat.
+O Voice Desk é um app de **ditado por voz para desktop, no Mac e no Windows**. O usuário aciona um atalho em qualquer programa, fala e solta. O texto aparece onde o cursor estava, já com o vocabulário dele e, se o modo pedir, refinado por IA: formal num e-mail, quase literal num chat.
 
-Hoje o BD tem esse fluxo no Mac com o VoiceInk 2.13, que só existe para macOS e depende de recursos exclusivos da Apple. No Windows ele perde o atalho, os modos, o dicionário e o histórico. O Voice Desk reproduz o **comportamento** que importa no dia a dia, com a mesma experiência nas duas máquinas e uma **configuração única que vale nas duas**. Não reaproveita código, textos, ícones nem marca do VoiceInk, que é GPL-3.0.
+Hoje o BD tem esse fluxo no Mac com o VoiceInk 2.13, que só existe para macOS e depende de recursos exclusivos da Apple. No Windows ele perde o atalho, os modos, o dicionário e o histórico. O Voice Desk reproduz o **comportamento** que importa no dia a dia, com a mesma experiência nas duas máquinas e uma **configuração única que vale nas duas**. Não reaproveita textos, ícones nem marca do VoiceInk, que é GPL-3.0; o reuso de código depende da licença do Voice Desk (seção 10).
+
+O Voice Desk é **software livre (código aberto) e gratuito**. O BD é o primeiro usuário e a referência deste PRD, mas qualquer pessoa com quem ele compartilhar (colegas da Going2, outras empresas) pode baixar e instalar na própria máquina, com as próprias chaves e a própria configuração. Não há conta central, administração nem multiusuário: cada instalação é independente.
 
 A v1 é enxuta de propósito: o fluxo central (gravar → transcrever → limpar o texto → refinar → colar), modos, dicionário, histórico e sincronização da configuração. Ficam de fora a leitura da tela, a troca de modo por site, o assistente e o tempo real. Sucesso é o BD **trocar o VoiceInk pelo Voice Desk nas duas máquinas por 30 dias seguidos**.
 
@@ -22,13 +24,16 @@ A v1 é enxuta de propósito: o fluxo central (gravar → transcrever → limpar
 
 | Perfil | Descrição | Principais tarefas | Permissões em alto nível |
 |---|---|---|---|
-| BD (usuário único) | Usa um Mac e um Windows no trabalho e dita muito texto: e-mails, chats, documentos. Já domina modos e dicionário do VoiceInk. Tem chaves próprias dos provedores. | Ditar em qualquer programa; manter modos, vocabulário e substituições; consultar o histórico. | Tudo. Não há login, contas nem papéis: o app roda na máquina dele, para ele. |
+| BD (usuário principal) | Usa um Mac e um Windows no trabalho e dita muito texto: e-mails, chats, documentos. Já domina modos e dicionário do VoiceInk. Tem chaves próprias dos provedores. | Ditar em qualquer programa; manter modos, vocabulário e substituições; consultar o histórico. | Tudo na própria instalação. |
+| Usuário compartilhado | Colega da Going2 ou pessoa de outra empresa com quem o BD compartilhou o Voice Desk. Usa Mac, Windows ou os dois. Pode nunca ter usado o VoiceInk. | Baixar, instalar e configurar sozinho; ditar em qualquer programa; opcionalmente importar a configuração que o BD compartilhou. | Tudo na própria instalação, com as próprias chaves e a própria sincronização. Não vê nem altera nada de outro usuário. |
+
+Os dois perfis usam o mesmo app, sem diferença de funções. Não há login no Voice Desk, contas, papéis nem administração: cada instalação pertence a quem a instalou.
 
 ### 2.2 Não usuários (v1)
 
-- Outras pessoas da Going2, equipes e clientes: não há multiusuário, convite nem administração. [PREMISSA]
+- Equipes como unidade: não há multiusuário, convite, administração central, configuração gerenciada por empresa nem compartilhamento de histórico entre pessoas.
 - Usuários de celular ou de navegador: o produto é só desktop.
-- Compradores: não há venda, licença, teste grátis nem ativação. [PREMISSA]
+- Compradores: o software é gratuito e de código aberto; não há venda, licença paga, teste grátis nem ativação.
 
 ### 2.3 Jornadas principais
 
@@ -40,6 +45,7 @@ _Os programas citados são exemplos._
 - **UJ-4. BD recupera um ditado que não colou.** Contexto: ditou um parágrafo longo, mas o cursor não estava num campo de texto. · Caminho: (1) recebe o aviso de que o texto ficou na área de transferência; (2) clica no campo certo e cola; ou (3) abre o histórico, busca por uma palavra e copia o texto. · Momento de valor: nenhum ditado se perde. · Caso de erro: a transcrição falhou por falta de internet; o áudio está no histórico e ele manda transcrever de novo.
 - **UJ-5. BD dita sem internet.** Contexto: está num voo, com o Mac. · Caminho: (1) o modo em uso aponta para a transcrição local; (2) dita normalmente. · Momento de valor: o texto é colado sem depender da rede. · Caso de erro: o modelo local não foi baixado; o Voice Desk avisa antes de gravar e indica onde baixar.
 - **UJ-6. BD instala o Voice Desk numa máquina nova.** Contexto: primeiro uso no Windows. · Caminho: (1) instala e abre; (2) o primeiro uso guiado pede a permissão do microfone e as demais necessárias, a escolha do atalho e as chaves de API; (3) ativa a sincronização. · Momento de valor: em até 10 minutos ele faz o primeiro ditado, com os modos e o dicionário que já tinha no Mac. · Caso de erro: uma permissão é negada; o Voice Desk explica o que deixa de funcionar e como conceder depois.
+- **UJ-7. Uma colega da Going2 começa a usar o Voice Desk.** Contexto: o BD mandou para a Ana, do time comercial, o link de download e o arquivo com os modos dele. · Caminho: (1) a Ana baixa o instalador da página pública do projeto e instala no Windows dela; (2) no primeiro uso, cadastra a própria chave do Groq; (3) importa o arquivo de configuração do BD; (4) dita um e-mail. · Momento de valor: em até 15 minutos ela dita com os modos que o BD já refinou, sem depender dele e sem acesso a nada dele. · Caso de erro: ela não tem chave de API; o primeiro uso explica como obter uma, ou como usar só a transcrição local.
 
 ## 3. Glossário
 
@@ -49,10 +55,10 @@ _Os programas citados são exemplos._
 - **Programa em foco** — o programa que estava ativo quando o ditado começou; é onde o texto será colado e o que decide o modo automático.
 - **Transcrição** — conversão do áudio do ditado em texto, feita por um provedor de transcrição.
 - **Provedor** — serviço que faz a transcrição ou o refinamento. Na nuvem (Groq) ou local, na própria máquina (Whisper local, Ollama).
-- **Chave de API** — credencial do BD num provedor de nuvem; o custo de uso é dele.
+- **Chave de API** — credencial do usuário num provedor de nuvem; o custo de uso é dele.
 - **Cofre do sistema** — armazenamento seguro de credenciais do sistema operacional (no Mac e no Windows).
 - **Limpeza do texto** — etapa sem IA que aplica substituições, remove palavras de preenchimento e formata o texto transcrito.
-- **Vocabulário** — lista de palavras e nomes que o BD quer que a transcrição reconheça.
+- **Vocabulário** — lista de palavras e nomes que o usuário quer que a transcrição reconheça.
 - **Substituição** — par "original → substituto" aplicado ao texto transcrito; pode ser ativada ou desativada.
 - **Palavras de preenchimento** — muletas da fala ("é…", "hã", "tipo", "né") removidas na limpeza do texto.
 - **Modo** — conjunto de regras de um ditado: nome, emoji, idioma, provedor de transcrição, se refina com IA, provedor e modelo de IA, prompt, uso de contexto, envio de Enter, programas associados, atalho e palavra-gatilho.
@@ -65,7 +71,9 @@ _Os programas citados são exemplos._
 - **Histórico** — registro local dos ditados concluídos: áudio, texto transcrito, texto final, modo, provedores, programa em foco, tempos e resultado da colagem.
 - **Retenção** — prazo depois do qual o áudio e os itens do histórico são apagados automaticamente; prazos separados para áudio e para texto.
 - **Configuração sincronizável** — modos, prompts, vocabulário, substituições, lista de palavras de preenchimento e preferências de texto. Não inclui chaves de API, histórico, áudio, atalhos, microfone nem modelos baixados.
-- **Máquina** — uma instalação do Voice Desk (o Mac ou o Windows do BD).
+- **Máquina** — uma instalação do Voice Desk (o Mac ou o Windows do usuário).
+- **Usuário** — pessoa que instalou o Voice Desk nas próprias máquinas: o BD ou um usuário compartilhado. Cada usuário tem a própria configuração, as próprias chaves e o próprio histórico.
+- **Página do projeto** — página pública onde ficam os instaladores de cada versão, as instruções de instalação, o código-fonte e a licença.
 
 ## 4. Épicos e funcionalidades (índice)
 
@@ -91,16 +99,17 @@ _Os programas citados são exemplos._
 | F-18 | Transcrever de novo | E-04 | Desejável | UJ-4 | FL-05 |
 | F-19 | Exportar o histórico em CSV | E-04 | Desejável | UJ-4 | ER-25 |
 | F-20 | Sincronização da configuração entre máquinas | E-05 Mesma configuração nas duas máquinas | Essencial | UJ-3, UJ-6 | resumo ("Mudar"); substitui ER-22 |
-| F-21 | Exportar e importar a configuração | E-05 | Importante | UJ-3 | ER-25 |
+| F-21 | Exportar e importar a configuração | E-05 | Importante | UJ-3, UJ-7 | ER-25 |
 | F-22 | Transcrição local (Whisper) | E-06 Uso sem internet | Importante | UJ-5 | ER-08 |
 | F-23 | Escolha do microfone | E-07 Conforto na gravação | Importante | UJ-1, UJ-2 | ER-04 |
 | F-24 | Sons de início e fim | E-07 | Desejável | UJ-2 | ER-05 |
 | F-25 | Pausar a mídia durante o ditado | E-07 | Desejável | UJ-1 | ER-06 |
 | F-26 | Descartar ditado sem fala | E-07 | Desejável | UJ-2 | ER-07 |
+| F-27 | Instaladores públicos e página do projeto | E-01 | Importante | UJ-6, UJ-7 | considerações do BD (ENG-53) |
 
 **Épicos** (na ordem sugerida de entrega)
 
-- **E-01 Ditado de ponta a ponta** — o BD dita em qualquer programa, no Mac e no Windows, e o texto é colado onde estava o cursor. Ao fim do épico o produto já é utilizável. Funcionalidades: F-01 a F-06.
+- **E-01 Ditado de ponta a ponta** — o BD dita em qualquer programa, no Mac e no Windows, e o texto é colado onde estava o cursor. Ao fim do épico o produto já é utilizável. Funcionalidades: F-01 a F-06 e F-27.
 - **E-02 Texto do jeito do BD** — nomes, siglas e muletas tratados sem IA, em todo ditado. Funcionalidades: F-07, F-08, F-09.
 - **E-03 Modos e refinamento por IA** — o texto sai no formato certo para cada programa. Funcionalidades: F-10 a F-15.
 - **E-04 Histórico** — nenhum ditado se perde, e os dados não ficam guardados além do prazo. Funcionalidades: F-16 a F-19.
@@ -113,26 +122,26 @@ _Os programas citados são exemplos._
 ### F-01 Gravar com atalho global e gravador flutuante
 
 **Épico:** E-01 · **Prioridade:** Essencial · **Realiza:** UJ-1, UJ-2 · **Origem:** ER-01, ER-02, ER-03
-**Descrição:** com o Voice Desk aberto (mesmo minimizado na bandeja), o BD aciona o atalho global em qualquer programa. O gravador aparece sem tirar o foco do programa, indica que está gravando e mostra o nível do áudio. O mesmo atalho para a gravação e inicia o processamento. Esc duas vezes cancela. O ditado guarda qual era o programa em foco no início.
+**Descrição:** com o Voice Desk aberto (mesmo minimizado na bandeja), o usuário aciona o atalho global em qualquer programa. O gravador aparece sem tirar o foco do programa, indica que está gravando e mostra o nível do áudio. O mesmo atalho para a gravação e inicia o processamento. Esc duas vezes cancela. O ditado guarda qual era o programa em foco no início.
 
 **Requisitos funcionais**
-- **RF-01.1** O BD pode definir o atalho global nas configurações, com pelo menos uma tecla modificadora.
+- **RF-01.1** O usuário pode definir o atalho global nas configurações, com pelo menos uma tecla modificadora.
   - Consequência testável: um atalho já usado pelo sistema ou só com uma letra é recusado, com mensagem; o atalho salvo passa a funcionar sem reiniciar o app.
-- **RF-01.2** O BD pode iniciar o ditado pelo atalho global com qualquer programa em foco.
+- **RF-01.2** O usuário pode iniciar o ditado pelo atalho global com qualquer programa em foco.
   - Consequência testável: o gravador aparece em até 300 ms e o programa em foco continua em foco (o cursor não sai do campo).
-- **RF-01.3** O BD pode parar o ditado acionando o atalho de novo.
+- **RF-01.3** O usuário pode parar o ditado acionando o atalho de novo.
   - Consequência testável: o gravador passa a "processando" e, ao terminar, some sozinho.
-- **RF-01.4** O BD pode cancelar o ditado apertando Esc duas vezes em até 1,5 s enquanto grava.
+- **RF-01.4** O usuário pode cancelar o ditado apertando Esc duas vezes em até 1,5 s enquanto grava.
   - Consequência testável: nada é colado, nada é enviado a provedor e nada entra no histórico. Esc uma vez só não cancela e chega normalmente ao programa em foco.
 - **RF-01.5** O ditado para sozinho ao atingir 10 minutos de gravação. [PREMISSA]
-  - Consequência testável: aos 9 min 30 s o gravador mostra um aviso; aos 10 min o ditado segue para o processamento como se o BD tivesse parado.
+  - Consequência testável: aos 9 min 30 s o gravador mostra um aviso; aos 10 min o ditado segue para o processamento como se o usuário tivesse parado.
 - **RF-01.6** Enquanto um ditado está em processamento, o atalho global não inicia outro.
   - Consequência testável: acionar o atalho durante o processamento não abre nova gravação, e o gravador indica "aguarde".
 
 **Critérios de aceite (alto nível)**
-- Dado o Voice Desk na bandeja e o Bloco de Notas em foco, quando o BD aciona o atalho, fala e aciona de novo, então o gravador aparece, mostra o nível do áudio, passa a "processando" e some.
-- Dado um ditado em andamento, quando o BD aperta Esc duas vezes em 1 s, então o gravador some e nada é colado nem registrado.
-- Dado o microfone sem permissão, quando o BD aciona o atalho, então o gravador mostra "sem acesso ao microfone" com o caminho para conceder, e nada é gravado.
+- Dado o Voice Desk na bandeja e o Bloco de Notas em foco, quando o usuário aciona o atalho, fala e aciona de novo, então o gravador aparece, mostra o nível do áudio, passa a "processando" e some.
+- Dado um ditado em andamento, quando o usuário aperta Esc duas vezes em 1 s, então o gravador some e nada é colado nem registrado.
+- Dado o microfone sem permissão, quando o usuário aciona o atalho, então o gravador mostra "sem acesso ao microfone" com o caminho para conceder, e nada é gravado.
 
 **Fora do escopo desta funcionalidade:** modo "segurar para falar" (gravar só enquanto o atalho estiver pressionado); gravador no entalhe ("notch") do MacBook; texto ao vivo durante a fala.
 **Notas / perguntas:** o atalho padrão sugerido no primeiro uso é definido pela Nina, diferente para Mac e Windows.
@@ -140,34 +149,34 @@ _Os programas citados são exemplos._
 ### F-02 Transcrição na nuvem (Groq)
 
 **Épico:** E-01 · **Prioridade:** Essencial · **Realiza:** UJ-1, UJ-2 · **Origem:** ER-09, ER-11
-**Descrição:** ao parar o ditado, o áudio vai ao provedor de transcrição do modo ativo. Na v1, o provedor de nuvem é o Groq, com a chave do BD. O idioma vem do modo: português do Brasil, inglês ou automático.
+**Descrição:** ao parar o ditado, o áudio vai ao provedor de transcrição do modo ativo. Na v1, o provedor de nuvem é o Groq, com a chave do usuário. O idioma vem do modo: português do Brasil, inglês ou automático.
 
 **Requisitos funcionais**
-- **RF-02.1** O BD pode escolher, por modo, o provedor de transcrição (Groq ou Whisper local, ver F-22) e o modelo do provedor.
+- **RF-02.1** O usuário pode escolher, por modo, o provedor de transcrição (Groq ou Whisper local, ver F-22) e o modelo do provedor.
   - Consequência testável: ditados feitos em modos diferentes registram no histórico o provedor e o modelo de cada modo.
-- **RF-02.2** O BD pode escolher, por modo, o idioma do ditado: português do Brasil, inglês ou detecção automática.
+- **RF-02.2** O usuário pode escolher, por modo, o idioma do ditado: português do Brasil, inglês ou detecção automática.
   - Consequência testável: com o idioma "inglês", uma frase falada em inglês é transcrita em inglês, sem tradução.
 - **RF-02.3** Quando a transcrição falha (sem internet, chave ausente ou inválida, erro do provedor ou mais de 30 s sem resposta), o Voice Desk não cola nada, guarda o áudio no histórico com o estado "falhou" e mostra o motivo.
   - Consequência testável: com a rede desligada, o ditado termina com aviso "sem conexão com o provedor", e o item aparece no histórico com áudio e estado "falhou".
 
 **Critérios de aceite (alto nível)**
-- Dado um modo com Groq e chave válida, quando o BD dita 20 s em português, então o texto transcrito é colado no programa em foco.
-- Dado um modo com Groq sem chave cadastrada, quando o BD inicia o ditado, então o gravador avisa "cadastre a chave do Groq" antes de gravar, com atalho para a tela de chaves.
+- Dado um modo com Groq e chave válida, quando o usuário dita 20 s em português, então o texto transcrito é colado no programa em foco.
+- Dado um modo com Groq sem chave cadastrada, quando o usuário inicia o ditado, então o gravador avisa "cadastre a chave do Groq" antes de gravar, com atalho para a tela de chaves.
 
 **Fora do escopo desta funcionalidade:** outros provedores de nuvem; transcrição em tempo real; transcrição de arquivo.
 
 ### F-03 Colar no programa em foco
 
 **Épico:** E-01 · **Prioridade:** Essencial · **Realiza:** UJ-1, UJ-2, UJ-4 · **Origem:** ER-13
-**Descrição:** o texto final do ditado é inserido no programa em foco, onde estava o cursor, como se o BD tivesse colado. Depois disso, o conteúdo que o BD tinha na área de transferência volta para ela. Se o modo pedir, o Voice Desk envia Enter depois de colar. Se não der para colar, o texto fica na área de transferência e o BD é avisado.
+**Descrição:** o texto final do ditado é inserido no programa em foco, onde estava o cursor, como se o usuário tivesse colado. Depois disso, o conteúdo que o usuário tinha na área de transferência volta para ela. Se o modo pedir, o Voice Desk envia Enter depois de colar. Se não der para colar, o texto fica na área de transferência e o usuário é avisado.
 
 **Requisitos funcionais**
 - **RF-03.1** O Voice Desk cola o texto final no programa em foco ao fim do processamento.
   - Consequência testável: nos programas da lista de compatibilidade (RNF-05), o texto aparece na posição do cursor, inclusive com acentos, emojis e quebras de linha.
 - **RF-03.2** Depois de colar, o Voice Desk devolve à área de transferência o conteúdo que estava nela antes do ditado.
   - Consequência testável: com "abc" copiado antes do ditado, Ctrl+V ou Cmd+V depois da colagem cola "abc".
-- **RF-03.3** O BD pode ligar, por modo, o envio de Enter depois de colar.
-  - Consequência testável: num modo com Enter ligado, a mensagem ditada no chat é enviada sem o BD tocar no teclado; com Enter desligado, ela fica na caixa de texto.
+- **RF-03.3** O usuário pode ligar, por modo, o envio de Enter depois de colar.
+  - Consequência testável: num modo com Enter ligado, a mensagem ditada no chat é enviada sem o usuário tocar no teclado; com Enter desligado, ela fica na caixa de texto.
 - **RF-03.4** Quando o Voice Desk não consegue colar (permissão de acessibilidade negada ou o programa em foco recusa a colagem), o texto final fica na área de transferência e aparece um aviso "Texto copiado; cole com Ctrl+V/Cmd+V".
   - Consequência testável: com a permissão de acessibilidade negada, o ditado termina com o aviso e o texto pode ser colado manualmente; o item no histórico registra "não colado".
 - **RF-03.5** Cada item do histórico registra o resultado da colagem: "colado", "não colado" ou "cancelado".
@@ -184,10 +193,10 @@ _Os programas citados são exemplos._
 ### F-04 Chaves de API no cofre do sistema
 
 **Épico:** E-01 · **Prioridade:** Essencial · **Realiza:** UJ-1, UJ-6 · **Origem:** ER-29
-**Descrição:** o BD cadastra as chaves de API dos provedores de nuvem (na v1, Groq) numa tela própria. Elas ficam guardadas no cofre do sistema de cada máquina, nunca em arquivo comum, e não viajam na sincronização nem na exportação.
+**Descrição:** o usuário cadastra as chaves de API dos provedores de nuvem (na v1, Groq) numa tela própria. Elas ficam guardadas no cofre do sistema de cada máquina, nunca em arquivo comum, e não viajam na sincronização nem na exportação.
 
 **Requisitos funcionais**
-- **RF-04.1** O BD pode cadastrar, trocar e apagar a chave de cada provedor de nuvem.
+- **RF-04.1** O usuário pode cadastrar, trocar e apagar a chave de cada provedor de nuvem.
   - Consequência testável: depois de apagar a chave do Groq, um ditado num modo com Groq avisa "cadastre a chave do Groq".
 - **RF-04.2** Ao salvar uma chave, o Voice Desk testa a chave no provedor e mostra "válida" ou "inválida" em até 10 s.
   - Consequência testável: uma chave inventada é marcada "inválida", e a mensagem diz o motivo informado pelo provedor.
@@ -197,7 +206,7 @@ _Os programas citados são exemplos._
   - Consequência testável: o link do Groq abre o console do Groq no navegador padrão.
 
 **Critérios de aceite (alto nível)**
-- Dado o BD na tela de chaves, quando cola uma chave válida do Groq e salva, então aparece "válida" e os ditados com Groq passam a funcionar.
+- Dado o usuário na tela de chaves, quando cola uma chave válida do Groq e salva, então aparece "válida" e os ditados com Groq passam a funcionar.
 - Dado um arquivo exportado (F-21) ou a configuração sincronizada (F-20), quando alguém procura a chave nele, então ela não está lá.
 
 ### F-05 Ícone na bandeja ou barra de menus e iniciar com o sistema
@@ -208,31 +217,33 @@ _Os programas citados são exemplos._
 **Requisitos funcionais**
 - **RF-05.1** O menu do ícone oferece: iniciar ou parar ditado, escolher o modo padrão, abrir o histórico, abrir as configurações e sair.
   - Consequência testável: cada item do menu executa a ação correspondente; escolher um modo padrão no menu muda o modo usado quando nenhum programa associado está em foco (F-12).
-- **RF-05.2** O BD pode ligar ou desligar "iniciar com o sistema"; o padrão é ligado.
+- **RF-05.2** O usuário pode ligar ou desligar "iniciar com o sistema"; o padrão é ligado.
   - Consequência testável: com a opção ligada, depois de reiniciar a máquina e entrar na conta, o ícone aparece em até 5 s, sem abrir janela.
 - **RF-05.3** O ícone indica o estado atual: parado, gravando, processando ou erro.
   - Consequência testável: durante a gravação o ícone muda de aparência e volta ao normal ao terminar.
 
 **Critérios de aceite (alto nível)**
-- Dado o Voice Desk instalado com "iniciar com o sistema" ligado, quando o BD reinicia a máquina, então o ícone aparece e o atalho global funciona sem abrir o app.
-- Dado o BD clicando em "Sair", quando confirma, então o ícone some e o atalho global deixa de funcionar.
+- Dado o Voice Desk instalado com "iniciar com o sistema" ligado, quando o usuário reinicia a máquina, então o ícone aparece e o atalho global funciona sem abrir o app.
+- Dado o usuário clicando em "Sair", quando confirma, então o ícone some e o atalho global deixa de funcionar.
 
 ### F-06 Primeiro uso guiado
 
 **Épico:** E-01 · **Prioridade:** Importante · **Realiza:** UJ-6 · **Origem:** ER-28
-**Descrição:** na primeira abertura em cada máquina, um passo a passo leva o BD pelas permissões do sistema (microfone e acessibilidade, mais as equivalentes no Mac), pela escolha do atalho, pela chave do Groq e pela ativação da sincronização. Termina com um ditado de teste.
+**Descrição:** na primeira abertura em cada máquina, um passo a passo leva o usuário pelas permissões do sistema (microfone e acessibilidade, mais as equivalentes no Mac), pela escolha do atalho, pela chave do Groq e pela ativação da sincronização. Termina com um ditado de teste.
 
 **Requisitos funcionais**
 - **RF-06.1** O primeiro uso pede cada permissão necessária, explica em uma frase para que serve e mostra se foi concedida.
   - Consequência testável: com a permissão de microfone negada, o passo mostra "negada", o que deixa de funcionar e como conceder nas configurações do sistema.
-- **RF-06.2** O BD pode pular qualquer passo e voltar a ele depois pelas configurações.
+- **RF-06.2** O usuário pode pular qualquer passo e voltar a ele depois pelas configurações.
   - Consequência testável: pulando a chave do Groq, o primeiro uso termina, e a tela de chaves continua acessível pelo menu.
 - **RF-06.3** O último passo é um ditado de teste numa caixa de texto do próprio primeiro uso.
   - Consequência testável: o texto ditado aparece na caixa; se falhar, aparece o motivo (F-02 RF-02.3).
+- **RF-06.4** O usuário sem chave de API pode concluir o primeiro uso escolhendo a transcrição local (F-22); o passo da chave explica em uma frase como obter uma.
+  - Consequência testável: sem cadastrar chave e com o modelo local baixado, o ditado de teste funciona.
 
 **Critérios de aceite (alto nível)**
-- Dado um Windows sem o Voice Desk, quando o BD instala e segue o primeiro uso concedendo tudo, então em até 10 minutos ele conclui o ditado de teste.
-- Dado o primeiro uso já concluído, quando o BD reabre o app, então o primeiro uso não aparece de novo.
+- Dado um Windows sem o Voice Desk, quando o usuário instala e segue o primeiro uso concedendo tudo, então em até 10 minutos ele conclui o ditado de teste.
+- Dado o primeiro uso já concluído, quando o usuário reabre o app, então o primeiro uso não aparece de novo.
 
 ### F-07 Vocabulário personalizado
 
@@ -240,18 +251,18 @@ _Os programas citados são exemplos._
 **Descrição:** lista de palavras, nomes e siglas que o provedor de transcrição deve reconhecer. O Voice Desk envia o vocabulário como dica a cada transcrição. Há uma forma rápida de adicionar uma palavra sem abrir as configurações.
 
 **Requisitos funcionais**
-- **RF-07.1** O BD pode adicionar, editar, remover e buscar palavras no vocabulário.
+- **RF-07.1** O usuário pode adicionar, editar, remover e buscar palavras no vocabulário.
   - Consequência testável: uma palavra adicionada aparece na lista e na busca; uma palavra duplicada (sem diferenciar maiúsculas) é recusada com aviso.
 - **RF-07.2** Todo ditado envia o vocabulário como dica ao provedor de transcrição.
   - Consequência testável: um nome incomum que a transcrição errava sem o vocabulário passa a sair escrito como cadastrado em pelo menos 4 de 5 ditados de teste.
-- **RF-07.3** O BD pode adicionar uma palavra ao vocabulário pelo menu do ícone, numa caixa rápida, sem abrir as configurações.
+- **RF-07.3** O usuário pode adicionar uma palavra ao vocabulário pelo menu do ícone, numa caixa rápida, sem abrir as configurações.
   - Consequência testável: a palavra digitada na caixa rápida aparece na lista do vocabulário.
 - **RF-07.4** O vocabulário aceita até 500 palavras. [PREMISSA]
   - Consequência testável: a 501ª palavra é recusada com a mensagem "limite de 500 palavras".
 
 **Critérios de aceite (alto nível)**
-- Dado "Going2" no vocabulário, quando o BD dita "mandei para a Going2", então o texto colado traz "Going2".
-- Dado o vocabulário vazio, quando o BD dita, então a transcrição funciona normalmente, sem dica.
+- Dado "Going2" no vocabulário, quando o usuário dita "mandei para a Going2", então o texto colado traz "Going2".
+- Dado o vocabulário vazio, quando o usuário dita, então a transcrição funciona normalmente, sem dica.
 
 **Notas / perguntas:** o limite real de dica por provedor é verificado pelo Otávio; se for menor que 500 palavras, o PRD é ajustado.
 
@@ -261,7 +272,7 @@ _Os programas citados são exemplos._
 **Descrição:** pares "original → substituto" aplicados ao texto transcrito, antes do refinamento. Servem para corrigir erros recorrentes e para atalhos de texto (ex.: "meu e-mail" → endereço completo).
 
 **Requisitos funcionais**
-- **RF-08.1** O BD pode criar, editar, remover, ativar e desativar substituições.
+- **RF-08.1** O usuário pode criar, editar, remover, ativar e desativar substituições.
   - Consequência testável: uma substituição desativada não é aplicada; reativada, volta a ser.
 - **RF-08.2** A substituição vale para palavras ou expressões inteiras, sem diferenciar maiúsculas e minúsculas.
   - Consequência testável: com "vois desk → Voice Desk", o texto "o Vois Desk" vira "o Voice Desk"; a palavra "voisdesking" não é alterada.
@@ -269,8 +280,8 @@ _Os programas citados são exemplos._
   - Consequência testável: no histórico, o texto enviado ao refinamento já contém o substituto.
 
 **Critérios de aceite (alto nível)**
-- Dada a substituição "pix" → "PIX" ativa, quando o BD dita "manda um pix", então o texto colado é "manda um PIX".
-- Dado um original vazio, quando o BD tenta salvar, então o app recusa com aviso.
+- Dada a substituição "pix" → "PIX" ativa, quando o usuário dita "manda um pix", então o texto colado é "manda um PIX".
+- Dado um original vazio, quando o usuário tenta salvar, então o app recusa com aviso.
 
 ### F-09 Remoção de palavras de preenchimento e formatação
 
@@ -278,24 +289,24 @@ _Os programas citados são exemplos._
 **Descrição:** limpeza sem IA, ligada ou desligada por modo: tira as palavras de preenchimento de uma lista editável e formata o texto (primeira letra maiúscula, pontuação final, espaços duplos removidos).
 
 **Requisitos funcionais**
-- **RF-09.1** O BD pode ligar ou desligar, por modo, a remoção de palavras de preenchimento e a formatação, separadamente.
+- **RF-09.1** O usuário pode ligar ou desligar, por modo, a remoção de palavras de preenchimento e a formatação, separadamente.
   - Consequência testável: com a remoção desligada, "é… eu acho que sim" é colado igual à transcrição.
-- **RF-09.2** O BD pode editar a lista de palavras de preenchimento; a lista vem preenchida com as mais comuns em português e em inglês.
+- **RF-09.2** O usuário pode editar a lista de palavras de preenchimento; a lista vem preenchida com as mais comuns em português e em inglês.
   - Consequência testável: com "tipo" na lista e a remoção ligada, "é tipo assim" vira "É assim." (com formatação ligada).
 - **RF-09.3** A formatação deixa a primeira letra maiúscula, põe ponto final se a frase não terminar em pontuação e remove espaços duplos.
   - Consequência testável: a transcrição "olá  tudo bem" vira "Olá tudo bem."
 
 **Critérios de aceite (alto nível)**
-- Dado o modo "Chat" com remoção e formatação ligadas, quando o BD dita "hã… chego em dez minutos", então o texto colado é "Chego em dez minutos."
-- Dado o modo "Ditado literal" com tudo desligado, quando o BD dita a mesma frase, então o texto colado é a transcrição sem alteração.
+- Dado o modo "Chat" com remoção e formatação ligadas, quando o usuário dita "hã… chego em dez minutos", então o texto colado é "Chego em dez minutos."
+- Dado o modo "Ditado literal" com tudo desligado, quando o usuário dita a mesma frase, então o texto colado é a transcrição sem alteração.
 
 ### F-10 Modos
 
 **Épico:** E-03 · **Prioridade:** Essencial · **Realiza:** UJ-1, UJ-2 · **Origem:** ER-17
-**Descrição:** o BD cria modos para cada tipo de texto. O Voice Desk vem com três modos iniciais editáveis: "Ditado" (sem refinamento, modo padrão), "E-mail" (refinamento formal) e "Chat" (limpeza, sem refinamento, com Enter ligado). Os prompts iniciais são escritos pelo time, sem copiar os do VoiceInk.
+**Descrição:** o usuário cria modos para cada tipo de texto. O Voice Desk vem com três modos iniciais editáveis: "Ditado" (sem refinamento, modo padrão), "E-mail" (refinamento formal) e "Chat" (limpeza, sem refinamento, com Enter ligado). Os prompts iniciais são escritos pelo time, sem copiar os do VoiceInk.
 
 **Requisitos funcionais**
-- **RF-10.1** O BD pode criar, editar, duplicar e excluir modos com: nome, emoji, idioma, provedor e modelo de transcrição, limpeza (F-09), refinamento ligado ou desligado, provedor e modelo de IA, prompt, uso de contexto (F-13) e envio de Enter (F-03).
+- **RF-10.1** O usuário pode criar, editar, duplicar e excluir modos com: nome, emoji, idioma, provedor e modelo de transcrição, limpeza (F-09), refinamento ligado ou desligado, provedor e modelo de IA, prompt, uso de contexto (F-13) e envio de Enter (F-03).
   - Consequência testável: um modo novo salvo aparece no menu do ícone e pode ser escolhido como modo padrão.
 - **RF-10.2** Sempre existe exatamente um modo padrão; o modo padrão não pode ser excluído enquanto for o padrão.
   - Consequência testável: o botão de excluir do modo padrão fica desativado, com a explicação "escolha outro modo padrão antes".
@@ -305,16 +316,16 @@ _Os programas citados são exemplos._
   - Consequência testável: salvar dois modos com o mesmo nome é recusado; um prompt com 4.001 caracteres é recusado com aviso.
 
 **Critérios de aceite (alto nível)**
-- Dada a primeira abertura, quando o BD abre a lista de modos, então vê "Ditado" (padrão), "E-mail" e "Chat", todos editáveis.
-- Dado o modo "Chat" com Enter ligado, quando o BD dita no Slack, então o texto é colado e enviado.
+- Dada a primeira abertura, quando o usuário abre a lista de modos, então vê "Ditado" (padrão), "E-mail" e "Chat", todos editáveis.
+- Dado o modo "Chat" com Enter ligado, quando o usuário dita no Slack, então o texto é colado e enviado.
 
 ### F-11 Refinamento por IA (Groq e Ollama)
 
 **Épico:** E-03 · **Prioridade:** Essencial · **Realiza:** UJ-1 · **Origem:** ER-15
-**Descrição:** se o modo tem refinamento ligado, o texto limpo (e o contexto, se o modo permitir) vai ao provedor de IA do modo com o prompt do modo, e a resposta vira o texto final. Na v1, os provedores de IA são o Groq (nuvem, com a chave do BD) e o Ollama (local, sem chave). Se o refinamento falhar, o ditado não se perde.
+**Descrição:** se o modo tem refinamento ligado, o texto limpo (e o contexto, se o modo permitir) vai ao provedor de IA do modo com o prompt do modo, e a resposta vira o texto final. Na v1, os provedores de IA são o Groq (nuvem, com a chave do usuário) e o Ollama (local, sem chave). Se o refinamento falhar, o ditado não se perde.
 
 **Requisitos funcionais**
-- **RF-11.1** O BD pode escolher, por modo, o provedor de IA (Groq ou Ollama) e o modelo, a partir da lista de modelos disponíveis no provedor.
+- **RF-11.1** O usuário pode escolher, por modo, o provedor de IA (Groq ou Ollama) e o modelo, a partir da lista de modelos disponíveis no provedor.
   - Consequência testável: a lista de modelos do Groq aparece depois de cadastrar a chave; a do Ollama aparece quando o Ollama está rodando na máquina.
 - **RF-11.2** O texto final é só a resposta da IA, sem comentários extras sobre o pedido nem citação do contexto quando ele não for relevante.
   - Consequência testável: em 10 ditados de teste com o modo "E-mail", nenhum texto colado começa com frases como "Aqui está o seu e-mail".
@@ -324,18 +335,18 @@ _Os programas citados são exemplos._
   - Consequência testável: o detalhe do item no histórico (F-16) mostra os dois textos lado a lado.
 
 **Critérios de aceite (alto nível)**
-- Dado o modo "E-mail" com Groq, quando o BD dita "fala pro João que a reunião mudou pra quinta", então o texto colado é um parágrafo de e-mail formal com essa informação.
-- Dado o Ollama fechado, quando o BD dita num modo com Ollama, então o texto limpo é colado em até 20 s e aparece o aviso.
+- Dado o modo "E-mail" com Groq, quando o usuário dita "fala pro João que a reunião mudou pra quinta", então o texto colado é um parágrafo de e-mail formal com essa informação.
+- Dado o Ollama fechado, quando o usuário dita num modo com Ollama, então o texto limpo é colado em até 20 s e aparece o aviso.
 
 **Fora do escopo desta funcionalidade:** outros provedores de IA (OpenAI, Anthropic, Gemini, OpenRouter, LM Studio e outros); comando de terminal local ("Local CLI"); modelo próprio embutido no app.
 
 ### F-12 Troca automática de modo pelo programa em foco
 
 **Épico:** E-03 · **Prioridade:** Essencial · **Realiza:** UJ-1, UJ-2 · **Origem:** ER-18 (sem a troca por site)
-**Descrição:** o BD associa programas a modos. No início do ditado, o Voice Desk vê o programa em foco e aplica o modo associado; se não houver associação, aplica o modo padrão. Como a configuração é sincronizada, um modo pode ter programas do Mac e do Windows ao mesmo tempo (ex.: Mail e Outlook no modo "E-mail").
+**Descrição:** o usuário associa programas a modos. No início do ditado, o Voice Desk vê o programa em foco e aplica o modo associado; se não houver associação, aplica o modo padrão. Como a configuração é sincronizada, um modo pode ter programas do Mac e do Windows ao mesmo tempo (ex.: Mail e Outlook no modo "E-mail").
 
 **Requisitos funcionais**
-- **RF-12.1** O BD pode associar um ou mais programas a um modo, escolhendo da lista de programas abertos ou instalados naquela máquina.
+- **RF-12.1** O usuário pode associar um ou mais programas a um modo, escolhendo da lista de programas abertos ou instalados naquela máquina.
   - Consequência testável: o Outlook associado no Windows aparece na lista de programas do modo também no Mac, identificado como programa do Windows.
 - **RF-12.2** Cada programa pertence a no máximo um modo.
   - Consequência testável: ao associar ao modo "Chat" um programa que já estava no "E-mail", o app pergunta se deve movê-lo; confirmado, ele sai do "E-mail".
@@ -343,18 +354,18 @@ _Os programas citados são exemplos._
   - Consequência testável: com o Slack associado ao "Chat", um ditado iniciado pelo atalho do modo "E-mail" usa o "E-mail".
 
 **Critérios de aceite (alto nível)**
-- Dado o Outlook associado ao "E-mail", quando o BD inicia um ditado com o Outlook em foco, então o gravador mostra "E-mail" e o refinamento formal é aplicado.
-- Dado um programa sem associação, quando o BD dita, então o modo padrão é aplicado.
+- Dado o Outlook associado ao "E-mail", quando o usuário inicia um ditado com o Outlook em foco, então o gravador mostra "E-mail" e o refinamento formal é aplicado.
+- Dado um programa sem associação, quando o usuário dita, então o modo padrão é aplicado.
 
 **Fora do escopo desta funcionalidade:** troca de modo pelo site aberto no navegador (fase 2).
 
 ### F-13 Contexto do texto selecionado e da área de transferência
 
 **Épico:** E-03 · **Prioridade:** Importante · **Realiza:** UJ-1 · **Origem:** ER-16 (sem o texto da janela e sem o OCR da tela)
-**Descrição:** se o modo permitir, o refinamento recebe como contexto o texto selecionado no programa em foco e o conteúdo de texto da área de transferência no início do ditado. Exemplo: o BD seleciona o e-mail recebido e dita "responde dizendo que aceito".
+**Descrição:** se o modo permitir, o refinamento recebe como contexto o texto selecionado no programa em foco e o conteúdo de texto da área de transferência no início do ditado. Exemplo: o usuário seleciona o e-mail recebido e dita "responde dizendo que aceito".
 
 **Requisitos funcionais**
-- **RF-13.1** O BD pode ligar, por modo, o uso do texto selecionado e o uso da área de transferência como contexto, separadamente; o padrão é desligado.
+- **RF-13.1** O usuário pode ligar, por modo, o uso do texto selecionado e o uso da área de transferência como contexto, separadamente; o padrão é desligado.
   - Consequência testável: com os dois desligados, o histórico mostra que nenhum contexto foi enviado.
 - **RF-13.2** O contexto enviado é limitado a 8.000 caracteres por fonte; o excesso é cortado. [PREMISSA]
   - Consequência testável: uma seleção de 10.000 caracteres chega ao refinamento com 8.000, e o histórico indica "contexto cortado".
@@ -362,41 +373,41 @@ _Os programas citados são exemplos._
   - Consequência testável: com a permissão negada, o ditado é concluído e o histórico registra "seleção indisponível".
 
 **Critérios de aceite (alto nível)**
-- Dado um e-mail recebido selecionado e o modo "E-mail" com seleção ligada, quando o BD dita "responde que aceito a proposta", então o texto colado é uma resposta coerente com o e-mail selecionado.
-- Dado o modo com contexto desligado, quando o BD dita com texto selecionado, então a seleção não é enviada ao provedor.
+- Dado um e-mail recebido selecionado e o modo "E-mail" com seleção ligada, quando o usuário dita "responde que aceito a proposta", então o texto colado é uma resposta coerente com o e-mail selecionado.
+- Dado o modo com contexto desligado, quando o usuário dita com texto selecionado, então a seleção não é enviada ao provedor.
 
 **Notas / perguntas:** atenção à colagem: se houver texto selecionado, a colagem o substitui (comportamento padrão de colar). O detalhe de interação fica com a Nina.
 
 ### F-14 Atalho por modo
 
 **Épico:** E-03 · **Prioridade:** Desejável · **Realiza:** UJ-1 · **Origem:** ER-01
-**Descrição:** além do atalho global, o BD pode dar a um modo um atalho próprio, que inicia o ditado já naquele modo, sem depender do programa em foco.
+**Descrição:** além do atalho global, o usuário pode dar a um modo um atalho próprio, que inicia o ditado já naquele modo, sem depender do programa em foco.
 
 **Requisitos funcionais**
-- **RF-14.1** O BD pode definir um atalho opcional por modo, diferente do atalho global e dos atalhos de outros modos.
+- **RF-14.1** O usuário pode definir um atalho opcional por modo, diferente do atalho global e dos atalhos de outros modos.
   - Consequência testável: um atalho repetido é recusado com aviso indicando qual modo já o usa.
 - **RF-14.2** Iniciar pelo atalho do modo aplica aquele modo; acionar de novo o mesmo atalho para o ditado.
   - Consequência testável: com o Slack em foco (associado ao "Chat"), o atalho do "E-mail" grava no modo "E-mail".
 
 **Critérios de aceite (alto nível)**
-- Dado o atalho do "E-mail" definido, quando o BD o aciona em qualquer programa, então o gravador mostra "E-mail".
-- Dado um modo sem atalho próprio, quando o BD abre a configuração do modo, então o campo de atalho está vazio e o modo só é usado pelas outras regras.
+- Dado o atalho do "E-mail" definido, quando o usuário o aciona em qualquer programa, então o gravador mostra "E-mail".
+- Dado um modo sem atalho próprio, quando o usuário abre a configuração do modo, então o campo de atalho está vazio e o modo só é usado pelas outras regras.
 
 **Notas / perguntas:** os atalhos são por máquina e não sincronizam, porque as teclas diferem entre Mac e Windows.
 
 ### F-15 Palavra-gatilho falada
 
 **Épico:** E-03 · **Prioridade:** Desejável · **Realiza:** UJ-1 · **Origem:** ER-18
-**Descrição:** o BD dá a um modo uma ou mais palavras-gatilho. Se o ditado começar com uma delas, o modo é aplicado e a palavra é retirada do texto.
+**Descrição:** o usuário dá a um modo uma ou mais palavras-gatilho. Se o ditado começar com uma delas, o modo é aplicado e a palavra é retirada do texto.
 
 **Requisitos funcionais**
-- **RF-15.1** O BD pode cadastrar palavras-gatilho por modo; cada palavra pertence a um único modo.
+- **RF-15.1** O usuário pode cadastrar palavras-gatilho por modo; cada palavra pertence a um único modo.
   - Consequência testável: cadastrar no "Chat" uma palavra que já é do "E-mail" é recusado com aviso.
 - **RF-15.2** Se as primeiras 3 palavras do texto transcrito contêm uma palavra-gatilho, o modo dela é aplicado e a palavra é removida do texto final.
   - Consequência testável: com "e-mail" como gatilho do "E-mail", o ditado "e-mail, avisa o time que a entrega atrasou" é refinado no modo "E-mail" e o texto final não começa com "e-mail".
 
 **Critérios de aceite (alto nível)**
-- Dado o gatilho "tradução" no modo "Traduzir", quando o BD dita "tradução: bom dia a todos", então o texto colado é a tradução de "bom dia a todos".
+- Dado o gatilho "tradução" no modo "Traduzir", quando o usuário dita "tradução: bom dia a todos", então o texto colado é a tradução de "bom dia a todos".
 - Dado um ditado sem gatilho, quando termina, então o modo é escolhido pelas demais regras (RF-12.3).
 
 **Notas / perguntas:** como a palavra-gatilho só é conhecida depois da transcrição, o idioma e o provedor de transcrição usados são os do modo escolhido pelas outras regras; só a limpeza e o refinamento seguem o modo do gatilho.
@@ -407,32 +418,32 @@ _Os programas citados são exemplos._
 **Descrição:** janela com a lista dos ditados concluídos daquela máquina, do mais recente para o mais antigo, com busca por texto e detalhe de cada item. Ditados cancelados não entram.
 
 **Requisitos funcionais**
-- **RF-16.1** O BD pode ver a lista do histórico com data e hora, modo, início do texto final e estado (colado, não colado, falhou).
+- **RF-16.1** O usuário pode ver a lista do histórico com data e hora, modo, início do texto final e estado (colado, não colado, falhou).
   - Consequência testável: um ditado feito agora aparece no topo da lista em até 2 s após o fim do processamento.
-- **RF-16.2** O BD pode buscar no texto transcrito e no texto final.
+- **RF-16.2** O usuário pode buscar no texto transcrito e no texto final.
   - Consequência testável: com 5.000 itens, a busca por uma palavra devolve os itens que a contêm em até 1 s.
-- **RF-16.3** O BD pode abrir o detalhe de um item: texto transcrito, texto final, modo, provedores e modelos, programa em foco, duração do áudio, tempo de transcrição, tempo de refinamento, resultado da colagem e contexto enviado (se houver).
+- **RF-16.3** O usuário pode abrir o detalhe de um item: texto transcrito, texto final, modo, provedores e modelos, programa em foco, duração do áudio, tempo de transcrição, tempo de refinamento, resultado da colagem e contexto enviado (se houver).
   - Consequência testável: todos esses campos aparecem no detalhe de um ditado refinado.
-- **RF-16.4** O BD pode copiar o texto final ou o transcrito, ouvir o áudio (enquanto não tiver sido apagado pela retenção) e excluir o item.
+- **RF-16.4** O usuário pode copiar o texto final ou o transcrito, ouvir o áudio (enquanto não tiver sido apagado pela retenção) e excluir o item.
   - Consequência testável: depois de excluir, o item e o áudio somem da máquina e não voltam após reiniciar o app.
 
 **Critérios de aceite (alto nível)**
-- Dado um ditado que não colou, quando o BD abre o histórico e busca uma palavra dele, então encontra o item e copia o texto final.
-- Dado um item com áudio já apagado pela retenção, quando o BD abre o detalhe, então o texto aparece e o áudio mostra "apagado pela retenção".
+- Dado um ditado que não colou, quando o usuário abre o histórico e busca uma palavra dele, então encontra o item e copia o texto final.
+- Dado um item com áudio já apagado pela retenção, quando o usuário abre o detalhe, então o texto aparece e o áudio mostra "apagado pela retenção".
 
 **Fora do escopo desta funcionalidade:** histórico da outra máquina (o histórico não sincroniza [PREMISSA]); painel de estatísticas.
 
 ### F-17 Retenção automática
 
 **Épico:** E-04 · **Prioridade:** Importante · **Realiza:** UJ-4 · **Origem:** ER-24
-**Descrição:** o BD define por quanto tempo guardar os áudios e, separadamente, os itens do histórico. O que passa do prazo é apagado sozinho.
+**Descrição:** o usuário define por quanto tempo guardar os áudios e, separadamente, os itens do histórico. O que passa do prazo é apagado sozinho.
 
 **Requisitos funcionais**
-- **RF-17.1** O BD pode escolher o prazo de retenção do áudio e o do histórico entre: 1 dia, 7 dias, 30 dias, 90 dias ou "não apagar". Os padrões são: áudio 7 dias e histórico 90 dias. [PREMISSA]
+- **RF-17.1** O usuário pode escolher o prazo de retenção do áudio e o do histórico entre: 1 dia, 7 dias, 30 dias, 90 dias ou "não apagar". Os padrões são: áudio 7 dias e histórico 90 dias. [PREMISSA]
   - Consequência testável: a tela de configurações mostra os padrões numa instalação nova.
 - **RF-17.2** A limpeza roda ao abrir o app e depois a cada 24 h, apagando o que passou do prazo.
   - Consequência testável: com o áudio em 1 dia, um áudio de 2 dias atrás some na próxima limpeza, e o texto do item continua no histórico.
-- **RF-17.3** O BD pode apagar todo o histórico e todos os áudios de uma vez, com confirmação.
+- **RF-17.3** O usuário pode apagar todo o histórico e todos os áudios de uma vez, com confirmação.
   - Consequência testável: depois de confirmar, a lista fica vazia e a pasta de áudios do app fica sem arquivos.
 
 **Critérios de aceite (alto nível)**
@@ -442,85 +453,87 @@ _Os programas citados são exemplos._
 ### F-18 Transcrever de novo
 
 **Épico:** E-04 · **Prioridade:** Desejável · **Realiza:** UJ-4 · **Origem:** FL-05 do relatório
-**Descrição:** a partir de um item do histórico que ainda tem áudio, o BD manda processar de novo, no mesmo modo ou em outro. Útil quando a transcrição falhou por falta de rede.
+**Descrição:** a partir de um item do histórico que ainda tem áudio, o usuário manda processar de novo, no mesmo modo ou em outro. Útil quando a transcrição falhou por falta de rede.
 
 **Requisitos funcionais**
-- **RF-18.1** O BD pode transcrever de novo um item com áudio, escolhendo o modo.
+- **RF-18.1** O usuário pode transcrever de novo um item com áudio, escolhendo o modo.
   - Consequência testável: o resultado é gravado no mesmo item, que passa do estado "falhou" para "não colado", com o texto novo.
 - **RF-18.2** O resultado de "transcrever de novo" vai para a área de transferência, não é colado em nenhum programa.
   - Consequência testável: depois do reprocessamento, Ctrl+V/Cmd+V cola o texto novo.
 
 **Critérios de aceite (alto nível)**
-- Dado um item "falhou" por falta de internet, quando o BD reconecta e manda transcrever de novo, então o item recebe o texto e o estado muda.
-- Dado um item sem áudio, quando o BD abre o detalhe, então a ação "transcrever de novo" fica indisponível, com a explicação.
+- Dado um item "falhou" por falta de internet, quando o usuário reconecta e manda transcrever de novo, então o item recebe o texto e o estado muda.
+- Dado um item sem áudio, quando o usuário abre o detalhe, então a ação "transcrever de novo" fica indisponível, com a explicação.
 
 ### F-19 Exportar o histórico em CSV
 
 **Épico:** E-04 · **Prioridade:** Desejável · **Realiza:** UJ-4 · **Origem:** ER-25
-**Descrição:** o BD exporta o histórico (só texto, sem áudio) para uma planilha.
+**Descrição:** o usuário exporta o histórico (só texto, sem áudio) para uma planilha.
 
 **Requisitos funcionais**
-- **RF-19.1** O BD pode exportar o histórico inteiro ou um intervalo de datas para um arquivo CSV em UTF-8.
+- **RF-19.1** O usuário pode exportar o histórico inteiro ou um intervalo de datas para um arquivo CSV em UTF-8.
   - Consequência testável: o arquivo abre no Excel e no Numbers com acentos corretos e uma linha por item.
 - **RF-19.2** O CSV traz: data e hora, modo, programa em foco, texto transcrito, texto final, provedores, duração do áudio e estado.
   - Consequência testável: as colunas aparecem no cabeçalho do arquivo, nessa ordem.
 
 **Critérios de aceite (alto nível)**
-- Dado um histórico com 1.000 itens, quando o BD exporta tudo, então o arquivo é gerado em até 5 s.
-- Dado um histórico vazio, quando o BD tenta exportar, então o app avisa "nada para exportar" e não gera arquivo.
+- Dado um histórico com 1.000 itens, quando o usuário exporta tudo, então o arquivo é gerado em até 5 s.
+- Dado um histórico vazio, quando o usuário tenta exportar, então o app avisa "nada para exportar" e não gera arquivo.
 
 ### F-20 Sincronização da configuração entre máquinas
 
 **Épico:** E-05 · **Prioridade:** Essencial [PREMISSA] · **Realiza:** UJ-3, UJ-6 · **Origem:** resumo ("Mudar"); substitui a sincronização do dicionário pelo iCloud (ER-22)
-**Descrição:** o BD liga a sincronização em cada máquina. A partir daí, a configuração sincronizável (glossário) é a mesma no Mac e no Windows. Chaves de API, histórico, áudio, atalhos, microfone e modelos baixados ficam em cada máquina.
+**Descrição:** o usuário liga a sincronização em cada máquina. A partir daí, a configuração sincronizável (glossário) é a mesma no Mac e no Windows. Chaves de API, histórico, áudio, atalhos, microfone e modelos baixados ficam em cada máquina.
 
 **Requisitos funcionais**
-- **RF-20.1** O BD pode ligar a sincronização numa máquina e conectar a segunda máquina à mesma configuração.
+- **RF-20.1** O usuário pode ligar a sincronização numa máquina e conectar a segunda máquina à mesma configuração.
   - Consequência testável: ao conectar o Windows a uma configuração que já existe no Mac, os modos, o vocabulário e as substituições do Mac aparecem no Windows em até 1 minuto.
 - **RF-20.2** Uma alteração na configuração sincronizável feita numa máquina aparece na outra em até 5 minutos, com as duas conectadas à internet.
-  - Consequência testável: uma palavra adicionada ao vocabulário no Mac aparece no Windows em até 5 minutos, sem ação do BD.
+  - Consequência testável: uma palavra adicionada ao vocabulário no Mac aparece no Windows em até 5 minutos, sem ação do usuário.
 - **RF-20.3** Alterações feitas sem internet são enviadas quando a máquina reconecta.
   - Consequência testável: uma substituição criada com o Windows sem rede chega ao Mac até 5 minutos depois de reconectar.
 - **RF-20.4** Se o mesmo item (um modo, uma palavra, uma substituição) for alterado nas duas máquinas antes de sincronizar, vale a alteração mais recente. [PREMISSA]
   - Consequência testável: com o prompt do "E-mail" alterado no Mac às 10h00 e no Windows às 10h01, sem rede, as duas máquinas ficam com o texto das 10h01 depois de reconectar.
-- **RF-20.5** O BD vê o estado da sincronização (em dia, sincronizando, sem conexão, erro) e a data da última sincronização.
+- **RF-20.5** O usuário vê o estado da sincronização (em dia, sincronizando, sem conexão, erro) e a data da última sincronização.
   - Consequência testável: com a rede desligada, o estado muda para "sem conexão" em até 1 minuto.
-- **RF-20.6** O BD pode desligar a sincronização numa máquina; a configuração local fica como estava.
+- **RF-20.6** O usuário pode desligar a sincronização numa máquina; a configuração local fica como estava.
   - Consequência testável: depois de desligar, alterações no Mac não chegam mais ao Windows, e nada é apagado no Windows.
+- **RF-20.7** A sincronização liga só as máquinas do mesmo usuário; não há sincronização nem visão entre usuários diferentes.
+  - Consequência testável: a configuração do BD nunca aparece na instalação de outro usuário, nem com os dois usando o Voice Desk na mesma rede.
 
 **Critérios de aceite (alto nível)**
-- Dados o Mac e o Windows conectados, quando o BD cria o modo "Relatório" no Windows, então o modo aparece no Mac em até 5 minutos, com o mesmo prompt.
+- Dados o Mac e o Windows conectados, quando o usuário cria o modo "Relatório" no Windows, então o modo aparece no Mac em até 5 minutos, com o mesmo prompt.
 - Dado um modo que usa o Groq, quando ele chega numa máquina sem a chave do Groq, então o modo aparece com o aviso "cadastre a chave do Groq nesta máquina".
 - Dados os dados sincronizados, quando alguém inspeciona o que trafega e o que fica guardado fora da máquina, então não há chaves de API, áudios nem textos ditados.
 
-**Notas / perguntas:** o meio da sincronização é decisão do Otávio, dentro das restrições da seção 10 (sob controle do BD, sem serviço pago de terceiros sem aprovação, dados protegidos). Se o BD recusar a premissa, F-20 sai da v1 e F-21 cobre UJ-3 manualmente.
+**Notas / perguntas:** o meio da sincronização é decisão do Otávio, dentro das restrições da seção 10 (sob controle do usuário, sem serviço pago de terceiros sem aprovação, dados protegidos). Se o usuário recusar a premissa, F-20 sai da v1 e F-21 cobre UJ-3 manualmente.
 
 ### F-21 Exportar e importar a configuração
 
-**Épico:** E-05 · **Prioridade:** Importante · **Realiza:** UJ-3 · **Origem:** ER-25
-**Descrição:** o BD salva a configuração sincronizável num arquivo e a carrega em outra máquina ou depois de reinstalar. Serve de cópia de segurança e de alternativa à sincronização.
+**Épico:** E-05 · **Prioridade:** Importante · **Realiza:** UJ-3, UJ-7 · **Origem:** ER-25
+**Descrição:** o usuário salva a configuração sincronizável num arquivo e a carrega em outra máquina ou depois de reinstalar. Serve de cópia de segurança, de alternativa à sincronização e de forma de compartilhar modos e dicionário com outro usuário (UJ-7), já que o arquivo não leva chaves.
 
 **Requisitos funcionais**
-- **RF-21.1** O BD pode exportar a configuração sincronizável para um arquivo.
+- **RF-21.1** O usuário pode exportar a configuração sincronizável para um arquivo.
   - Consequência testável: o arquivo contém modos, prompts, vocabulário, substituições e palavras de preenchimento, e não contém chaves de API.
-- **RF-21.2** O BD pode importar um arquivo de configuração; o app mostra o que será substituído e pede confirmação.
+- **RF-21.2** O usuário pode importar um arquivo de configuração; o app mostra o que será substituído e pede confirmação.
   - Consequência testável: depois de confirmar, a configuração da máquina fica igual à do arquivo; se a sincronização estiver ligada, a outra máquina também recebe.
 - **RF-21.3** Um arquivo inválido ou de outra origem é recusado sem alterar nada.
   - Consequência testável: importar um arquivo de texto qualquer mostra "arquivo de configuração inválido", e a configuração continua a mesma.
 
 **Critérios de aceite (alto nível)**
-- Dada uma configuração exportada no Mac, quando o BD a importa num Windows novo, então os modos e o dicionário ficam iguais aos do Mac.
-- Dado um arquivo corrompido, quando o BD importa, então nada muda e aparece o aviso.
+- Dada uma configuração exportada no Mac, quando o usuário a importa num Windows novo, então os modos e o dicionário ficam iguais aos do Mac.
+- Dado um arquivo corrompido, quando o usuário importa, então nada muda e aparece o aviso.
 
-**Fora do escopo desta funcionalidade:** importar a configuração do VoiceInk (o formato dele não foi observado; avaliar na v2 se o BD pedir).
+**Fora do escopo desta funcionalidade:** importar a configuração do VoiceInk (o formato dele não foi observado; avaliar na v2 se o usuário pedir).
 
 ### F-22 Transcrição local (Whisper)
 
 **Épico:** E-06 · **Prioridade:** Importante · **Realiza:** UJ-5 · **Origem:** ER-08
-**Descrição:** o BD baixa um modelo Whisper para a máquina e o escolhe como provedor de transcrição de um modo. A transcrição acontece sem internet e sem enviar o áudio para fora. Na v1 há um único modelo oferecido: o equivalente ao large-v3-turbo, que o BD já usa. [PREMISSA]
+**Descrição:** o usuário baixa um modelo Whisper para a máquina e o escolhe como provedor de transcrição de um modo. A transcrição acontece sem internet e sem enviar o áudio para fora. Na v1 há um único modelo oferecido: o equivalente ao large-v3-turbo, que o usuário já usa. [PREMISSA]
 
 **Requisitos funcionais**
-- **RF-22.1** O BD pode baixar, ver o tamanho e o progresso, e apagar o modelo local.
+- **RF-22.1** O usuário pode baixar, ver o tamanho e o progresso, e apagar o modelo local.
   - Consequência testável: durante o download, a tela mostra a porcentagem; depois de apagar, o espaço é liberado e os modos que usavam o modelo passam a mostrar "modelo não baixado".
 - **RF-22.2** Com o modelo baixado, um modo com transcrição local funciona com a rede desligada.
   - Consequência testável: com a rede desligada, um ditado de 30 s num modo local é transcrito e colado.
@@ -530,18 +543,18 @@ _Os programas citados são exemplos._
   - Consequência testável: desligar a rede no meio do download e religar permite concluir; um modelo incompleto nunca aparece como "pronto".
 
 **Critérios de aceite (alto nível)**
-- Dado o modelo baixado e o Mac sem internet, quando o BD dita num modo local, então o texto é colado dentro do tempo da RNF-01.
-- Dado um modo local com refinamento pelo Groq e sem internet, quando o BD dita, então a transcrição local funciona e o refinamento falha como em RF-11.3 (cola o texto limpo e avisa).
+- Dado o modelo baixado e o Mac sem internet, quando o usuário dita num modo local, então o texto é colado dentro do tempo da RNF-01.
+- Dado um modo local com refinamento pelo Groq e sem internet, quando o usuário dita, então a transcrição local funciona e o refinamento falha como em RF-11.3 (cola o texto limpo e avisa).
 
 **Fora do escopo desta funcionalidade:** outros modelos locais (Parakeet, Nemotron, SenseVoice, Paraformer, Apple Speech) e importação de modelos pelo usuário.
 
 ### F-23 Escolha do microfone
 
 **Épico:** E-07 · **Prioridade:** Importante · **Realiza:** UJ-1, UJ-2 · **Origem:** ER-04
-**Descrição:** o BD escolhe o microfone usado nos ditados. O Voice Desk lembra a escolha e lida com a troca de dispositivo (fone que conecta ou desconecta).
+**Descrição:** o usuário escolhe o microfone usado nos ditados. O Voice Desk lembra a escolha e lida com a troca de dispositivo (fone que conecta ou desconecta).
 
 **Requisitos funcionais**
-- **RF-23.1** O BD pode escolher o microfone numa lista com os dispositivos de entrada conectados, ou "padrão do sistema".
+- **RF-23.1** O usuário pode escolher o microfone numa lista com os dispositivos de entrada conectados, ou "padrão do sistema".
   - Consequência testável: com um headset escolhido, o histórico registra o ditado com áudio do headset.
 - **RF-23.2** Se o microfone escolhido não estiver conectado, o ditado usa o padrão do sistema e o gravador avisa qual microfone está em uso.
   - Consequência testável: com o headset desconectado, o ditado acontece pelo microfone padrão, com o aviso.
@@ -549,25 +562,25 @@ _Os programas citados são exemplos._
   - Consequência testável: reconectar o headset faz o ditado seguinte usar o headset.
 
 **Critérios de aceite (alto nível)**
-- Dado o headset escolhido e conectado, quando o BD dita, então o nível de áudio do gravador reage à voz no headset.
-- Dado nenhum microfone disponível, quando o BD aciona o atalho, então o gravador avisa "nenhum microfone encontrado" e não grava.
+- Dado o headset escolhido e conectado, quando o usuário dita, então o nível de áudio do gravador reage à voz no headset.
+- Dado nenhum microfone disponível, quando o usuário aciona o atalho, então o gravador avisa "nenhum microfone encontrado" e não grava.
 
 **Notas / perguntas:** a escolha do microfone é por máquina e não sincroniza.
 
 ### F-24 Sons de início e fim
 
 **Épico:** E-07 · **Prioridade:** Desejável · **Realiza:** UJ-2 · **Origem:** ER-05
-**Descrição:** um som curto ao começar a gravar e outro ao terminar o processamento, para o BD ditar sem olhar para a tela.
+**Descrição:** um som curto ao começar a gravar e outro ao terminar o processamento, para o usuário ditar sem olhar para a tela.
 
 **Requisitos funcionais**
-- **RF-24.1** O BD pode ligar ou desligar os sons e escolher entre pelo menos 3 sons próprios do Voice Desk, com prévia.
+- **RF-24.1** O usuário pode ligar ou desligar os sons e escolher entre pelo menos 3 sons próprios do Voice Desk, com prévia.
   - Consequência testável: com os sons desligados, nenhum som toca durante o ditado.
 - **RF-24.2** O som de início toca antes da captura de áudio começar e não entra na gravação.
   - Consequência testável: ao ouvir o áudio no histórico, o som de início não aparece.
 
 **Critérios de aceite (alto nível)**
-- Dados os sons ligados, quando o BD dita, então ouve um som ao iniciar e outro quando o texto é colado.
-- Dados os sons desligados, quando o BD dita, então nenhum som toca.
+- Dados os sons ligados, quando o usuário dita, então ouve um som ao iniciar e outro quando o texto é colado.
+- Dados os sons desligados, quando o usuário dita, então nenhum som toca.
 
 **Fora do escopo desta funcionalidade:** sons personalizados enviados pelo usuário; sons do VoiceInk (não podem ser reaproveitados).
 
@@ -577,16 +590,16 @@ _Os programas citados são exemplos._
 **Descrição:** se havia música ou vídeo tocando, a mídia pausa ao iniciar o ditado e volta ao terminar a gravação.
 
 **Requisitos funcionais**
-- **RF-25.1** O BD pode ligar ou desligar a pausa de mídia; o padrão é ligado.
+- **RF-25.1** O usuário pode ligar ou desligar a pausa de mídia; o padrão é ligado.
   - Consequência testável: com a opção desligada, a música continua tocando durante o ditado.
 - **RF-25.2** A mídia só é retomada se estava tocando antes do ditado.
-  - Consequência testável: com a música já pausada pelo BD, ela continua pausada depois do ditado.
+  - Consequência testável: com a música já pausada pelo usuário, ela continua pausada depois do ditado.
 
 **Critérios de aceite (alto nível)**
-- Dado o Spotify tocando, quando o BD inicia o ditado, então a música pausa em até 500 ms e volta quando ele para de gravar.
-- Dado um programa de mídia que não aceita o controle do sistema, quando o BD dita, então o ditado funciona normalmente e a mídia não é afetada.
+- Dado o Spotify tocando, quando o usuário inicia o ditado, então a música pausa em até 500 ms e volta quando ele para de gravar.
+- Dado um programa de mídia que não aceita o controle do sistema, quando o usuário dita, então o ditado funciona normalmente e a mídia não é afetada.
 
-**Notas / perguntas:** no VoiceInk isso usa recurso privado da Apple (relatório §8); a viabilidade em cada sistema é avaliada pelo Otávio. Se não for viável numa plataforma, vira "silenciar o áudio do sistema", com aprovação do BD.
+**Notas / perguntas:** no VoiceInk isso usa recurso privado da Apple (relatório §8); a viabilidade em cada sistema é avaliada pelo Otávio. Se não for viável numa plataforma, vira "silenciar o áudio do sistema", com aprovação do usuário.
 
 ### F-26 Descartar ditado sem fala
 
@@ -594,14 +607,36 @@ _Os programas citados são exemplos._
 **Descrição:** se a gravação não tem fala (atalho acionado sem querer, microfone mudo), o Voice Desk não envia o áudio ao provedor e não cola nada.
 
 **Requisitos funcionais**
-- **RF-26.1** O BD pode ligar ou desligar o descarte de ditado sem fala; o padrão é ligado.
+- **RF-26.1** O usuário pode ligar ou desligar o descarte de ditado sem fala; o padrão é ligado.
   - Consequência testável: com a opção desligada, uma gravação silenciosa é enviada ao provedor como qualquer outra.
 - **RF-26.2** Com a opção ligada, uma gravação sem fala detectada termina com o aviso "nenhuma fala detectada", sem envio ao provedor, sem colagem e sem item no histórico.
   - Consequência testável: 5 s de silêncio não geram chamada ao provedor nem item no histórico.
 
 **Critérios de aceite (alto nível)**
-- Dado o descarte ligado, quando o BD grava 5 s em silêncio, então aparece "nenhuma fala detectada" e nada é colado.
-- Dado o descarte ligado, quando o BD fala baixo mas audível, então o ditado é processado normalmente.
+- Dado o descarte ligado, quando o usuário grava 5 s em silêncio, então aparece "nenhuma fala detectada" e nada é colado.
+- Dado o descarte ligado, quando o usuário fala baixo mas audível, então o ditado é processado normalmente.
+
+### F-27 Instaladores públicos e página do projeto
+
+**Épico:** E-01 · **Prioridade:** Importante · **Realiza:** UJ-6, UJ-7 · **Origem:** considerações do BD no ENG-53 (software livre, instalação individual)
+**Descrição:** o Voice Desk é distribuído de graça, com código aberto, numa página pública do projeto. Cada versão tem um instalador para Mac e um para Windows. A página explica como instalar, quais permissões conceder e como obter as chaves dos provedores, para que qualquer pessoa instale sem ajuda do BD.
+
+**Requisitos funcionais**
+- **RF-27.1** Qualquer pessoa pode baixar, sem cadastro, o instalador da versão mais recente para Mac e para Windows na página do projeto.
+  - Consequência testável: a partir da página, sem login, os dois instaladores da última versão são baixados e instalam numa máquina limpa.
+- **RF-27.2** A página do projeto traz, em português do Brasil: requisitos mínimos (RNF-04), passo a passo de instalação e de permissões nas duas plataformas, como obter a chave do Groq, como usar sem chave (transcrição local), a licença e o código-fonte.
+  - Consequência testável: uma pessoa que nunca usou o Voice Desk instala e faz o primeiro ditado seguindo só a página, em até 15 minutos (UJ-7).
+- **RF-27.3** Cada versão publicada tem número, data e lista do que mudou.
+  - Consequência testável: a página de versões mostra pelo menos a versão atual com essas três informações.
+- **RF-27.4** A tela "Sobre" do app mostra a versão instalada, a licença, o link da página do projeto e o aviso de que o Voice Desk não tem relação com o VoiceInk.
+  - Consequência testável: o link da tela "Sobre" abre a página do projeto no navegador padrão.
+
+**Critérios de aceite (alto nível)**
+- Dada uma máquina Windows sem o Voice Desk, quando uma pessoa baixa o instalador da página do projeto e o executa, então o app instala e abre o primeiro uso (F-06).
+- Dada uma versão nova publicada, quando o usuário abre a página de versões, então vê a versão nova com a lista de mudanças e o instalador correspondente.
+
+**Fora do escopo desta funcionalidade:** atualização automática dentro do app; lojas de apps (App Store, Microsoft Store); instalação gerenciada por empresa.
+**Notas / perguntas:** o local da página e o processo de publicação ficam com o Otávio e o Igor. Para o instalador abrir sem avisos de segurança no Mac e no Windows, pode ser preciso assinatura de código, que tem custo anual; ver pergunta 6.
 
 ## 6. Requisitos não funcionais
 
@@ -613,19 +648,20 @@ _Os programas citados são exemplos._
 | RNF-04 | Compatibilidade | macOS 14 ou superior e Windows 10 (22H2) e 11, 64 bits. As mesmas funcionalidades da v1 existem nas duas plataformas; as diferenças permitidas são as teclas (Cmd ou Ctrl) e o local do ícone (barra de menus ou bandeja). [PREMISSA] |
 | RNF-05 | Compatibilidade da colagem | A colagem (F-03) e a leitura da seleção (F-13) funcionam em 100% dos testes com estes programas: no Windows, Outlook, Teams, Word, Chrome, Edge, Slack e Bloco de Notas; no Mac, Mail, Slack, Chrome, Safari, Word, Notas e VS Code. [PREMISSA: lista a confirmar pelo BD] |
 | RNF-06 | Segurança | Chaves de API só no cofre do sistema; nunca em arquivo comum, log, exportação, sincronização ou tela (só os 4 últimos caracteres). Comunicação com provedores de nuvem só por conexão criptografada. |
-| RNF-07 | Privacidade (LGPD) | Áudio e texto dos ditados podem ter dados de clientes. Ficam só na máquina e só saem para o provedor de transcrição e de IA do modo. A sincronização leva só a configuração sincronizável, protegida no trânsito e no armazenamento, e acessível só ao BD. Sem telemetria nem envio de uso para terceiros. O BD apaga tudo quando quiser (RF-17.3), e a retenção apaga o resto (F-17). |
+| RNF-07 | Privacidade (LGPD) | Áudio e texto dos ditados podem ter dados de clientes. Ficam só na máquina e só saem para o provedor de transcrição e de IA do modo. A sincronização leva só a configuração sincronizável, protegida no trânsito e no armazenamento, e acessível só ao próprio usuário. Nenhum dado de um usuário chega ao BD, ao time do projeto ou a outro usuário. Sem telemetria nem envio de uso para terceiros. O usuário apaga tudo quando quiser (RF-17.3), e a retenção apaga o resto (F-17). |
 | RNF-08 | Confiabilidade | Nenhum ditado concluído se perde: se a transcrição falhar ou o app fechar no meio do processamento, o áudio fica no histórico como "falhou" ao reabrir, em 100% dos testes de queda forçada. |
 | RNF-09 | Observabilidade | Log local de erros e eventos (início e fim do ditado, provedor, tempos, resultado da colagem), sem texto ditado, áudio nem chaves; guardado por 7 dias, com até 20 MB; o BD abre a pasta do log pelo menu de configurações. |
 | RNF-10 | Idioma | Interface em português do Brasil. Ditado em português do Brasil e inglês no mínimo. |
 | RNF-11 | Acessibilidade | Todas as ações das telas de configuração e do histórico podem ser feitas só com o teclado; contraste WCAG 2.1 AA nessas telas. |
 | RNF-12 | Instalação | Um instalador por plataforma; a instalação leva até 2 minutos. No Windows, instala sem privilégio de administrador. [PREMISSA: depende de o Windows do BD ser pessoal ou corporativo] |
-| RNF-13 | Propriedade intelectual | Nenhum código, texto de interface, prompt, ícone, som ou marca do VoiceInk é usado. Os textos, prompts e sons iniciais são criados pelo time. |
+| RNF-13 | Propriedade intelectual | Nenhum texto de interface, prompt, ícone, som ou marca do VoiceInk é usado; os textos, prompts e sons iniciais são criados pelo time. Código do VoiceInk só entra se a licença do Voice Desk for compatível com a GPL-3.0 e com parecer do Otávio e aprovação do BD (seção 10). |
+| RNF-14 | Código aberto | O código-fonte completo de cada versão publicada fica disponível na página do projeto, com a licença; qualquer pessoa consegue gerar o app a partir dele seguindo as instruções do repositório. |
 
 ## 7. Escopo da v1
 
 ### 7.1 Dentro
 
-As 26 funcionalidades da seção 4 (F-01 a F-26), nas duas plataformas, com os provedores:
+As 27 funcionalidades da seção 4 (F-01 a F-27), nas duas plataformas, com os provedores:
 - **Transcrição:** Groq (nuvem) e Whisper local (um modelo).
 - **IA:** Groq (nuvem) e Ollama (local).
 
@@ -659,15 +695,17 @@ Isso cobre tudo o que o resumo aprovado lista como "copiar o comportamento (v1)"
 | Outros modelos locais e importação de modelos (parte do ER-08) | Um modelo cobre o uso sem internet | v2, sob demanda |
 | Modo "segurar para falar" | Não foi observado no relatório; sem pedido do BD | Avaliar |
 | Sincronizar histórico e áudio entre máquinas | Privacidade e volume; a premissa é que só a configuração viaja | Depende da pergunta 2 |
-| Atualização automática do app (parte do ER-31) | Uso por uma pessoa; a nova versão é instalada manualmente [PREMISSA] | v2 |
+| Atualização automática do app (parte do ER-31) | Na v1 o usuário baixa a versão nova na página do projeto (F-27). Com outros usuários, ganha valor: candidata forte à v2 [PREMISSA] | v2 |
 | Assistente/chat, "perguntar" e voz sintetizada (ER-19, ER-32) | Não fazem parte do ditado; TTS nem está confirmado no VoiceInk | Não previsto |
 | Gravador no entalhe ("notch"), ações do app Atalhos da Apple, comando local ("Local CLI"), modelo de refino embutido (ER-03 parcial, ER-15 parcial, ER-27 parcial) | Exclusivos do Mac ou de nicho | Não previsto |
-| Licença, teste grátis, afiliados, avisos remotos, convite para estrela no GitHub (ER-30, ER-31) | Uso próprio | Não previsto |
+| Licença paga, teste grátis, afiliados, avisos remotos, convite para estrela no GitHub (ER-30, ER-31) | Software livre e gratuito | Não previsto |
+| Administração central, configuração gerenciada por empresa, compartilhamento de histórico entre pessoas | Cada instalação é individual (decisão do BD) | Não previsto |
 | Importar a configuração do VoiceInk | Formato não observado | Avaliar se o BD pedir |
 
 ## 8. Não objetivos
 
-- Não é um produto comercial nem multiusuário: sem contas, planos, pagamentos ou administração.
+- Não é um produto comercial nem multiusuário: é software livre e gratuito, instalado individualmente, sem contas, planos, pagamentos ou administração.
+- Não oferece suporte formal a quem o usa: a página do projeto é a referência de instalação e uso.
 - Não é um clone do VoiceInk: não busca paridade de funcionalidades, só o fluxo que o BD usa no dia a dia.
 - Não guarda nem processa os ditados em servidor próprio: áudio e texto ficam na máquina ou vão direto ao provedor escolhido pelo BD.
 - Não é assistente de voz nem controla o computador por comandos de voz.
@@ -691,16 +729,17 @@ Todas medidas na própria máquina, pelo histórico e pelo log local (sem teleme
 
 ## 10. Restrições e integrações
 
-- **Licença e marca:** o VoiceInk é GPL-3.0. O Voice Desk não reaproveita código, textos, prompts, ícones, sons nem marca dele (RNF-13). Qualquer reuso de código depende de parecer do Otávio e de aprovação do BD antes.
-- **Plataformas:** Mac e Windows desde a v1, com a mesma experiência (RNF-04). O maior risco técnico é colar e ler a seleção em cada sistema: deve ser validado no início do E-01, nas máquinas reais do BD.
-- **Provedores externos:** Groq (transcrição e IA, chave do BD, custo dele), Ollama (IA local, instalado pelo BD) e Whisper local (modelo baixado pelo app). O custo de uso dos provedores é do BD.
-- **Sincronização:** o meio é decisão do Otávio, com estas restrições de produto: (a) os dados ficam sob controle do BD; (b) nenhum serviço pago novo sem aprovação do BD; (c) só a configuração sincronizável trafega, protegida (RNF-07); (d) funciona com o Mac e o Windows em redes diferentes.
+- **Licença e marca:** o Voice Desk é software livre (código aberto), por decisão do BD. A licença ainda não foi escolhida (pergunta 5). O VoiceInk é GPL-3.0: o Voice Desk só pode reaproveitar código dele se também for GPL-3.0 (ou compatível); com uma licença permissiva (por exemplo, MIT), nenhum código do VoiceInk entra. Em qualquer caso, nome, ícones, sons, textos e prompts do VoiceInk não são usados (RNF-13), e qualquer reuso de código passa antes por parecer do Otávio e aprovação do BD.
+- **Plataformas:** Mac e Windows desde a v1, com a mesma experiência (RNF-04). O maior risco técnico é colar e ler a seleção em cada sistema: deve ser validado no início do E-01, nas máquinas reais do BD e, se possível, numa máquina de outro usuário.
+- **Provedores externos:** Groq (transcrição e IA, com a chave de cada usuário), Ollama (IA local, instalado por cada usuário) e Whisper local (modelo baixado pelo app). O custo de uso dos provedores é de cada usuário; o projeto não paga nem intermedeia chaves.
+- **Sincronização:** o meio é decisão do Otávio, com estas restrições de produto: (a) os dados de cada usuário ficam sob controle dele, sem servidor central mantido pelo projeto [PREMISSA]; (b) nenhum serviço pago para o usuário nem para o projeto sem aprovação do BD; (c) só a configuração sincronizável trafega, protegida (RNF-07); (d) funciona com o Mac e o Windows em redes diferentes.
 - **Permissões do sistema:** microfone e acessibilidade nas duas plataformas, mais as equivalentes no Mac. O primeiro uso (F-06) guia a concessão.
-- **Distribuição:** só para as máquinas do BD; sem loja de apps na v1. [PREMISSA]
+- **Distribuição:** pública e gratuita, pela página do projeto (F-27); cada pessoa instala na própria máquina. Sem loja de apps na v1. [PREMISSA: sem loja]
 
 ## 11. Premissas
 
-- [PREMISSA] O Voice Desk é para uso próprio do BD, sem venda, licença, teste grátis ou ativação (seções 2.2, 7.2, 8).
+- [PREMISSA] A sincronização não depende de servidor central mantido pelo projeto: cada usuário usa um meio sob o próprio controle (seção 10).
+- [PREMISSA] A documentação de instalação e a interface ficam em português do Brasil, mesmo com usuários de outras empresas (RF-27.2, RNF-10).
 - [PREMISSA] A sincronização da configuração entre Mac e Windows entra na v1 como Essencial; se o BD recusar, F-20 sai e F-21 cobre a necessidade manualmente (F-20).
 - [PREMISSA] Na sincronização só viaja a configuração sincronizável: nada de chaves, histórico ou áudio (glossário, F-20, RNF-07).
 - [PREMISSA] Em conflito de sincronização, vale a alteração mais recente do mesmo item (RF-20.4).
@@ -724,12 +763,17 @@ Todas medidas na própria máquina, pelo histórico e pelo log local (sem teleme
 2. O histórico (textos e áudios) deve aparecer na outra máquina? — BD — não bloqueia (o PRD assume que não).
 3. O Windows do BD é pessoal ou corporativo, com restrição de instalação ou antivírus? — BD — não bloqueia o design, mas afeta a RNF-12 e o risco da colagem; precisa de resposta antes do E-01 ir para teste.
 4. Quais programas o BD mais usa para ditar em cada máquina? — BD — não bloqueia (a RNF-05 traz uma lista inicial).
+5. Qual a licença de código aberto do Voice Desk: GPL-3.0 (permite reaproveitar código do VoiceInk, mas obriga quem modificar e distribuir o Voice Desk a abrir o código também) ou uma permissiva, como MIT (sem reaproveitar nada do VoiceInk)? — BD, com parecer do Otávio — não bloqueia o design; precisa de resposta antes de a arquitetura fechar.
+6. O projeto vai pagar assinatura de código para os instaladores abrirem sem aviso de segurança no Mac e no Windows (custo anual), ou a v1 aceita o aviso, com instruções na página do projeto? — BD — não bloqueia o design; afeta F-27 e o Igor.
 
 ## 13. Histórico e reconciliação
 
 | Versão | Data | Mudança | Origem |
 |---|---|---|---|
 | 1 | 2026-10-23 | Versão inicial | Resumo aprovado (ENG-51) + relatório de engenharia reversa do VoiceInk 2.13 |
+| 2 | 2026-10-23 | Voice Desk passa a ser software livre, gratuito e instalado individualmente; outras pessoas (Going2 e outras empresas) podem usar, sem administração nem multiusuário. Novo perfil "Usuário compartilhado", jornada UJ-7, funcionalidade F-27 (instaladores públicos e página do projeto), RF-06.4, RF-20.7, RNF-14; ajustes em RNF-07, RNF-13, seções 2, 7.2, 8, 10, 11 e 12; nos requisitos, "o BD" virou "o usuário". | Comentário do BD no ENG-53 |
+
+Mudança da versão 2 sobre o resumo aprovado: o resumo dizia "Não é para (v1): equipes, venda a terceiros" e tinha a premissa de uso só pelo BD. O BD decidiu que outras pessoas podem usar, cada uma na própria instalação, e que o software é livre. Continua valendo "sem equipes como unidade e sem venda". O resumo não foi alterado; esta decisão do BD prevalece sobre ele.
 
 Decisões tomadas neste PRD sobre o que o resumo deixou aberto ou o que não foi observado no VoiceInk:
 - **Contexto:** o resumo fala em "seleção e área de transferência". O PRD exclui também o texto da janela atual, que o relatório lista junto do OCR, pelo mesmo motivo do OCR.
