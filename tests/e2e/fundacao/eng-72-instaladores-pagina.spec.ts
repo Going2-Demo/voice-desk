@@ -35,7 +35,13 @@ test.describe("RF-27.1 a 27.3 página do projeto (site/)", () => {
 
   test("conteúdo em português: requisitos, instalação, permissões, Groq, sem chave, licença e código", () => {
     expect(html).toContain('lang="pt-BR"');
-    for (const t of ["Requisitos mínimos", "Como instalar", "chave do Groq", "Código aberto", "MIT"]) {
+    for (const t of [
+      "Requisitos mínimos",
+      "Como instalar",
+      "chave do Groq",
+      "Código aberto",
+      "MIT",
+    ]) {
       expect(html).toContain(t);
     }
     expect(html.toLowerCase()).toContain("conceda");
