@@ -8,7 +8,8 @@
       "!node_modules",
       "!dist",
       "!docs",
-      "!**/*.md"
+      "!**/*.md",
+      "!pnpm-lock.yaml"
     ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
