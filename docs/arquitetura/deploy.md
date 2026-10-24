@@ -41,9 +41,9 @@ Deploy automático por push: **ligado** (é só build; nada vai para usuário fi
 | Nome | Para quê | Onde está o valor |
 |---|---|---|
 | `GITHUB_TOKEN` | publicar release | automático do Actions |
-| `APPLE_CERT_P12`, `APPLE_CERT_PASSWORD`, `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD` | assinar e notarizar no Mac | GitHub › Settings › Secrets (**só se o BD aprovar a assinatura**, pergunta 6) |
+| `APPLE_CERT_P12`, `APPLE_CERT_PASSWORD`, `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD` | assinar e notarizar no Mac | GitHub › Settings › Secrets (**não usados na v1**: o BD decidiu não ter custo de assinatura, pergunta 6) |
 | `WIN_CERT_PFX`, `WIN_CERT_PASSWORD` | assinar no Windows | idem |
-Sem assinatura, o instalador abre com aviso de segurança; a página do projeto traz as instruções para liberar. Valores nunca vão para o repositório.
+Sem certificado pago, o Mac (Gatekeeper) e o Windows (SmartScreen) mostram aviso na primeira abertura; a página do projeto traz as instruções para liberar. Decisão do BD em 2026-10-23: sem custo. Valores nunca vão para o repositório.
 
 ## URL de dev
 - Pré-releases: `https://github.com/going2-demo/voice-desk/releases` (tag `dev-<sha>`)
@@ -58,7 +58,7 @@ Sem assinatura, o instalador abre com aviso de segurança; a página do projeto 
 2. Código: `git revert` do squash por PR `revert/<KEY>` e novo build.
 
 ## Primeiro deploy (provisionamento)
-- [ ] Repositório público (necessário para distribuição aberta, RF-27.1/RNF-14, e para minutos de runner gratuitos) — **decisão do BD**, hoje é privado.
+- [ ] Repositório público (necessário para distribuição aberta, RF-27.1/RNF-14, e para minutos de runner gratuitos) — **BD decide mais tarde**; hoje é privado. Enquanto privado, os builds funcionam, mas consomem minutos do plano e o download exige login.
 - [ ] Habilitar GitHub Pages; escrever os 3 workflows (após a stack).
-- [ ] Assinatura de código: decisão do BD (pergunta 6).
+- [x] Assinatura de código: decidido, sem custo (sem assinatura paga).
 Status: pendente
