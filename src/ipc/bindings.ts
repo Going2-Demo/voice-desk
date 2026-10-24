@@ -8,6 +8,14 @@ export const commands = {
 	bandejaEstado: () => typedError<EstadoIcone, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_estado")),
 	bandejaIniciarComOSistema: () => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_iniciar_com_o_sistema")),
 	bandejaDefinirIniciarComOSistema: (ligado: boolean) => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_definir_iniciar_com_o_sistema", { ligado })),
+	chavesEstado: () => typedError<EstadoChave_Serialize[], ErroApp_Serialize>(__TAURI_INVOKE("chaves_estado")),
+	/**  Valida o formato, testa a chave no provedor (até 10 s) e guarda no cofre. */
+	chavesSalvar: (provedor: Provedor, chave: string) => typedError<EstadoChave_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("chaves_salvar", { provedor, chave })),
+	/**  Testa de novo a chave já guardada (por exemplo, depois de uma falha de rede). */
+	chavesTestar: (provedor: Provedor) => typedError<EstadoChave_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("chaves_testar", { provedor })),
+	chavesApagar: (provedor: Provedor) => typedError<EstadoChave_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("chaves_apagar", { provedor })),
+	/**  Abre no navegador padrão a página do provedor onde se obtém a chave (RF-04.4). */
+	chavesAbrirPagina: (provedor: Provedor) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("chaves_abrir_pagina", { provedor })),
 };
 
 /* Types */
@@ -25,12 +33,45 @@ export type ErroApp_Serialize = {
 	campo?: string,
 };
 
+/**  Estado de uma chave para a tela: nunca contém a chave inteira. */
+export type EstadoChave = EstadoChave_Serialize | EstadoChave_Deserialize;
+
+/**  Estado de uma chave para a tela: nunca contém a chave inteira. */
+export type EstadoChave_Deserialize = {
+	provedor: Provedor,
+	salva: boolean,
+	/**  `••••abcd` (RF-04.3); `None` sem chave. */
+	mascara?: string | null,
+	validade?: Validade | null,
+	motivo?: string | null,
+};
+
+/**  Estado de uma chave para a tela: nunca contém a chave inteira. */
+export type EstadoChave_Serialize = {
+	provedor: Provedor,
+	salva: boolean,
+	/**  `••••abcd` (RF-04.3); `None` sem chave. */
+	mascara: string | null,
+	validade: Validade | null,
+	motivo: string | null,
+};
+
 export type EstadoIcone = "parado" | "gravando" | "processando" | "erro";
+
+export type Provedor = "groq";
 
 export type Sobre = {
 	versao: string,
 	commit: string,
 };
+
+export type Validade = 
+/**  O provedor aceitou a chave. */
+"valida" | 
+/**  O provedor recusou a chave. */
+"invalida" | 
+/**  Não deu para testar (sem rede, tempo esgotado, provedor fora do ar). */
+"nao_testada";
 
 /* Tauri Specta runtime */
 async function typedError<T, E>(result: Promise<T>): Promise<{ status: "ok"; data: T } | { status: "error"; error: E }> {
