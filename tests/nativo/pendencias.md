@@ -22,3 +22,9 @@ Itens que só se conferem em máquina real; o BD roda um roteiro por épico.
 | ENG-67 | E1 | Idioma inglês sem tradução | No modo com idioma "inglês", ditar uma frase em inglês | Texto em inglês, sem tradução | macOS, Windows |
 | ENG-67 | E1 | Falha sem rede | Desligar a rede e ditar | Aviso "sem conexão com o provedor"; nada colado; item "falhou" no histórico com áudio | macOS, Windows |
 | ENG-67 | E1 | Sem chave | Apagar a chave do Groq e iniciar o ditado | Gravador avisa "Cadastre a chave do Groq" com botão "Abrir chaves" que abre a tela de chaves | macOS, Windows |
+| ENG-68 | E1 | Colar no Outlook (Windows) | Cursor no corpo de um e-mail novo; ditar uma frase com acentos, emoji e quebra de linha | Texto aparece na posição do cursor | Windows |
+| ENG-68 | E1 | Colar no Mail e no Slack (Mac) | Mesmo cenário no corpo de um e-mail e numa conversa | Texto aparece na posição do cursor, com acentos, emoji e quebra de linha | macOS |
+| ENG-68 | E1 | Área de transferência volta ao anterior | Copiar "abc"; ditar e esperar a colagem; colar com Cmd/Ctrl+V | Cola "abc" (e, com imagem copiada antes, a imagem) | macOS, Windows |
+| ENG-68 | E1 | Sem campo de texto em foco | Foco na área de trabalho/janela sem campo; ditar | Texto fica na área de transferência e aparece "Texto copiado; cole com Cmd+V/Ctrl+V" (a detecção de "sem campo" não existe: pode colar em nada) | macOS, Windows |
+| ENG-68 | E1 | Acessibilidade negada (Mac) | Remover a permissão de Acessibilidade; ditar | Aviso "Texto copiado; cole com Cmd+V"; colar manualmente funciona | macOS |
+| ENG-68 | E1 | Enter depois de colar | Num modo com Enter ligado, ditar no chat; depois com Enter desligado (depende da área de modos) | Ligado: mensagem enviada sozinha; desligado: fica na caixa | macOS, Windows |
