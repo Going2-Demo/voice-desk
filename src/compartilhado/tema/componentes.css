@@ -1,0 +1,145 @@
+/* Componentes do design 2.3 usados por mais de uma área: cartão, opção com interruptor, dica, atalho, toast. */
+.cartao {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-lg);
+  padding: var(--espaco-5);
+  box-shadow: var(--sombra-1);
+  margin-top: var(--espaco-5);
+}
+.cartao > h2 {
+  margin: 0 0 4px;
+  font-size: 19px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+.dica {
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.linha-opcao {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-4);
+  padding: 12px 0;
+}
+.linha-opcao .texto {
+  max-width: 60ch;
+}
+.linha-opcao .texto b {
+  display: block;
+  font-weight: 600;
+}
+kbd {
+  font: 600 12.5px var(--fonte-mono);
+  padding: 2px 7px;
+  border: 1px solid var(--cor-borda-forte);
+  border-bottom-width: 2px;
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie);
+  white-space: nowrap;
+}
+
+.interruptor {
+  position: relative;
+  width: 46px;
+  height: 28px;
+  flex: none;
+}
+.interruptor input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.interruptor span {
+  position: absolute;
+  inset: 0;
+  background: var(--cor-borda-forte);
+  border-radius: var(--raio-pilula);
+  transition: background 0.15s;
+  pointer-events: none;
+}
+.interruptor span::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s;
+}
+.interruptor input:checked + span {
+  background: var(--cor-primaria);
+}
+.interruptor input:checked + span::after {
+  transform: translateX(18px);
+}
+.interruptor input:focus-visible + span {
+  outline: 3px solid var(--cor-foco);
+  outline-offset: 2px;
+}
+.interruptor input:disabled {
+  cursor: not-allowed;
+}
+.interruptor input:disabled + span {
+  opacity: 0.5;
+}
+
+.aviso-erro {
+  padding: 12px 16px;
+  border-radius: var(--raio-md);
+  border: 1px solid var(--cor-erro);
+  background: var(--cor-erro-suave);
+  margin: var(--espaco-3) 0 0;
+}
+
+.toasts {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: min(380px, calc(100vw - 32px));
+}
+.toast {
+  background: var(--cor-gravador-fundo);
+  color: var(--cor-gravador-texto);
+  padding: 12px 16px;
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-2);
+  border-left: 4px solid var(--cor-primaria);
+}
+
+@media (max-width: 720px) {
+  .interruptor {
+    width: 52px;
+    height: 32px;
+  }
+  .interruptor span::after {
+    width: 26px;
+    height: 26px;
+  }
+  .interruptor input:checked + span::after {
+    transform: translateX(20px);
+  }
+  .linha-opcao {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,104 @@
+.bandeja {
+  max-width: 760px;
+}
+.bandeja > p {
+  max-width: 62ch;
+}
+.bandeja-demo {
+  display: flex;
+  gap: var(--espaco-6);
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.bandeja-demo > div {
+  min-width: 0;
+}
+.seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-pilula);
+  overflow: hidden;
+  margin: var(--espaco-4) 0;
+}
+.seg {
+  padding: 0;
+  min-width: 0;
+  margin-inline: 0;
+}
+.seg button {
+  background: transparent;
+  color: var(--cor-texto);
+  border: 0;
+  padding: 4px 14px;
+  font: inherit;
+  cursor: pointer;
+  min-height: 32px;
+}
+.seg button[aria-pressed="true"] {
+  background: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
+  font-weight: 600;
+}
+.barra-sistema {
+  width: 100%;
+  max-width: 560px;
+  height: 30px;
+  border-radius: var(--raio-sm) var(--raio-sm) 0 0;
+  background: var(--cor-superficie-2);
+  border: 1px solid var(--cor-borda);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+}
+.estado-icone {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cor-texto);
+}
+.menu-bandeja {
+  width: 300px;
+  max-width: 100%;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-2);
+  padding: 6px;
+  margin-top: var(--espaco-3);
+}
+.menu-bandeja .item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: var(--raio-sm);
+  color: var(--cor-texto);
+}
+.menu-bandeja .item:hover {
+  background: var(--cor-primaria-suave);
+}
+.menu-bandeja .titulo-menu {
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+  padding: 6px 10px 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.menu-bandeja .sep {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--cor-borda);
+}
+.menu-bandeja ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
