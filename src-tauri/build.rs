@@ -30,5 +30,19 @@ fn main() {
         codigo,
     )
     .unwrap();
+    embutir_manifesto_nos_testes();
     tauri_build::build()
+}
+
+/// No Windows, o executável de teste da lib não leva o manifesto que o `tauri_build` embute só no
+/// app. Sem Common Controls v6 (importado pelo Tauri/muda), ele nem inicia (STATUS_ENTRYPOINT_NOT_FOUND).
+fn embutir_manifesto_nos_testes() {
+    if env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows")
+        && env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc")
+    {
+        println!("cargo:rustc-link-arg-tests=/MANIFEST:EMBED");
+        println!(
+            "cargo:rustc-link-arg-tests=/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"
+        );
+    }
 }
