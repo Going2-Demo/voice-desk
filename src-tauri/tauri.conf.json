@@ -11,7 +11,7 @@
   },
   "app": {
     "windows": [
-      { "label": "principal", "title": "Voice Desk", "url": "index.html", "width": 1100, "height": 760, "minWidth": 720, "minHeight": 520 }
+      { "label": "principal", "visible": false, "title": "Voice Desk", "url": "index.html", "width": 1100, "height": 760, "minWidth": 720, "minHeight": 520 }
     ],
     "security": { "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; connect-src ipc: http://ipc.localhost" }
   },

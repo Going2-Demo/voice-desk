@@ -38,4 +38,5 @@ App de desktop de ditado por voz para macOS 14+ e Windows 10/11, software livre.
 
 ## Armadilhas conhecidas
 - Windows: o binário de teste da lib precisa do manifesto Common Controls v6, senão `cargo test` falha com `STATUS_ENTRYPOINT_NOT_FOUND` (0xc0000139). O `src-tauri/build.rs` o embute por argumento do linker (e o `tauri_build` fica sem o manifesto próprio); mantenha isso ao mexer no build. O plugin `dialog` não está instalado no F-00 por não ter uso ainda.
+- App de bandeja: a janela `principal` nasce oculta e fechar a última janela não encerra o app (só `app.exit(0)`, pelo item Sair). Aberto no login, o sistema passa `--oculto` (plugin autostart) e nenhuma janela aparece. Para mudar o ícone use `bandeja::definir_estado`; o item de ditado do menu emite o evento `bandeja:alternar_ditado`.
 - (acrescente quando um agente errar algo de forma recorrente)
