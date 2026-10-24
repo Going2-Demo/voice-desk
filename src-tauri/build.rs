@@ -1,4 +1,5 @@
-//! Embute os arquivos de `migracoes/` (ordem pelo nome) em `$OUT_DIR/migracoes.rs`.
+//! Embute os arquivos de `migracoes/` (ordem pelo nome) em `$OUT_DIR/migracoes.rs` e prepara o
+//! manifesto do Windows.
 
 use std::{env, fs, path::PathBuf};
 
@@ -30,19 +31,23 @@ fn main() {
         codigo,
     )
     .unwrap();
-    embutir_manifesto_nos_testes();
-    tauri_build::build()
+
+    if windows_msvc() {
+        // O manifesto com Common Controls v6 vai por argumento do linker para TODOS os alvos
+        // (app, lib e executável de teste da lib). Sem ele, o teste da lib nem inicia
+        // (STATUS_ENTRYPOINT_NOT_FOUND). O tauri_build não embute o dele para não duplicar.
+        println!("cargo:rustc-link-arg=/MANIFEST:EMBED");
+        println!(
+            "cargo:rustc-link-arg=/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"
+        );
+        let janelas = tauri_build::WindowsAttributes::new_without_app_manifest();
+        tauri_build::try_build(tauri_build::Attributes::new().windows_attributes(janelas)).unwrap();
+    } else {
+        tauri_build::build()
+    }
 }
 
-/// No Windows, o executável de teste da lib não leva o manifesto que o `tauri_build` embute só no
-/// app. Sem Common Controls v6 (importado pelo Tauri/muda), ele nem inicia (STATUS_ENTRYPOINT_NOT_FOUND).
-fn embutir_manifesto_nos_testes() {
-    if env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows")
+fn windows_msvc() -> bool {
+    env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows")
         && env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc")
-    {
-        println!("cargo:rustc-link-arg-tests=/MANIFEST:EMBED");
-        println!(
-            "cargo:rustc-link-arg-tests=/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'"
-        );
-    }
 }
