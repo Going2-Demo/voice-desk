@@ -78,9 +78,78 @@ jobs:
           name: instalador-${{ matrix.nome }}
           path: saida/*
 
+  fumaca:
+    name: fumaça (${{ matrix.nome }})
+    needs: instalador
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: macos-14, nome: mac }
+          - { os: windows-latest, nome: win }
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: instalador-${{ matrix.nome }}
+          path: instalador
+      - name: Instalar
+        run: |
+          if [ "${{ matrix.nome }}" = "mac" ]; then
+            dmg=$(ls instalador/*.dmg | head -1)
+            hdiutil attach "$dmg" -mountpoint /tmp/vd -nobrowse -quiet
+            mkdir -p "$RUNNER_TEMP/apps"
+            cp -R "/tmp/vd/Voice Desk.app" "$RUNNER_TEMP/apps/"
+            hdiutil detach /tmp/vd -quiet
+            echo "EXE=$RUNNER_TEMP/apps/Voice Desk.app/Contents/MacOS/voice-desk" >> "$GITHUB_ENV"
+          else
+            exe=$(ls instalador/*.exe | head -1)
+            # O instalador silencioso pode abrir o app ao terminar e não devolver o controle:
+            # roda em segundo plano, espera o executável aparecer e encerra o que ficou aberto.
+            MSYS2_ARG_CONV_EXCL="*" ./"$exe" /S > /dev/null 2>&1 &
+            achado=""
+            for _ in $(seq 1 30); do
+              sleep 2
+              achado=$(find "$LOCALAPPDATA" -maxdepth 3 -iname 'voice*desk*.exe' ! -iname 'uninst*' | head -1)
+              [ -n "$achado" ] && break
+            done
+            [ -n "$achado" ] || { echo "instalação silenciosa não deixou o executável"; find "$LOCALAPPDATA" -maxdepth 2 -newer "$exe" | head -20; exit 1; }
+            sleep 10
+            taskkill //F //IM "$(basename "$achado")" > /dev/null 2>&1 || true
+            taskkill //F //IM "$(basename "$exe")" > /dev/null 2>&1 || true
+            echo "EXE=$achado" >> "$GITHUB_ENV"
+          fi
+      - name: Abrir, esperar e conferir
+        run: |
+          dados="$RUNNER_TEMP/dados"
+          mkdir -p "$dados"
+          export VOICE_DESK_PASTA_DADOS="$dados"
+          "$EXE" --oculto > "$RUNNER_TEMP/saida.txt" 2>&1 &
+          pid=$!
+          sleep 15
+          kill -0 "$pid" || { echo "o app não seguiu vivo"; tail -30 "$RUNNER_TEMP/saida.txt"; exit 1; }
+          kill "$pid" || true
+          log=$(ls "$dados"/logs/voice-desk.*.log | head -1)
+          [ -n "$log" ] || { echo "sem arquivo de log"; exit 1; }
+          grep -q 'app_iniciado' "$log" || { echo "log sem app_iniciado"; tail -30 "$log"; exit 1; }
+          if grep -qiE 'panic|erro_interno' "$log"; then echo "log com panic ou erro"; tail -30 "$log"; exit 1; fi
+          grep -aq "${{ github.sha }}" "$EXE" || { echo "versão do executável diferente do commit"; exit 1; }
+          echo "fumaça ok: app vivo, app_iniciado no log, versão = ${{ github.sha }}"
+      - name: Guardar o log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fumaca-log-${{ matrix.nome }}
+          path: ${{ runner.temp }}/dados/logs/*
+          if-no-files-found: ignore
+
   release-dev:
     name: release dev-<sha>
-    needs: instalador
+    needs: [instalador, fumaca]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
