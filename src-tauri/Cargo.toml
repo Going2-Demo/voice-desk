@@ -37,6 +37,8 @@ tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["fmt"] }
 keyring = "4.2"
 reqwest = { version = "0.13", default-features = false, features = ["rustls", "json"] }
+arboard = "3.7"
+enigo = "0.6"
 
 [dev-dependencies]
 tempfile = "3"
