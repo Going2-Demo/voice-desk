@@ -60,3 +60,16 @@ body {
   padding: var(--espaco-3);
   border-radius: var(--raio-md);
 }
+
+@media (max-width: 720px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+  .lateral {
+    border-right: 0;
+    border-bottom: 1px solid var(--cor-borda);
+  }
+  .conteudo {
+    padding: var(--espaco-4);
+  }
+}
