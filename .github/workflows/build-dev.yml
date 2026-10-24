@@ -52,6 +52,9 @@ jobs:
         with:
           workspaces: src-tauri
       - run: pnpm install --frozen-lockfile
+      - name: Descartar artefatos do próprio app em cache
+        shell: bash
+        run: find src-tauri/target -type d \( -name "voice-desk-*" -o -name "voice_desk_lib-*" \) -path "*release*" -exec rm -rf {} + 2>/dev/null || true
       - name: Compilar o instalador
         shell: bash
         env:
@@ -138,12 +141,12 @@ jobs:
           grep -q 'app_iniciado' "$log" || { echo "log sem app_iniciado"; tail -30 "$log"; exit 1; }
           if grep -qiE 'panic|erro_interno' "$log"; then echo "log com panic ou erro"; tail -30 "$log"; exit 1; fi
           export LC_ALL=C
-          ls -l "$EXE"; shasum "$EXE"
+          ls -l "$EXE"
           if [ "${{ matrix.nome }}" = "mac" ]; then
             # Instalador universal: cada arquitetura precisa trazer o commit do build.
             for arq in arm64 x86_64; do
               lipo "$EXE" -thin "$arq" -output "$RUNNER_TEMP/fina-$arq"
-              grep -aqF "${{ github.sha }}" "$RUNNER_TEMP/fina-$arq" || { echo "versão de $arq diferente do commit"; exit 1; }
+              grep -aqF "${{ github.sha }}" "$RUNNER_TEMP/fina-$arq" || { echo "versão de $arq diferente do commit; encontrado: $(grep -aoE '[0-9a-f]{40}' "$RUNNER_TEMP/fina-$arq" | sort -u | head -3 | tr '\n' ' ')"; exit 1; }
             done
           else
             grep -aqF "${{ github.sha }}" "$EXE" || { echo "versão do executável diferente do commit"; exit 1; }
