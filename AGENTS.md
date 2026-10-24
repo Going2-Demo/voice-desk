@@ -20,17 +20,22 @@ App de desktop de ditado por voz para macOS 14+ e Windows 10/11, software livre.
 - Deploy em dev: `docs/arquitetura/deploy.md` (Igor)
 
 ## Rodar e verificar
-- TODO (após F-00): instalar — `pnpm install`
-- TODO (após F-00): rodar o app — `pnpm tauri dev`
-- TODO (após F-00): interface no navegador, núcleo simulado — `pnpm dev:simulado`
-- TODO (após F-00): testes — `cargo test --manifest-path src-tauri/Cargo.toml` e `pnpm test`
-- TODO (após F-00): lint e tipos — `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `pnpm biome ci`, `pnpm typecheck`
-- TODO (após F-00): instaladores — `pnpm tauri build`
-- TODO (após F-00): e2e — `BASE_URL=<url> pnpm exec playwright test` (suíte em `tests/e2e/`, mantida pela QA)
+- Pré-requisitos: Node 24+, pnpm, Rust estável (`rustup`), CMake; no Mac, Xcode Command Line Tools.
+- Instalar — `pnpm install`
+- Rodar o app — `pnpm tauri dev` (regera `src/ipc/bindings.ts`)
+- Interface no navegador, núcleo simulado — `pnpm dev:simulado` (porta 1420)
+- Testes — `cargo test --manifest-path src-tauri/Cargo.toml` e `pnpm test`
+- Lint e tipos — `cargo fmt --manifest-path src-tauri/Cargo.toml --check`, `cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings`, `pnpm biome ci`, `pnpm typecheck`
+- Regerar `bindings.ts` sem abrir o app — `VOICE_DESK_REGERAR_BINDINGS=1 cargo test --manifest-path src-tauri/Cargo.toml bindings`
+- Instaladores — `pnpm tauri build`
+- Dados de desenvolvimento separados — `VOICE_DESK_PASTA_DADOS=/tmp/vd pnpm tauri dev`
+- CI — `.github/workflows/ci.yml` roda tudo acima em `macos-14` e `windows-latest` em todo PR; `build-dev.yml` publica a pré-release `dev-<sha>` a cada merge na `main` (`docs/arquitetura/deploy.md`).
+- e2e — `BASE_URL=<url> pnpm exec playwright test` (suíte em `tests/e2e/`, mantida pela QA; ainda não criada)
 
 ## Convenções diferentes do padrão
 - Nomes de domínio em português sem acento (`modo`, `historico_item`); datas ISO 8601 UTC; durações em `_ms` inteiros; IDs UUID v7.
 - Erros dos comandos: `{ codigo, mensagem, campo? }`, mensagem já em português.
 
 ## Armadilhas conhecidas
-- (vazio; acrescente quando um agente errar algo de forma recorrente)
+- Windows: o binário de teste da lib precisa do manifesto Common Controls v6, senão `cargo test` falha com `STATUS_ENTRYPOINT_NOT_FOUND` (0xc0000139). O `src-tauri/build.rs` o embute por argumento do linker (e o `tauri_build` fica sem o manifesto próprio); mantenha isso ao mexer no build. O plugin `dialog` não está instalado no F-00 por não ter uso ainda.
+- (acrescente quando um agente errar algo de forma recorrente)

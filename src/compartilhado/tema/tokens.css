@@ -1,0 +1,64 @@
+/* Tokens do docs/design/design.md (seção 1). Só o F-00 mexe aqui; mudança de token é pedido à Nina. */
+:root {
+  --cor-fundo: #f6f4ef;
+  --cor-superficie: #ffffff;
+  --cor-superficie-2: #eeebe4;
+  --cor-texto: #1d2327;
+  --cor-texto-suave: #5a6368;
+  --cor-borda: #d9d5cb;
+  --cor-borda-forte: #78838a;
+  --cor-primaria: #0f6b5c;
+  --cor-primaria-hover: #0b5649;
+  --cor-primaria-suave: #dcefea;
+  --cor-sobre-primaria: #ffffff;
+  --cor-erro: #b3261e;
+  --cor-erro-suave: #f9e3e1;
+  --cor-sucesso: #1e7a3c;
+  --cor-sucesso-suave: #ddf1e3;
+  --cor-alerta: #8a5a00;
+  --cor-alerta-suave: #fbefd3;
+  --cor-gravador-fundo: #1b2124;
+  --cor-gravador-texto: #f2f4f5;
+  --cor-gravando: #ff5a47;
+  --cor-foco: #0f6b5c;
+
+  --fonte-base: "Inter", -apple-system, "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  --fonte-mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+
+  --espaco-1: 4px;
+  --espaco-2: 8px;
+  --espaco-3: 12px;
+  --espaco-4: 16px;
+  --espaco-5: 24px;
+  --espaco-6: 32px;
+  --espaco-7: 48px;
+  --raio-sm: 6px;
+  --raio-md: 10px;
+  --raio-lg: 16px;
+  --raio-pilula: 999px;
+  --sombra-1: 0 1px 2px rgba(29, 35, 39, 0.08);
+  --sombra-2: 0 8px 24px rgba(29, 35, 39, 0.14);
+  --sombra-3: 0 18px 48px rgba(29, 35, 39, 0.28);
+}
+[data-tema="escuro"] {
+  --cor-fundo: #14181a;
+  --cor-superficie: #1d2326;
+  --cor-superficie-2: #262d31;
+  --cor-texto: #eceff0;
+  --cor-texto-suave: #a3adb2;
+  --cor-borda: #333b40;
+  --cor-borda-forte: #6b767c;
+  --cor-primaria: #4fc3ac;
+  --cor-primaria-hover: #6fd3bf;
+  --cor-primaria-suave: #17332e;
+  --cor-sobre-primaria: #0b1412;
+  --cor-erro: #ff8a80;
+  --cor-erro-suave: #3a1f1d;
+  --cor-sucesso: #6fd38b;
+  --cor-sucesso-suave: #1b3324;
+  --cor-alerta: #f2b84b;
+  --cor-alerta-suave: #3a2e12;
+  --cor-foco: #8fe0cf;
+  --sombra-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --sombra-2: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
