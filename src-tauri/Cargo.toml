@@ -19,6 +19,10 @@ tauri-plugin-single-instance = "2.5"
 tauri-plugin-opener = "2.7"
 tauri-plugin-autostart = "2"
 tauri-plugin-dialog = "2"
+tauri-plugin-global-shortcut = "2.4"
+handy-keys = "0.3"
+cpal = "0.18"
+active-win-pos-rs = "0.11"
 tauri-specta = { version = "=2.0.0-rc.26", features = ["derive", "typescript"] }
 specta = { version = "=2.0.0-rc.26", features = ["derive"] }
 specta-typescript = "=0.0.13"

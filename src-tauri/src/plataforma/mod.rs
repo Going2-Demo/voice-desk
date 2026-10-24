@@ -2,6 +2,9 @@
 //! macos.rs, windows.rs}`. As capacidades (colagem, foco, seleção, teclado, mídia, permissões)
 //! nascem nas histórias de cada uma; fora desta pasta não há `cfg(target_os)`.
 
+pub mod foco;
+pub mod teclado;
+
 /// Plataforma em que o app roda, no formato do banco (`modo_programa.plataforma`).
 pub const fn atual() -> &'static str {
     if cfg!(target_os = "macos") {

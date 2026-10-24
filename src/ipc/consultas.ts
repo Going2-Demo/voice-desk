@@ -2,4 +2,5 @@
 export const consultas = {
   app: { sobre: ["app", "sobre"] as const },
   chaves: { estado: ["chaves", "estado"] as const },
+  atalhos: { global: ["atalhos", "global"] as const },
 };
