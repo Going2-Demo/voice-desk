@@ -108,10 +108,19 @@ jobs:
             echo "EXE=$RUNNER_TEMP/apps/Voice Desk.app/Contents/MacOS/voice-desk" >> "$GITHUB_ENV"
           else
             exe=$(ls instalador/*.exe | head -1)
-            ./"$exe" /S
-            sleep 20
-            achado=$(find "$LOCALAPPDATA" -maxdepth 3 -iname 'voice-desk.exe' | head -1)
+            # O instalador silencioso pode abrir o app ao terminar e não devolver o controle:
+            # roda em segundo plano, espera o executável aparecer e encerra o que ficou aberto.
+            ./"$exe" /S > /dev/null 2>&1 &
+            achado=""
+            for _ in $(seq 1 30); do
+              sleep 2
+              achado=$(find "$LOCALAPPDATA" -maxdepth 3 -iname 'voice-desk.exe' | head -1)
+              [ -n "$achado" ] && break
+            done
             [ -n "$achado" ] || { echo "instalação silenciosa não deixou o executável"; exit 1; }
+            sleep 10
+            taskkill //F //IM voice-desk.exe > /dev/null 2>&1 || true
+            taskkill //F //IM "$(basename "$exe")" > /dev/null 2>&1 || true
             echo "EXE=$achado" >> "$GITHUB_ENV"
           fi
       - name: Abrir, esperar e conferir
