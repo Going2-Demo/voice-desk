@@ -18,3 +18,7 @@ Itens que só se conferem em máquina real; o BD roda um roteiro por épico.
 | ENG-70 | E1 | Sair com confirmação | Menu > Sair; cancelar; repetir e confirmar | Cancelar mantém o ícone; confirmar remove o ícone e o atalho global deixa de funcionar | macOS, Windows |
 | ENG-70 | E1 | Iniciar com o sistema | Com a opção ligada, reiniciar a máquina e entrar; depois desligar em Geral e repetir | Ligada: ícone em até 5 s, sem janela, atalho global funciona; desligada: não abre sozinho | macOS, Windows |
 | ENG-70 | E1 | Estados do ícone | Ditar com o F-01 integrado | Ícone muda ao gravar/processar/erro e volta ao normal (depende de `bandeja::definir_estado` no F-01) | macOS, Windows |
+| ENG-67 | E1 | Transcrição real no Groq | Com chave real do Groq no modo ativo, ditar ~20 s em português com um editor em foco | O texto transcrito é colado no editor; o item no histórico mostra provedor e modelo do modo | macOS, Windows |
+| ENG-67 | E1 | Idioma inglês sem tradução | No modo com idioma "inglês", ditar uma frase em inglês | Texto em inglês, sem tradução | macOS, Windows |
+| ENG-67 | E1 | Falha sem rede | Desligar a rede e ditar | Aviso "sem conexão com o provedor"; nada colado; item "falhou" no histórico com áudio | macOS, Windows |
+| ENG-67 | E1 | Sem chave | Apagar a chave do Groq e iniciar o ditado | Gravador avisa "Cadastre a chave do Groq" com botão "Abrir chaves" que abre a tela de chaves | macOS, Windows |
