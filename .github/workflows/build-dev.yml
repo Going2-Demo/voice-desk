@@ -24,8 +24,8 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - { os: macos-14, nome: mac, glob: "src-tauri/target/release/bundle/dmg/*.dmg" }
-          - { os: windows-latest, nome: win, glob: "src-tauri/target/release/bundle/nsis/*.exe" }
+          - { os: macos-14, nome: mac, alvos: "aarch64-apple-darwin,x86_64-apple-darwin", args: "--target universal-apple-darwin", glob: "src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg" }
+          - { os: windows-latest, nome: win, alvos: "", args: "", glob: "src-tauri/target/release/bundle/nsis/*.exe" }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -34,6 +34,8 @@ jobs:
           node-version: 24
           cache: pnpm
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.alvos }}
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
@@ -42,7 +44,16 @@ jobs:
         shell: bash
         env:
           VOICE_DESK_COMMIT: ${{ github.sha }}
-        run: pnpm tauri build
+        run: pnpm tauri build ${{ matrix.args }}
+      - name: Conferir que o instalador do Mac é universal
+        if: matrix.nome == 'mac'
+        run: |
+          dmg=$(ls ${{ matrix.glob }} | head -1)
+          hdiutil attach "$dmg" -mountpoint /tmp/vd -nobrowse -quiet
+          archs=$(lipo -archs "/tmp/vd/Voice Desk.app/Contents/MacOS/voice-desk")
+          hdiutil detach /tmp/vd -quiet
+          echo "arquiteturas: $archs"
+          case "$archs" in *x86_64*arm64*|*arm64*x86_64*) ;; *) echo "instalador não é universal"; exit 1;; esac
       - name: Renomear
         shell: bash
         run: |
