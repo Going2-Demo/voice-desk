@@ -39,13 +39,21 @@ pub struct Sobre {
 /// Página pública do projeto (F-27), publicada pelo GitHub Pages.
 pub const URL_PROJETO: &str = "https://going2-demo.github.io/voice-desk/";
 
+/// Commit do build. `#[used]` mantém o texto como dado no executável: no x86_64 o LLVM o
+/// dissolvia em instruções e a fumaça do CI não achava o commit no instalador universal.
+#[used]
+static COMMIT_DO_BUILD: &str = match option_env!("VOICE_DESK_COMMIT") {
+    Some(c) => c,
+    None => "local",
+};
+
 // --- fundacao / app -----------------------------------------------------------------------
 #[tauri::command]
 #[specta::specta]
 pub fn app_sobre() -> Result<Sobre, ErroApp> {
     Ok(Sobre {
         versao: env!("CARGO_PKG_VERSION").into(),
-        commit: option_env!("VOICE_DESK_COMMIT").unwrap_or("local").into(),
+        commit: std::hint::black_box(COMMIT_DO_BUILD).into(),
         licenca: env!("CARGO_PKG_LICENSE").into(),
         url_projeto: URL_PROJETO.into(),
     })
