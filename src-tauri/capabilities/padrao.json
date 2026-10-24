@@ -3,5 +3,5 @@
   "identifier": "padrao",
   "description": "Permissões mínimas da janela principal",
   "windows": ["principal"],
-  "permissions": ["core:default", "opener:default"]
+  "permissions": ["core:default"]
 }
