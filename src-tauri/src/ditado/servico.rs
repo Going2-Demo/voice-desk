@@ -1,6 +1,7 @@
 //! Orquestrador do ditado (F-01): liga a máquina de estados aos efeitos reais (gravador, áudio,
 //! foco, teclado). Os efeitos entram por `Efeitos`, então tudo aqui é testável sem sistema.
 
+use super::colagem::ResultadoColagem;
 use super::etapas::Contexto;
 use super::maquina::{Acao, Fase, Maquina};
 use crate::audio::captura::Gravacao;
@@ -24,6 +25,14 @@ pub const MSG_PROCESSANDO: &str = "Processando…";
 pub const MSG_AGUARDE: &str = "Aguarde: ainda processando";
 pub const MSG_LIMITE: &str = "Parando automaticamente em 30 s";
 pub const MSG_PRONTO: &str = "Pronto";
+
+/// Aviso de RF-03.4, com o atalho da plataforma.
+pub fn mensagem_nao_colado() -> String {
+    format!(
+        "Texto copiado; cole com {}",
+        crate::plataforma::colagem::atalho_manual()
+    )
+}
 
 pub trait Efeitos: Send + Sync + 'static {
     fn agora_ms(&self) -> u64;
@@ -187,6 +196,11 @@ impl<E: Efeitos> Ditado<E> {
 
     fn concluir(&self, resultado: Result<Contexto, ErroApp>) {
         match resultado {
+            Ok(contexto) if contexto.colagem == Some(ResultadoColagem::NaoColado) => {
+                // RF-03.4: o texto ficou na área de transferência.
+                self.estado("aviso", &mensagem_nao_colado(), 0);
+                self.efeitos.ocultar_gravador(OCULTAR_APOS_AVISO_MS);
+            }
             Ok(_) => {
                 self.estado("ok", MSG_PRONTO, 0);
                 self.efeitos.ocultar_gravador(OCULTAR_APOS_OK_MS);
@@ -278,6 +292,36 @@ mod testes {
     fn terminar(f: &Falso) {
         let fim = f.pendente.lock().unwrap().take().unwrap();
         fim(Ok(Contexto::default()));
+    }
+
+    #[test]
+    fn nao_colado_termina_com_aviso_e_o_atalho_manual() {
+        let (f, d) = montar();
+        d.atalho();
+        d.atalho();
+        let fim = f.pendente.lock().unwrap().take().unwrap();
+        fim(Ok(Contexto {
+            colagem: Some(ResultadoColagem::NaoColado),
+            ..Contexto::default()
+        }));
+        let e = ultimo(&f);
+        assert_eq!(e.fase, "aviso");
+        assert_eq!(e.mensagem, mensagem_nao_colado());
+        assert!(e.mensagem.starts_with("Texto copiado; cole com "));
+        assert_eq!(eventos(&f).last().unwrap(), "ocultar:4000");
+    }
+
+    #[test]
+    fn colado_termina_com_pronto() {
+        let (f, d) = montar();
+        d.atalho();
+        d.atalho();
+        let fim = f.pendente.lock().unwrap().take().unwrap();
+        fim(Ok(Contexto {
+            colagem: Some(ResultadoColagem::Colado),
+            ..Contexto::default()
+        }));
+        assert_eq!(ultimo(&f).fase, "ok");
     }
 
     fn eventos(f: &Falso) -> Vec<String> {

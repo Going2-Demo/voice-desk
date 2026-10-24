@@ -2,6 +2,8 @@
 //! macos.rs, windows.rs}`. As capacidades (colagem, foco, seleção, teclado, mídia, permissões)
 //! nascem nas histórias de cada uma; fora desta pasta não há `cfg(target_os)`.
 
+pub mod area_transferencia;
+pub mod colagem;
 pub mod foco;
 pub mod teclado;
 

@@ -13,6 +13,8 @@ pub mod registrar;
 pub mod substituir;
 pub mod transcrever;
 
+use super::colagem::ResultadoColagem;
+
 /// Dados que atravessam as etapas. Cada história acrescenta os campos de que precisa.
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct Contexto {
@@ -20,6 +22,10 @@ pub struct Contexto {
     pub texto_final: String,
     /// Programa que estava em foco quando o ditado começou (RF-01, usado por modos e histórico).
     pub programa_em_foco: Option<String>,
+    /// Modo pede Enter depois de colar (RF-03.3). Preenchido quando o modo ativo é resolvido.
+    pub enviar_enter: bool,
+    /// Resultado da colagem (RF-03.5); `None` se a etapa `colar` não rodou ou não havia texto.
+    pub colagem: Option<ResultadoColagem>,
     /// Nomes das etapas já executadas, na ordem (útil em teste e diagnóstico; sem texto ditado).
     pub passou_por: Vec<&'static str>,
 }
