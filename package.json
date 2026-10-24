@@ -12,6 +12,7 @@
     "preview:simulado": "vite preview --port 4173",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "lint": "biome ci",
     "tauri": "tauri"
   },

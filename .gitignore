@@ -23,3 +23,5 @@ playwright/.cache/
 .vscode/
 *.log
 src-tauri/gen/
+test-results/
+playwright-report/
