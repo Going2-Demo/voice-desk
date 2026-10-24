@@ -1,5 +1,6 @@
 //! Núcleo do Voice Desk: montagem do app, plugins e janelas.
 
+pub mod bandeja;
 pub mod comandos;
 pub mod configuracao;
 pub mod ditado;
@@ -10,7 +11,12 @@ use tauri::Manager;
 use tauri_specta::{Builder, collect_commands};
 
 pub fn construtor_ipc() -> Builder<tauri::Wry> {
-    Builder::<tauri::Wry>::new().commands(collect_commands![comandos::app_sobre])
+    Builder::<tauri::Wry>::new().commands(collect_commands![
+        comandos::app_sobre,
+        bandeja::bandeja_estado,
+        bandeja::bandeja_iniciar_com_o_sistema,
+        bandeja::bandeja_definir_iniciar_com_o_sistema
+    ])
 }
 
 /// Gera `src/ipc/bindings.ts` (tipos e funções de todos os comandos).
@@ -32,11 +38,13 @@ pub fn run() {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _, _| {
-            if let Some(janela) = app.get_webview_window("principal") {
-                let _ = janela.show();
-                let _ = janela.set_focus();
-            }
+            bandeja::abrir_principal(app, None);
         }))
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            Some(vec![bandeja::ARGUMENTO_OCULTO]),
+        ))
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(ipc.invoke_handler())
         .setup(move |app| {
@@ -49,10 +57,24 @@ pub fn run() {
             tracing::info!(evento = "app_iniciado");
             let conexao = nucleo::banco::abrir(&caminhos.banco())?;
             app.manage(std::sync::Mutex::new(conexao));
+            bandeja::iniciar(app.handle())?;
+            // Aberto pelo login do sistema: só o ícone, sem janela (RF-05.2).
+            if !std::env::args().any(|a| a == bandeja::ARGUMENTO_OCULTO) {
+                bandeja::abrir_principal(app.handle(), None);
+            }
             Ok(())
         })
-        .run(tauri::generate_context!())
-        .expect("erro ao iniciar o Voice Desk");
+        .build(tauri::generate_context!())
+        .expect("erro ao iniciar o Voice Desk")
+        .run(|_, evento| {
+            // O app vive na bandeja: fechar a última janela não encerra; só `exit` explícito (Sair).
+            if let tauri::RunEvent::ExitRequested {
+                api, code: None, ..
+            } = evento
+            {
+                api.prevent_exit();
+            }
+        });
 }
 
 #[cfg(test)]

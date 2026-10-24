@@ -5,6 +5,9 @@ import { invoke as __TAURI_INVOKE } from "@tauri-apps/api/core";
 /** Commands */
 export const commands = {
 	appSobre: () => typedError<Sobre, ErroApp_Serialize>(__TAURI_INVOKE("app_sobre")),
+	bandejaEstado: () => typedError<EstadoIcone, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_estado")),
+	bandejaIniciarComOSistema: () => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_iniciar_com_o_sistema")),
+	bandejaDefinirIniciarComOSistema: (ligado: boolean) => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_definir_iniciar_com_o_sistema", { ligado })),
 };
 
 /* Types */
@@ -21,6 +24,8 @@ export type ErroApp_Serialize = {
 	mensagem: string,
 	campo?: string,
 };
+
+export type EstadoIcone = "parado" | "gravando" | "processando" | "erro";
 
 export type Sobre = {
 	versao: string,
