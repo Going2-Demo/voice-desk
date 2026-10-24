@@ -114,12 +114,12 @@ jobs:
             achado=""
             for _ in $(seq 1 30); do
               sleep 2
-              achado=$(find "$LOCALAPPDATA" -maxdepth 3 -iname 'voice-desk.exe' | head -1)
+              achado=$(find "$LOCALAPPDATA" -maxdepth 3 -iname 'voice*desk*.exe' ! -iname 'uninst*' | head -1)
               [ -n "$achado" ] && break
             done
-            [ -n "$achado" ] || { echo "instalação silenciosa não deixou o executável"; exit 1; }
+            [ -n "$achado" ] || { echo "instalação silenciosa não deixou o executável"; find "$LOCALAPPDATA" -maxdepth 2 -newer "$exe" | head -20; exit 1; }
             sleep 10
-            taskkill //F //IM voice-desk.exe > /dev/null 2>&1 || true
+            taskkill //F //IM "$(basename "$achado")" > /dev/null 2>&1 || true
             taskkill //F //IM "$(basename "$exe")" > /dev/null 2>&1 || true
             echo "EXE=$achado" >> "$GITHUB_ENV"
           fi
