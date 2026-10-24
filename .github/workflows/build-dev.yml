@@ -110,7 +110,7 @@ jobs:
             exe=$(ls instalador/*.exe | head -1)
             # O instalador silencioso pode abrir o app ao terminar e não devolver o controle:
             # roda em segundo plano, espera o executável aparecer e encerra o que ficou aberto.
-            ./"$exe" /S > /dev/null 2>&1 &
+            MSYS2_ARG_CONV_EXCL="*" ./"$exe" /S > /dev/null 2>&1 &
             achado=""
             for _ in $(seq 1 30); do
               sleep 2
