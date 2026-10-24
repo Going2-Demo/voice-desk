@@ -18,6 +18,8 @@ pub mod transcrever;
 pub struct Contexto {
     pub texto_transcrito: String,
     pub texto_final: String,
+    /// Programa que estava em foco quando o ditado começou (RF-01, usado por modos e histórico).
+    pub programa_em_foco: Option<String>,
     /// Nomes das etapas já executadas, na ordem (útil em teste e diagnóstico; sem texto ditado).
     pub passou_por: Vec<&'static str>,
 }

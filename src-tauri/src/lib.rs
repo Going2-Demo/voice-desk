@@ -1,5 +1,7 @@
 //! Núcleo do Voice Desk: montagem do app, plugins e janelas.
 
+pub mod atalhos;
+pub mod audio;
 pub mod bandeja;
 pub mod chaves;
 pub mod comandos;
@@ -9,20 +11,86 @@ pub mod nucleo;
 pub mod plataforma;
 
 use tauri::Manager;
-use tauri_specta::{Builder, collect_commands};
+use tauri_specta::{Builder, collect_commands, collect_events};
 
 pub fn construtor_ipc() -> Builder<tauri::Wry> {
-    Builder::<tauri::Wry>::new().commands(collect_commands![
-        comandos::app_sobre,
-        bandeja::bandeja_estado,
-        bandeja::bandeja_iniciar_com_o_sistema,
-        bandeja::bandeja_definir_iniciar_com_o_sistema,
-        comandos::chaves_estado,
-        comandos::chaves_salvar,
-        comandos::chaves_testar,
-        comandos::chaves_apagar,
-        comandos::chaves_abrir_pagina,
-    ])
+    Builder::<tauri::Wry>::new()
+        .commands(collect_commands![
+            comandos::app_sobre,
+            comandos::atalhos_obter,
+            comandos::atalhos_validar,
+            comandos::atalhos_salvar,
+            comandos::ditado_alternar,
+            bandeja::bandeja_estado,
+            bandeja::bandeja_iniciar_com_o_sistema,
+            bandeja::bandeja_definir_iniciar_com_o_sistema,
+            comandos::chaves_estado,
+            comandos::chaves_salvar,
+            comandos::chaves_testar,
+            comandos::chaves_apagar,
+            comandos::chaves_abrir_pagina,
+        ])
+        .events(collect_events![
+            ditado::efeitos_tauri::DitadoEstado,
+            ditado::efeitos_tauri::DitadoNivel,
+        ])
+}
+
+/// Janela do gravador: pílula transparente, sempre no topo, que não toma o foco (RF-01.2).
+fn criar_janela_gravador(app: &tauri::App) -> tauri::Result<()> {
+    tauri::WebviewWindowBuilder::new(
+        app,
+        ditado::efeitos_tauri::JANELA_GRAVADOR,
+        tauri::WebviewUrl::App("gravador.html".into()),
+    )
+    .title("Voice Desk — Gravador")
+    .inner_size(460.0, 64.0)
+    .decorations(false)
+    .transparent(true)
+    .shadow(false)
+    .resizable(false)
+    .always_on_top(true)
+    .skip_taskbar(true)
+    .visible_on_all_workspaces(true)
+    .focusable(false)
+    .focused(false)
+    .visible(false)
+    .build()?;
+    Ok(())
+}
+
+/// Liga o ditado: efeitos reais, relógio do gravador e atalho global salvo (ou o padrão).
+fn montar_ditado(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
+    let efeitos = ditado::efeitos_tauri::EfeitosTauri::novo(app.handle().clone());
+    let ditado = ditado::servico::Ditado::novo(std::sync::Arc::clone(&efeitos));
+    let para_esc = std::sync::Arc::clone(&ditado);
+    let _ = efeitos
+        .ao_esc
+        .set(std::sync::Arc::new(move || para_esc.esc()));
+    let para_tique = std::sync::Arc::clone(&ditado);
+    std::thread::spawn(move || {
+        loop {
+            std::thread::sleep(std::time::Duration::from_millis(200));
+            para_tique.tique();
+        }
+    });
+    let registrado = atalhos::registro::Registrado::default();
+    let combinacao = {
+        let banco = app.state::<std::sync::Mutex<rusqlite::Connection>>();
+        let conexao = banco.lock().map_err(|_| "trava do banco")?;
+        atalhos::servico::obter(&conexao, plataforma::atual())?
+    };
+    if let Err(e) = atalhos::registro::registrar(
+        app.handle(),
+        &registrado,
+        &combinacao,
+        &comandos::acionador(&ditado),
+    ) {
+        tracing::warn!(evento = "atalho_nao_registrado", codigo = %e.codigo);
+    }
+    app.manage(registrado);
+    app.manage(ditado);
+    Ok(())
 }
 
 /// Gera `src/ipc/bindings.ts` (tipos e funções de todos os comandos).
@@ -52,6 +120,7 @@ pub fn run() {
         ))
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .invoke_handler(ipc.invoke_handler())
         .setup(move |app| {
             ipc.mount_events(app);
@@ -71,6 +140,8 @@ pub fn run() {
             let cofre: comandos::CofreEstado =
                 std::sync::Arc::new(chaves::cofre::CofreSistema::novo());
             app.manage(cofre);
+            criar_janela_gravador(app)?;
+            montar_ditado(app)?;
             Ok(())
         })
         .build(tauri::generate_context!())

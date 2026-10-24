@@ -1,14 +1,18 @@
 //! Lista única de comandos e eventos, um bloco por área, na ordem da seção 10 da arquitetura.
 //! Cada história só acrescenta linhas no bloco da própria área.
 
+use crate::atalhos::{registro, servico as atalhos_servico, validacao};
 use crate::chaves::cofre::Cofre;
 use crate::chaves::{EstadoChave, Provedor, groq, servico as chaves};
+use crate::ditado::efeitos_tauri::EfeitosTauri;
+use crate::ditado::servico::Ditado;
 use crate::nucleo::ErroApp;
+use crate::plataforma;
 use rusqlite::Connection;
 use serde::Serialize;
 use specta::Type;
 use std::sync::{Arc, Mutex};
-use tauri::State;
+use tauri::{AppHandle, State, Wry};
 use tauri_plugin_opener::OpenerExt;
 
 /// Cofre de chaves registrado no estado do app (o do sistema; nos testes, um em memória).
@@ -18,6 +22,8 @@ type Banco = Mutex<Connection>;
 fn banco<'a>(b: &'a Banco) -> Result<std::sync::MutexGuard<'a, Connection>, ErroApp> {
     b.lock().map_err(|_| ErroApp::interno("banco bloqueado"))
 }
+
+pub type DitadoApp = Ditado<Arc<EfeitosTauri>>;
 
 #[derive(Debug, Clone, Serialize, Type)]
 pub struct Sobre {
@@ -36,6 +42,82 @@ pub fn app_sobre() -> Result<Sobre, ErroApp> {
 }
 
 // --- ditado, audio, atalhos, plataforma-*, permissoes -------------------------------------
+#[derive(Debug, Clone, PartialEq, Serialize, Type)]
+pub struct Atalho {
+    /// Forma canônica, ex.: `Ctrl+Alt+Space`.
+    pub combinacao: String,
+    /// Texto para mostrar: `⌃⌥Espaço` no Mac, `Ctrl+Alt+Espaço` no Windows.
+    pub exibicao: String,
+    /// Sugestão do primeiro uso nesta plataforma.
+    pub padrao: String,
+}
+
+fn atalho_de(combinacao: String) -> Atalho {
+    let p = plataforma::atual();
+    Atalho {
+        exibicao: validacao::exibir(&combinacao, p),
+        padrao: atalhos_servico::padrao(p).to_string(),
+        combinacao,
+    }
+}
+
+fn banco_travado(
+    banco: &Mutex<Connection>,
+) -> Result<std::sync::MutexGuard<'_, Connection>, ErroApp> {
+    banco.lock().map_err(|_| ErroApp::interno("trava do banco"))
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn atalhos_obter(banco: State<'_, Mutex<Connection>>) -> Result<Atalho, ErroApp> {
+    let c = banco_travado(&banco)?;
+    Ok(atalho_de(atalhos_servico::obter(&c, plataforma::atual())?))
+}
+
+/// Confere o formato e conflitos sem gravar (resposta rápida enquanto o usuário digita).
+#[tauri::command]
+#[specta::specta]
+pub fn atalhos_validar(
+    combinacao: String,
+    banco: State<'_, Mutex<Connection>>,
+) -> Result<Atalho, ErroApp> {
+    let c = banco_travado(&banco)?;
+    Ok(atalho_de(atalhos_servico::validar_para_salvar(
+        &c,
+        plataforma::atual(),
+        &combinacao,
+    )?))
+}
+
+/// Valida, registra no sistema (vale sem reiniciar) e só então grava.
+#[tauri::command]
+#[specta::specta]
+pub fn atalhos_salvar(
+    combinacao: String,
+    app: AppHandle<Wry>,
+    banco: State<'_, Mutex<Connection>>,
+    registrado: State<'_, registro::Registrado>,
+    ditado: State<'_, Arc<DitadoApp>>,
+) -> Result<Atalho, ErroApp> {
+    let c = banco_travado(&banco)?;
+    let canonica = atalhos_servico::validar_para_salvar(&c, plataforma::atual(), &combinacao)?;
+    registro::registrar(&app, &registrado, &canonica, &acionador(&ditado))?;
+    atalhos_servico::gravar(&c, &canonica)?;
+    Ok(atalho_de(canonica))
+}
+
+/// Mesmo efeito do atalho global (botão "Testar ditado" e testes).
+#[tauri::command]
+#[specta::specta]
+pub fn ditado_alternar(ditado: State<'_, Arc<DitadoApp>>) {
+    ditado.atalho();
+}
+
+pub fn acionador(ditado: &Arc<DitadoApp>) -> Arc<dyn Fn() + Send + Sync> {
+    let d = Arc::clone(ditado);
+    Arc::new(move || d.atalho())
+}
+
 // --- chaves, transcricao, transcricao-local, refinamento ----------------------------------
 #[tauri::command]
 #[specta::specta]
