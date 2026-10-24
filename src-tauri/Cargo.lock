@@ -6189,6 +6189,7 @@ dependencies = [
  "flacenc",
  "handy-keys",
  "keyring",
+ "objc2",
  "reqwest",
  "rusqlite",
  "serde",

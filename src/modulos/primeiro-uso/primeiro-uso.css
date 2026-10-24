@@ -1,0 +1,122 @@
+.primeiro-uso .trilha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+  list-style: none;
+  margin: var(--espaco-4) 0 0;
+  padding: 0;
+}
+.primeiro-uso .trilha li {
+  padding: var(--espaco-1, 4px) var(--espaco-3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pilula);
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+}
+.primeiro-uso .trilha li[aria-current="step"] {
+  background: var(--cor-primaria-suave);
+  border-color: var(--cor-primaria);
+  color: var(--cor-texto);
+  font-weight: 600;
+}
+.primeiro-uso .trilha li.feito {
+  color: var(--cor-sucesso);
+}
+.primeiro-uso .cartao h2:focus {
+  outline: none;
+}
+.primeiro-uso .cartao h2:focus-visible {
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 2px;
+}
+.primeiro-uso .subcartao {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  padding: var(--espaco-4);
+  margin-top: var(--espaco-3);
+}
+.primeiro-uso .subcartao h3 {
+  margin: 0 0 var(--espaco-2);
+  font-size: 16px;
+}
+.primeiro-uso .aviso.info {
+  background: var(--cor-primaria-suave);
+  border-radius: var(--raio-md);
+  padding: var(--espaco-3) var(--espaco-4);
+}
+.primeiro-uso .campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1, 4px);
+  max-width: 420px;
+  margin: var(--espaco-3) 0;
+}
+.primeiro-uso .campo label {
+  font-weight: 600;
+}
+.primeiro-uso .campo input,
+.primeiro-uso .campo textarea {
+  font: inherit;
+  padding: var(--espaco-2) var(--espaco-3);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+.primeiro-uso .campo textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+.primeiro-uso .campo input[aria-invalid="true"] {
+  border-color: var(--cor-erro);
+}
+.primeiro-uso .erro-campo {
+  color: var(--cor-erro);
+  font-size: 13px;
+}
+.primeiro-uso .acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espaco-3);
+}
+.primeiro-uso .rodape-passos {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--espaco-4);
+}
+.primeiro-uso .btn {
+  display: inline-block;
+  font: inherit;
+  padding: var(--espaco-2) var(--espaco-4);
+  min-height: 36px;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  cursor: pointer;
+  text-decoration: none;
+}
+.primeiro-uso .btn.primario {
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
+}
+.primeiro-uso .btn.discreto {
+  border-color: transparent;
+  background: none;
+  color: var(--cor-texto-suave);
+}
+.primeiro-uso .btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.primeiro-uso .link {
+  font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--cor-primaria);
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -8,7 +8,9 @@ pub mod comandos;
 pub mod configuracao;
 pub mod ditado;
 pub mod nucleo;
+pub mod permissoes;
 pub mod plataforma;
+pub mod primeiro_uso;
 pub mod transcricao;
 
 use tauri::Manager;
@@ -34,6 +36,13 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
             comandos::chaves_testar,
             comandos::chaves_apagar,
             comandos::chaves_abrir_pagina,
+            permissoes::permissoes_estado,
+            permissoes::permissoes_pedir,
+            permissoes::permissoes_abrir_configuracoes,
+            primeiro_uso::primeiro_uso_estado,
+            primeiro_uso::primeiro_uso_pular,
+            primeiro_uso::primeiro_uso_cumprir,
+            primeiro_uso::primeiro_uso_concluir,
         ])
         .events(collect_events![
             ditado::efeitos_tauri::DitadoEstado,

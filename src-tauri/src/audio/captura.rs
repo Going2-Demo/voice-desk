@@ -102,6 +102,12 @@ impl Captura {
     }
 }
 
+/// Abre e fecha o microfone padrão sem guardar nada: serve para o sistema pedir a permissão
+/// e para saber se a entrada abre. `true` se abriu.
+pub fn sondar_entrada() -> bool {
+    Captura::iniciar(|_| {}).map(Captura::descartar).is_ok()
+}
+
 impl Drop for Captura {
     fn drop(&mut self) {
         self.encerrar();
