@@ -6,8 +6,9 @@ use crate::chaves::cofre::Cofre;
 use crate::chaves::{EstadoChave, Provedor, groq, servico as chaves};
 use crate::ditado::efeitos_tauri::EfeitosTauri;
 use crate::ditado::servico::Ditado;
-use crate::nucleo::ErroApp;
+use crate::nucleo::{ErroApp, relogio::Relogio};
 use crate::plataforma;
+use crate::transcricao::{self, ConfigTranscricao};
 use rusqlite::Connection;
 use serde::Serialize;
 use specta::Type;
@@ -131,6 +132,13 @@ pub fn ditado_alternar(ditado: State<'_, Arc<DitadoApp>>) {
     ditado.atalho();
 }
 
+/// Atalho do aviso "cadastre a chave" no gravador: abre a tela de chaves.
+#[tauri::command]
+#[specta::specta]
+pub fn ditado_abrir_chaves(ditado: State<'_, Arc<DitadoApp>>) {
+    ditado.abrir_chaves();
+}
+
 pub fn acionador(ditado: &Arc<DitadoApp>) -> Arc<dyn Fn() + Send + Sync> {
     let d = Arc::clone(ditado);
     Arc::new(move || d.atalho())
@@ -203,6 +211,35 @@ async fn testar_no_provedor(provedor: Provedor, chave: &str) -> crate::chaves::R
     match provedor {
         Provedor::Groq => groq::testar(groq::URL_BASE, chave).await,
     }
+}
+
+/// Provedor, modelo e idioma da transcrição de um modo (sem `modo_id`, o do modo ativo).
+#[tauri::command]
+#[specta::specta]
+pub fn transcricao_obter(
+    modo_id: Option<String>,
+    bd: State<'_, Banco>,
+) -> Result<ConfigTranscricao, ErroApp> {
+    let c = banco(&bd)?;
+    let modo = match modo_id {
+        Some(id) => Some(id),
+        None => transcricao::config::modo_ativo(&c)?,
+    };
+    transcricao::config::obter(&c, modo.as_deref())
+}
+
+/// Grava provedor, modelo e idioma da transcrição do modo (RF-02.1 e RF-02.2).
+#[tauri::command]
+#[specta::specta]
+pub fn transcricao_salvar(
+    modo_id: String,
+    config: ConfigTranscricao,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<ConfigTranscricao, ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    transcricao::config::salvar(&c, &relogio, &maquina, &modo_id, &config)
 }
 
 // --- bandeja, primeiro-uso ----------------------------------------------------------------

@@ -14,6 +14,8 @@ pub mod substituir;
 pub mod transcrever;
 
 use super::colagem::ResultadoColagem;
+use crate::audio::captura::Gravacao;
+use crate::transcricao::{ConfigTranscricao, FabricaCompartilhada, ProvedorTranscricao};
 
 /// Dados que atravessam as etapas. Cada história acrescenta os campos de que precisa.
 #[derive(Debug, Default, Clone, PartialEq)]
@@ -26,6 +28,14 @@ pub struct Contexto {
     pub enviar_enter: bool,
     /// Resultado da colagem (RF-03.5); `None` se a etapa `colar` não rodou ou não havia texto.
     pub colagem: Option<ResultadoColagem>,
+    /// Áudio capturado (some quando não houve captura).
+    pub gravacao: Option<Gravacao>,
+    /// Modo ativo e a configuração de transcrição dele (F-02).
+    pub modo_id: Option<String>,
+    pub config_transcricao: ConfigTranscricao,
+    pub fabrica_transcritor: Option<FabricaCompartilhada>,
+    pub transcricao_provedor: Option<ProvedorTranscricao>,
+    pub transcricao_modelo: Option<String>,
     /// Nomes das etapas já executadas, na ordem (útil em teste e diagnóstico; sem texto ditado).
     pub passou_por: Vec<&'static str>,
 }

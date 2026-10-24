@@ -17,6 +17,7 @@ App de desktop de ditado por voz para macOS 14+ e Windows 10/11, software livre.
 - Núcleo: `src-tauri/src/<area>/` · etapas do ditado: `src-tauri/src/ditado/etapas/`
 - Migrações: `src-tauri/migracoes/AAAAMMDDHHMM_<area>_<descricao>.sql` (nunca edite uma já mesclada)
 - Página do projeto: `site/` (HTML estático, sem build; `site/versoes.json` é a fonte da lista de versões, a primeira é a atual) · testes e2e: `tests/e2e/` · roteiro nativo: `tests/nativo/`
+- Transcrição: `src-tauri/src/transcricao/` (contrato `Transcritor`, `groq.rs`, `flac.rs`, `config.rs` por modo, `falha.rs` grava o item "falhou"); a etapa `ditado/etapas/transcrever.rs` só orquestra. Provedor novo = arquivo novo e um braço em `fabrica_com_cofre`.
 - Deploy em dev: `docs/arquitetura/deploy.md` (Igor)
 
 ## Rodar e verificar

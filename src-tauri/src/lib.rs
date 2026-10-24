@@ -9,6 +9,7 @@ pub mod configuracao;
 pub mod ditado;
 pub mod nucleo;
 pub mod plataforma;
+pub mod transcricao;
 
 use tauri::Manager;
 use tauri_specta::{Builder, collect_commands, collect_events};
@@ -22,6 +23,9 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
             comandos::atalhos_validar,
             comandos::atalhos_salvar,
             comandos::ditado_alternar,
+            comandos::ditado_abrir_chaves,
+            comandos::transcricao_obter,
+            comandos::transcricao_salvar,
             bandeja::bandeja_estado,
             bandeja::bandeja_iniciar_com_o_sistema,
             bandeja::bandeja_definir_iniciar_com_o_sistema,
@@ -132,6 +136,7 @@ pub fn run() {
             app.manage(guarda);
             tracing::info!(evento = "app_iniciado");
             let conexao = nucleo::banco::abrir(&caminhos.banco())?;
+            app.manage(caminhos);
             app.manage(std::sync::Mutex::new(conexao));
             bandeja::iniciar(app.handle())?;
             // Aberto pelo login do sistema: só o ícone, sem janela (RF-05.2).

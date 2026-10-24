@@ -1,12 +1,14 @@
 import { act, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
 import type { Estado, PonteDitado } from "../../ipc/ponte-ditado";
 import { Gravador, formatarTempo } from "./gravador";
 
-function ponteFalsa() {
+function ponteFalsa(abrirChaves = async () => {}) {
   let estado: (e: Estado) => void = () => {};
   let nivel: (n: number) => void = () => {};
   const ponte = {
+    abrirChaves,
     aoEstado: async (f) => {
       estado = f;
       return () => {};
@@ -55,6 +57,27 @@ describe("gravador flutuante", () => {
     await f.nivel(0.8);
     expect(screen.getByRole("meter", { name: "Nível do áudio" })).toHaveValue(80);
     expect(document.querySelector(".gravador")).toHaveAttribute("data-fase", "gravando");
+  });
+
+  it("sem chave do Groq avisa antes de gravar e oferece o atalho para as chaves", async () => {
+    const abrir = vi.fn(async () => {});
+    const f = ponteFalsa(abrir);
+    render(<Gravador ponte={f.ponte} />);
+    await f.estado({
+      fase: "erro",
+      mensagem: "Cadastre a chave do Groq em Configurações › Provedores e chaves.",
+      acao: "abrir_chaves",
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("Cadastre a chave do Groq");
+    await userEvent.click(screen.getByRole("button", { name: "Abrir chaves" }));
+    expect(abrir).toHaveBeenCalledTimes(1);
+  });
+
+  it("não mostra o atalho das chaves em outros avisos", async () => {
+    const f = ponteFalsa();
+    render(<Gravador ponte={f.ponte} />);
+    await f.estado({ fase: "erro", mensagem: "Sem conexão com o provedor." });
+    expect(screen.queryByRole("button")).toBeNull();
   });
 
   it("no processamento mostra o aviso e esconde o medidor e o tempo", async () => {

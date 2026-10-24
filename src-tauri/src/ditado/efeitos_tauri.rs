@@ -4,8 +4,11 @@ use super::etapas::Contexto;
 use super::pipeline;
 use super::servico::{Efeitos, EstadoGravador};
 use crate::audio::captura::{Captura, Gravacao};
-use crate::nucleo::ErroApp;
+use crate::comandos::CofreEstado;
+use crate::nucleo::{ErroApp, caminhos::Caminhos};
 use crate::plataforma::{foco, teclado::EscutaEsc};
+use crate::transcricao::{self, ConfigTranscricao};
+use rusqlite::Connection;
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -51,6 +54,34 @@ impl EfeitosTauri {
 
     fn janela(&self) -> Option<tauri::WebviewWindow<Wry>> {
         self.app.get_webview_window(JANELA_GRAVADOR)
+    }
+
+    /// Modo ativo e a transcrição configurada nele (padrão se não há modo).
+    fn config_do_modo_ativo(&self) -> Result<(Option<String>, ConfigTranscricao), ErroApp> {
+        let banco = self.app.state::<Mutex<Connection>>();
+        let c = banco
+            .lock()
+            .map_err(|_| ErroApp::interno("trava do banco"))?;
+        let modo = transcricao::config::modo_ativo(&c)?;
+        let config = transcricao::config::obter(&c, modo.as_deref())?;
+        Ok((modo, config))
+    }
+
+    /// Guarda o áudio e o item "falhou" no histórico (RF-02.3).
+    fn registrar_falha(&self, contexto: &Contexto, erro: &ErroApp) {
+        let caminhos = self.app.state::<Caminhos>();
+        let banco = self.app.state::<Mutex<Connection>>();
+        let Ok(c) = banco.lock() else { return };
+        let falha = transcricao::falha::Falha {
+            modo_id: contexto.modo_id.as_deref(),
+            programa: contexto.programa_em_foco.as_deref(),
+            config: &contexto.config_transcricao,
+            gravacao: contexto.gravacao.as_ref(),
+            erro,
+        };
+        if let Err(e) = transcricao::falha::registrar(&c, &caminhos, &falha) {
+            tracing::error!(evento = "falha_nao_registrada", codigo = %e.codigo);
+        }
     }
 
     fn posicionar(&self, janela: &tauri::WebviewWindow<Wry>) {
@@ -160,15 +191,37 @@ impl Efeitos for Arc<EfeitosTauri> {
         }
     }
 
+    fn conferir_transcricao(&self) -> Result<(), ErroApp> {
+        let config = self.config_do_modo_ativo()?.1;
+        let cofre = self.app.state::<CofreEstado>();
+        crate::transcricao::exigir_chave(cofre.as_ref(), &config)
+    }
+
+    fn abrir_chaves(&self) {
+        crate::bandeja::abrir_principal(&self.app, Some("/config/provedores"));
+    }
+
     fn processar(
         &self,
         mut contexto: Contexto,
-        _gravacao: Option<Gravacao>,
+        gravacao: Option<Gravacao>,
         ao_fim: Box<dyn FnOnce(Result<Contexto, ErroApp>) + Send>,
     ) {
+        let este = Arc::clone(self);
         std::thread::spawn(move || {
-            let resultado = pipeline::executar(&mut contexto).map(|_| contexto);
-            ao_fim(resultado);
+            let (modo_id, config) = este.config_do_modo_ativo().unwrap_or_default();
+            let cofre: CofreEstado = Arc::clone(&este.app.state::<CofreEstado>());
+            contexto.modo_id = modo_id;
+            contexto.config_transcricao = config;
+            contexto.gravacao = gravacao;
+            contexto.fabrica_transcritor = Some(crate::transcricao::fabrica_com_cofre(cofre));
+            let resultado = pipeline::executar(&mut contexto).map(|_| ());
+            if let Err(erro) = &resultado
+                && contexto.passou_por.last() == Some(&"transcrever")
+            {
+                este.registrar_falha(&contexto, erro);
+            }
+            ao_fim(resultado.map(|()| contexto));
         });
     }
 }
