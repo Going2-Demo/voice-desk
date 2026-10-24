@@ -16,7 +16,7 @@ App de desktop de ditado por voz para macOS 14+ e Windows 10/11, software livre.
 - Telas: `src/modulos/<area>/` · janelas do gravador e do menu: `src/janelas/`
 - Núcleo: `src-tauri/src/<area>/` · etapas do ditado: `src-tauri/src/ditado/etapas/`
 - Migrações: `src-tauri/migracoes/AAAAMMDDHHMM_<area>_<descricao>.sql` (nunca edite uma já mesclada)
-- Página do projeto: `site/` · testes e2e: `tests/e2e/` · roteiro nativo: `tests/nativo/`
+- Página do projeto: `site/` (HTML estático, sem build; `site/versoes.json` é a fonte da lista de versões, a primeira é a atual) · testes e2e: `tests/e2e/` · roteiro nativo: `tests/nativo/`
 - Deploy em dev: `docs/arquitetura/deploy.md` (Igor)
 
 ## Rodar e verificar
@@ -30,6 +30,7 @@ App de desktop de ditado por voz para macOS 14+ e Windows 10/11, software livre.
 - Instaladores — `pnpm tauri build`
 - Dados de desenvolvimento separados — `VOICE_DESK_PASTA_DADOS=/tmp/vd pnpm tauri dev`
 - CI — `.github/workflows/ci.yml` roda tudo acima em `macos-14` e `windows-latest` em todo PR; `build-dev.yml` publica a pré-release `dev-<sha>` a cada merge na `main` (`docs/arquitetura/deploy.md`).
+- Versão pública — suba a versão em `package.json`, `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml` e no topo de `site/versoes.json` (e no HTML estático de `site/index.html`); só o BD autoriza a tag `vX.Y.Z`, que dispara `release.yml` (instaladores `voice-desk-mac.dmg` e `voice-desk-windows.exe`, nomes fixos usados pelos links da página). `pages.yml` publica `site/`.
 - e2e — `BASE_URL=<url> pnpm exec playwright test` (suíte em `tests/e2e/`, mantida pela QA; ainda não criada)
 
 ## Convenções diferentes do padrão

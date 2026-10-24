@@ -17,6 +17,7 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
     Builder::<tauri::Wry>::new()
         .commands(collect_commands![
             comandos::app_sobre,
+            comandos::app_abrir_projeto,
             comandos::atalhos_obter,
             comandos::atalhos_validar,
             comandos::atalhos_salvar,

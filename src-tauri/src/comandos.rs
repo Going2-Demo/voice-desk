@@ -29,7 +29,14 @@ pub type DitadoApp = Ditado<Arc<EfeitosTauri>>;
 pub struct Sobre {
     pub versao: String,
     pub commit: String,
+    /// Identificador SPDX da licença do pacote (RF-27.4).
+    pub licenca: String,
+    /// Página pública do projeto (RF-27.4).
+    pub url_projeto: String,
 }
+
+/// Página pública do projeto (F-27), publicada pelo GitHub Pages.
+pub const URL_PROJETO: &str = "https://going2-demo.github.io/voice-desk/";
 
 // --- fundacao / app -----------------------------------------------------------------------
 #[tauri::command]
@@ -38,7 +45,18 @@ pub fn app_sobre() -> Result<Sobre, ErroApp> {
     Ok(Sobre {
         versao: env!("CARGO_PKG_VERSION").into(),
         commit: option_env!("VOICE_DESK_COMMIT").unwrap_or("local").into(),
+        licenca: env!("CARGO_PKG_LICENSE").into(),
+        url_projeto: URL_PROJETO.into(),
     })
+}
+
+/// Abre a página do projeto no navegador padrão (RF-27.4).
+#[tauri::command]
+#[specta::specta]
+pub fn app_abrir_projeto(app: tauri::AppHandle) -> Result<(), ErroApp> {
+    app.opener()
+        .open_url(URL_PROJETO, None::<&str>)
+        .map_err(ErroApp::interno)
 }
 
 // --- ditado, audio, atalhos, plataforma-*, permissoes -------------------------------------
@@ -202,5 +220,13 @@ mod testes {
         let s = app_sobre().unwrap();
         assert_eq!(s.versao, env!("CARGO_PKG_VERSION"));
         assert!(!s.commit.is_empty());
+    }
+
+    #[test]
+    fn sobre_traz_licenca_e_pagina_do_projeto() {
+        let s = app_sobre().unwrap();
+        assert_eq!(s.licenca, "MIT");
+        assert!(s.url_projeto.starts_with("https://"));
+        assert_eq!(s.url_projeto, URL_PROJETO);
     }
 }

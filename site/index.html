@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice Desk — ditado por voz para Mac e Windows</title>
+  <meta name="description" content="Voice Desk: ditado por voz gratuito e de código aberto para macOS e Windows.">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="pagina">
+    <header class="hero">
+      <h1>Voice Desk</h1>
+      <p>Dite em qualquer programa, no Mac e no Windows. Aperte um atalho, fale e solte: o texto aparece onde o cursor estava, do jeito que cada programa pede. Gratuito e de código aberto.</p>
+      <div class="acoes"><a class="btn primario" href="#baixar">Baixar o Voice Desk</a><a class="btn" href="#instalar">Como instalar</a><a class="btn" href="#codigo">Código-fonte ↗</a></div>
+    </header>
+
+    <main>
+    <section id="baixar" aria-labelledby="t-baixar">
+      <h2 id="t-baixar">Baixar a versão <span id="versao-atual">0.1.0</span> <span class="suave pequeno">· <span id="versao-data">23/10/2026</span></span></h2>
+      <div class="baixar">
+        <div class="cartao"><h3>macOS 14 ou superior</h3><p class="suave pequeno">Instalador .dmg · Apple Silicon e Intel</p><a class="btn primario" data-instalador="mac" href="https://github.com/going2-demo/voice-desk/releases/latest/download/voice-desk-mac.dmg">Baixar para Mac</a></div>
+        <div class="cartao"><h3>Windows 10 (22H2) ou 11, 64 bits</h3><p class="suave pequeno">Instalador .exe · instala sem administrador</p><a class="btn primario" data-instalador="windows" href="https://github.com/going2-demo/voice-desk/releases/latest/download/voice-desk-windows.exe">Baixar para Windows</a></div>
+      </div>
+      <p class="suave" style="margin-top:12px">Sem cadastro e sem pagar nada.</p>
+      <div class="aviso" role="note"><b>Aviso de segurança ao abrir.</b> Nesta versão o instalador ainda não é assinado, então o sistema pode avisar que o desenvolvedor não foi verificado. Veja abaixo como liberar com segurança.</div>
+    </section>
+
+    <section id="instalar" aria-labelledby="t-instalar">
+      <h2 id="t-instalar">Como instalar</h2>
+      <details open><summary>No Mac</summary><ol class="passos-lista"><li>Abra o arquivo .dmg e arraste o Voice Desk para a pasta Aplicativos.</li><li>Na primeira vez, clique com o botão direito no app e escolha “Abrir” para liberar o aviso.</li><li>Conceda <b>Microfone</b> e <b>Acessibilidade</b> quando o primeiro uso pedir (Ajustes do Sistema › Privacidade e Segurança).</li></ol></details>
+      <details><summary>No Windows</summary><ol class="passos-lista"><li>Execute o .exe. Se o SmartScreen avisar, clique em “Mais informações” e depois em “Executar assim mesmo”.</li><li>Conceda o acesso ao <b>Microfone</b> em Configurações › Privacidade quando o primeiro uso pedir.</li><li>O ícone fica na bandeja, perto do relógio.</li></ol></details>
+      <details><summary>Como obter a chave do Groq</summary><ol class="passos-lista"><li>Crie uma conta no <a href="https://console.groq.com/" target="_blank" rel="noopener">site do Groq</a> e abra a página de chaves de API.</li><li>Gere uma chave e copie.</li><li>Cole no Voice Desk, em Configurações › Provedores e chaves. O custo de uso é seu, na sua conta.</li></ol></details>
+      <details><summary>Usar sem chave de API</summary><p>Escolha a transcrição local no primeiro uso: o app baixa um modelo (1,6 GB) e transcreve na sua máquina, sem internet. O refinamento por IA pode usar o Ollama, também local.</p></details>
+      <details><summary>Importar a configuração de alguém</summary><p>Quem compartilhou os modos com você envia um arquivo. Em Sincronização › Importar configuração, escolha o arquivo e confirme. O arquivo nunca leva chaves nem histórico.</p></details>
+      <details><summary>Sincronizar entre máquinas</summary><p>A sincronização usa uma pasta do seu serviço de nuvem (iCloud Drive, OneDrive, Dropbox…), cifrada. Quem não usa nenhum pode exportar e importar a configuração por arquivo.</p></details>
+    </section>
+
+    <section aria-labelledby="t-req">
+      <h2 id="t-req">Requisitos mínimos</h2>
+      <ul><li>macOS 14 ou superior, ou Windows 10 (22H2) / 11, 64 bits.</li><li>Microfone. Internet para a transcrição na nuvem (não é preciso no modo local).</li><li>Cerca de 250 MB de memória em repouso e 1,6 GB de disco se usar o modelo local.</li></ul>
+    </section>
+
+    <section id="versoes" aria-labelledby="t-versoes">
+      <h2 id="t-versoes">Versões</h2>
+      <div class="tabela-wrap"><table><thead><tr><th scope="col">Versão</th><th scope="col">Data</th><th scope="col">O que mudou</th></tr></thead><tbody id="versoes-corpo">
+        <tr><td><b>0.1.0</b></td><td>23/10/2026</td><td>Primeira versão: ditado por atalho global, modos, vocabulário, histórico e sincronização da configuração.</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <section id="codigo" aria-labelledby="t-cod">
+      <h2 id="t-cod">Código aberto</h2>
+      <p>O código-fonte completo de cada versão fica no repositório, com a licença (MIT) e as instruções para gerar o app. <a href="https://github.com/going2-demo/voice-desk" target="_blank" rel="noopener">github.com/going2-demo/voice-desk ↗</a></p>
+      <p class="suave">O Voice Desk é um projeto independente e não tem relação com o VoiceInk.</p>
+    </section>
+    </main>
+  </div>
+  <script src="versoes.js"></script>
+</body>
+</html>
