@@ -32,6 +32,14 @@ export const commands = {
 	chavesApagar: (provedor: Provedor) => typedError<EstadoChave_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("chaves_apagar", { provedor })),
 	/**  Abre no navegador padrão a página do provedor onde se obtém a chave (RF-04.4). */
 	chavesAbrirPagina: (provedor: Provedor) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("chaves_abrir_pagina", { provedor })),
+	permissoesEstado: () => typedError<EstadoPermissoes, ErroApp_Serialize>(__TAURI_INVOKE("permissoes_estado")),
+	/**  Provoca o pedido do sistema (quando existe) e devolve o estado novo de todas. */
+	permissoesPedir: (permissao: PermissaoApp) => typedError<EstadoPermissoes, ErroApp_Serialize>(__TAURI_INVOKE("permissoes_pedir", { permissao })),
+	permissoesAbrirConfiguracoes: (permissao: PermissaoApp) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("permissoes_abrir_configuracoes", { permissao })),
+	primeiroUsoEstado: () => typedError<EstadoPrimeiroUso, ErroApp_Serialize>(__TAURI_INVOKE("primeiro_uso_estado")),
+	primeiroUsoPular: (passo: string) => typedError<EstadoPrimeiroUso, ErroApp_Serialize>(__TAURI_INVOKE("primeiro_uso_pular", { passo })),
+	primeiroUsoCumprir: (passo: string) => typedError<EstadoPrimeiroUso, ErroApp_Serialize>(__TAURI_INVOKE("primeiro_uso_cumprir", { passo })),
+	primeiroUsoConcluir: () => typedError<EstadoPrimeiroUso, ErroApp_Serialize>(__TAURI_INVOKE("primeiro_uso_concluir")),
 };
 
 /** Events */
@@ -132,11 +140,27 @@ export type EstadoGravador_Serialize = {
 
 export type EstadoIcone = "parado" | "gravando" | "processando" | "erro";
 
+export type EstadoPermissoes = {
+	/**  `macos` ou `windows`: a tela escolhe os textos (Acessibilidade só no Mac). */
+	plataforma: string,
+	microfone: SituacaoApp,
+	acessibilidade: SituacaoApp,
+};
+
+export type EstadoPrimeiroUso = {
+	concluido: boolean,
+	pulados: string[],
+};
+
 export type Idioma = "pt-BR" | "en" | "auto";
+
+export type PermissaoApp = "microfone" | "acessibilidade";
 
 export type Provedor = "groq";
 
 export type ProvedorTranscricao = "groq" | "whisper_local";
+
+export type SituacaoApp = "concedida" | "negada" | "pendente" | "nao_se_aplica";
 
 export type Sobre = {
 	versao: string,
