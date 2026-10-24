@@ -1,12 +1,12 @@
 # Arquitetura: Voice Desk
 
 > Status: rascunho para aprovação · Versão: 1 · Atualizado em: 2026-10-23
-> Fontes: [prd.md](../produto/prd.md) v2, [design.md](../design/design.md) v1 e protótipo, [relatório de engenharia reversa](../produto/engenharia-reversa/relatorio.md) (só como referência de comportamento), card ENG-56 (deploy, Igor; o `deploy.md` ainda não existe)
+> Fontes: [prd.md](../produto/prd.md) v2, [design.md](../design/design.md) v1 e protótipo, [relatório de engenharia reversa](../produto/engenharia-reversa/relatorio.md) (só como referência de comportamento), [deploy.md](deploy.md) (Igor, ENG-56, commit `5e14374`)
 > Paradigma: app de desktop com núcleo nativo em Rust e interface web local (Tauri 2), monólito modular organizado por área do sistema, sem servidor
 
 ## 1. Resumo
 
-O Voice Desk é **um único app de desktop** para macOS 14+ e Windows 10 22H2/11, feito com **Tauri 2**. O **núcleo em Rust** faz tudo o que é sistema e tempo crítico: atalho global, captura de áudio, transcrição (Groq ou whisper.cpp local), limpeza do texto, refinamento (Groq ou Ollama), colagem no programa em foco, cofre de chaves, banco SQLite local, retenção e sincronização. A **interface em React + TypeScript** roda no webview do sistema (WebKit no Mac, WebView2 no Windows) e desenha as três superfícies do design: gravador flutuante, menu do ícone e janela de configuração. Não há back-end nosso. A sincronização entre máquinas usa **uma pasta de nuvem do próprio usuário** (OneDrive, Google Drive, Dropbox ou iCloud Drive), com o conteúdo cifrado por uma frase secreta dele. O Igor publica os instaladores pelo GitHub Actions e, no Dokploy dev, a página do projeto e a interface em modo simulado, para os testes da Marta e a conferência da Nina.
+O Voice Desk é **um único app de desktop** para macOS 14+ e Windows 10 22H2/11, feito com **Tauri 2**. O **núcleo em Rust** faz tudo o que é sistema e tempo crítico: atalho global, captura de áudio, transcrição (Groq ou whisper.cpp local), limpeza do texto, refinamento (Groq ou Ollama), colagem no programa em foco, cofre de chaves, banco SQLite local, retenção e sincronização. A **interface em React + TypeScript** roda no webview do sistema (WebKit no Mac, WebView2 no Windows) e desenha as três superfícies do design: gravador flutuante, menu do ícone e janela de configuração. Não há back-end nosso. A sincronização entre máquinas usa **uma pasta de nuvem do próprio usuário** (OneDrive, Google Drive, Dropbox ou iCloud Drive), com o conteúdo cifrado por uma frase secreta dele. Conforme o `deploy.md` do Igor, não há Dokploy: o GitHub Actions gera os instaladores a cada merge (pré-release `dev-<sha>`), o GitHub Releases guarda as versões e o GitHub Pages publica a página do projeto. As telas também rodam no navegador em **modo simulado**, para os testes da Marta e a conferência da Nina.
 
 ## 2. Stack
 
@@ -36,7 +36,7 @@ Versões estáveis conferidas em 2026-10-23 (npm, crates.io, nodejs.org, rust-la
 | Testes e2e | Playwright | 1.64 | Telas em modo simulado (Marta) |
 | Lint/formatação | rustfmt + clippy · Biome | — · 2.6 | Uma ferramenta para TS (lint e formatação) |
 | Pacotes JS | pnpm · Node 24 LTS (só no build) | 12.15 · 24.22 | Node não vai dentro do app |
-| Execução/deploy | instaladores pelo GitHub Actions; container estático no Dokploy dev (detalhes no `deploy.md` do Igor) | — | Seção 3 e ADR-08 |
+| Execução/deploy | instaladores pelo GitHub Actions, GitHub Releases e GitHub Pages; sem Dokploy (detalhes no `deploy.md` do Igor) | — | ADR-08 |
 
 ## 3. Visão de componentes
 
@@ -204,7 +204,7 @@ Cada provedor implementa um contrato do núcleo (`Transcritor` ou `Refinador`, e
 - **Logs (RNF-09):** só eventos de uma lista fechada (`ditado_iniciado`, `transcricao_concluida`, `colagem_resultado`…), com tempos, provedor e códigos de erro. Proibido registrar texto ditado, contexto, áudio, chave ou o corpo de resposta dos provedores. 7 arquivos diários; o núcleo apaga os mais antigos se a pasta passar de 20 MB.
 - **Permissões do sistema:** Mac: microfone, acessibilidade (colar, ler seleção) e monitoramento de entrada (Esc duplo); Windows: privacidade do microfone. O módulo `plataforma/permissoes` informa o estado e abre a tela do sistema.
 - **Instância única** (plugin single-instance): abrir o app de novo só mostra a janela.
-- **Instaladores:** sem assinatura de código enquanto a pergunta 6 do PRD não for decidida (ver riscos).
+- **Instaladores:** sem certificado pago (decisão do BD de 2026-10-23, registrada no `deploy.md`): assinatura ad-hoc no Mac, sem assinatura no Windows (ver riscos).
 
 ## 7. Estrutura de pastas
 
@@ -285,7 +285,7 @@ Cada provedor implementa um contrato do núcleo (`Transcritor` ou `Refinador`, e
 | Unitário da interface (obrigatório em toda história com tela) | Vitest + Testing Library + jsdom | Dev | `src/modulos/<area>/*.test.tsx` | Local e no CI de todo PR |
 | Integração do núcleo | `cargo test` com SQLite em pasta temporária e wiremock para Groq/Ollama | Dev | `src-tauri/tests/` | CI de todo PR |
 | Contrato da plataforma | `cargo test --features teste-plataforma` com implementação falsa de `plataforma` | Dev | `src-tauri/src/plataforma/falso.rs` | CI |
-| Ponta a ponta das telas | Playwright contra a interface em modo simulado (local `pnpm dev:simulado` ou a URL do Dokploy dev) | Marta | `tests/e2e/` | Depois do deploy em dev |
+| Ponta a ponta das telas | Playwright contra a interface em modo simulado, servida pelo próprio Playwright (`webServer` com `pnpm preview:simulado`) | Marta | `tests/e2e/` | Local e no job de testes do `build-dev` |
 | Validação nativa | Roteiro manual (atalho, gravador sem roubar foco, colagem e seleção nos programas da RNF-05, permissões, tempos da RNF-01, consumo da RNF-03) | Marta escreve; executado no Mac pelo time e no Windows pelo BD, com o instalador do CI | `tests/nativo/roteiro.md` | Ao fim de cada épico e antes de cada versão |
 
 - **Cobertura mínima:** 80% das linhas em regras puras (limpeza, substituições, palavra-gatilho, escolha do modo, mesclagem da sincronização, relógio lógico, retenção, validação de importação), medida com `cargo llvm-cov` nesses módulos. Código de `plataforma` não entra na meta.
@@ -427,12 +427,12 @@ flowchart LR
 ```
 
 **O que o F-00 entrega (para a Helena descrever a história)**
-1. Projeto criado com o starter oficial (`create-tauri-app`, React + TS), com as dependências da seção 2, Biome, Vitest e os scripts `dev`, `dev:simulado`, `build:simulado`, `test`, `typecheck`, `tauri build`.
+1. Projeto criado com o starter oficial (`create-tauri-app`, React + TS), com as dependências da seção 2, Biome, Vitest e os scripts `dev`, `dev:simulado`, `preview:simulado`, `test`, `typecheck`, `tauri build`.
 2. Três janelas: principal (criada ao abrir e destruída ao fechar, para economizar memória), gravador (criada oculta na abertura, sem roubar foco, nas duas plataformas) e menu do ícone; ícone na bandeja/barra de menus com os ícones de estado do design.
 3. `tokens.css` e os componentes de `compartilhado/ui` a partir do protótipo; layout com lateral e todas as rotas provisórias.
 4. Núcleo: `ErroApp`, banco com migrador e o **esquema inicial completo da seção 4**, relógio lógico, caminhos, log com a lista fechada de eventos, `configuracao::gravar()` e a lista de seções, `comandos.rs` com os blocos por área, pipeline do ditado com todas as etapas "passa adiante", `plataforma/` com os contratos e uma implementação falsa para testes, modo padrão "Ditado" criado na primeira abertura.
 5. Modo simulado funcionando no navegador; `tauri-specta` gerando `bindings.ts`.
-6. CI do Igor rodando as verificações da seção 9 e gerando os dois instaladores; primeira publicação no Dokploy dev.
+6. Workflow `build-dev` do Igor rodando as verificações da seção 9 e publicando a primeira pré-release `dev-<sha>` com os dois instaladores.
 7. Medição inicial de consumo em repouso (RNF-03) nas duas plataformas, registrada no PR.
 8. `AGENTS.md` com os comandos reais.
 
@@ -481,10 +481,10 @@ flowchart LR
 - **Alternativas consideradas:** digitar letra a letra (fora do escopo do PRD; lento em textos longos).
 - **Consequências:** formatos além de texto e imagem (ex.: arquivos copiados no Finder ou Explorer) não são devolvidos na v1. No Windows, o Voice Desk não consegue colar em programas abertos como administrador (limite do sistema): cai em "não colado".
 
-### ADR-08 — Distribuição: instaladores pelo GitHub Actions e Dokploy só para o ambiente de testes
+### ADR-08 — Distribuição pelo GitHub (Actions, Releases, Pages), conforme o `deploy.md`
 - **Contexto:** F-27, RNF-12 e RNF-14; não há serviço web para publicar.
-- **Decisão:** CI com runners Mac e Windows gera `.dmg` universal e instalador NSIS por usuário (sem administrador); tag `v*` publica um GitHub Release. No Dokploy dev, um container nginx serve a página do projeto (`site/`) e a interface em modo simulado (`/app/`). A página pública definitiva e o destino dos downloads são decididos pelo Igor com o BD (ver riscos).
-- **Alternativas consideradas:** lojas de apps (fora da v1); servir os instaladores pelo Dokploy (possível, mas acopla downloads públicos a um ambiente de dev).
+- **Decisão:** adotada a do Igor. Runners Mac e Windows geram `.dmg` universal (`--target universal-apple-darwin`) e instalador NSIS em `installMode: currentUser` (sem administrador, RNF-12). Cada merge na `main` publica a pré-release `dev-<sha>`; tag `vX.Y.Z` publica a versão pública, só com aprovação do BD. A página do projeto fica em `site/` (HTML estático, sem build), publicada pelo GitHub Pages; a interface em modo simulado não é publicada, roda no CI e na máquina de quem testa.
+- **Alternativas consideradas:** lojas de apps (fora da v1); Dokploy (só roda contêiner Linux; descartado pelo Igor).
 - **Consequências:** sem atualização automática na v1; o app mostra a versão em "Sobre" e o usuário baixa a nova na página.
 
 ### ADR-09 — Parecer de licença: MIT (recomendação, decisão do BD)
@@ -500,7 +500,7 @@ flowchart LR
 - **Compressão Opus do áudio:** só se a medição da RNF-01(a) mostrar o envio como gargalo; hoje FLAC basta.
 - **Tradução da interface:** só português do Brasil (RNF-10); sem biblioteca de idiomas por ora.
 - **Testes e2e no app nativo** (WebDriver do Tauri): não funciona no Mac; o roteiro manual cobre a v1.
-- **Assinatura de código e notarização:** depende da pergunta 6 do PRD; o CI fica pronto para ligar.
+- **Certificado pago e notarização:** o BD decidiu não ter custo; os segredos já previstos no `deploy.md` permitem ligar depois sem mudar o app.
 - **Leitura de seleção por outros meios** (ex.: extensões de navegador): só se a RNF-05 falhar em algum programa.
 
 ## 13. Riscos e perguntas em aberto
@@ -510,7 +510,7 @@ flowchart LR
 - **Não há máquina Windows para os agentes:** o time roda no Mac. O CI compila e testa no Windows, mas a validação nativa no Windows depende do BD (instalador do CI + roteiro de `tests/nativo/`). Pergunta 3 do PRD (Windows pessoal ou corporativo) precisa de resposta antes do E-01 ir para teste.
 - **Gravador sem roubar o foco:** exige painel não ativável no Mac (tauri-nspanel) e estilo sem ativação no Windows. Validado já no F-00.
 - **Pausar mídia no Mac (F-25):** a API usada pelo VoiceInk (MediaRemote) é privada, e versões recentes do macOS restringem o acesso de apps de terceiros. No Windows há API pública (controles de mídia do sistema). A F-25 começa por uma prova técnica no Mac; se não for viável, o PRD já prevê "silenciar o áudio do sistema", com aprovação do BD.
-- **Sem assinatura de código:** o Windows mostra o aviso do SmartScreen e o Mac exige "Abrir mesmo assim" nos Ajustes. No Mac, com assinatura ad-hoc, **cada versão nova pode pedir de novo as permissões de microfone, acessibilidade e monitoramento de entrada**, porque o sistema as liga à assinatura. Isso pesa na pergunta 6 do PRD.
+- **Sem certificado pago (decidido pelo BD):** o Windows mostra o aviso do SmartScreen e o Mac pede "Abrir mesmo assim" na primeira abertura. Efeito a mais no Mac: com assinatura ad-hoc, **cada versão nova instalada pode pedir de novo as permissões de microfone, acessibilidade e monitoramento de entrada**, porque o sistema as liga à assinatura. A página do projeto e o primeiro uso precisam explicar isso; se incomodar no dia a dia, a saída é o certificado da Apple (custo anual).
 - **Repositório privado:** RNF-14 e F-27 pedem código e downloads públicos. Tornar o repositório `going2-demo/voice-desk` público depende do BD, de preferência junto com a decisão da licença.
 - **Consumo em repouso (RNF-03) no Windows:** o WebView2 tem custo fixo. Mitigação: a janela principal é destruída ao fechar; só o gravador fica carregado. Medido no F-00.
 - **Tempo da transcrição local no Windows (RNF-01c):** ver ADR-05.
