@@ -1,12 +1,13 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
+import { irPara } from "../helpers/navegar";
 
 const html = readFileSync("site/index.html", "utf8");
 const versoes = JSON.parse(readFileSync("site/versoes.json", "utf8"));
 
 test.describe("RF-27.4 tela Sobre (modo simulado)", () => {
   test("mostra versão, licença, link do projeto e aviso do VoiceInk", async ({ page }) => {
-    await page.goto("/#/sobre");
+    await irPara(page, "/sobre");
     await expect(page.getByRole("heading", { name: "Sobre o Voice Desk" })).toBeVisible();
     await expect(page.getByText("Versão instalada")).toBeVisible();
     await expect(page.getByText("0.1.0")).toBeVisible();
@@ -15,7 +16,7 @@ test.describe("RF-27.4 tela Sobre (modo simulado)", () => {
   });
 
   test("o link abre a página do projeto", async ({ page }) => {
-    await page.goto("/#/sobre");
+    await irPara(page, "/sobre");
     await page.route("https://going2-demo.github.io/**", (r) => r.fulfill({ body: "ok" }));
     const popup = page.waitForEvent("popup");
     await page.getByRole("button", { name: /Página do projeto/ }).click();

@@ -1,7 +1,8 @@
 import { expect, test } from "@playwright/test";
+import { irPara } from "../helpers/navegar";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/#/config/provedores");
+  await irPara(page, "/config/provedores");
   await expect(page.getByRole("heading", { name: "Provedores e chaves" })).toBeVisible();
 });
 

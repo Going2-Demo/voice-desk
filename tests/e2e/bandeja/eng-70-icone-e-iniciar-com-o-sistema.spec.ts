@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { irPara } from "../helpers/navegar";
 
 // ENG-70 / F-05 (modo simulado). O ícone na bandeja e o reinício são nativos: ver tests/nativo/pendencias.md.
 
@@ -6,7 +7,7 @@ test.describe("F-05 ícone e menu", () => {
   test("a página lista os itens do menu e os quatro estados do ícone (RF-05.1, RF-05.3)", async ({
     page,
   }) => {
-    await page.goto("/#/bandeja");
+    await irPara(page, "/bandeja");
     await expect(page.getByRole("heading", { name: "Ícone e menu" })).toBeVisible();
     const menu = page.getByRole("navigation", { name: "Menu do Voice Desk" });
     for (const item of [
@@ -28,7 +29,7 @@ test.describe("F-05 ícone e menu", () => {
   });
 
   test("a página está na lateral e abre pelo link", async ({ page }) => {
-    await page.goto("/#/config/geral");
+    await irPara(page, "/config/geral");
     await page.getByRole("link", { name: "Ícone e menu" }).click();
     await expect(page).toHaveURL(/#\/bandeja$/);
   });
@@ -37,7 +38,7 @@ test.describe("F-05 ícone e menu", () => {
 test.describe("F-05 iniciar com o sistema (RF-05.2)", () => {
   for (const caminho of ["/bandeja", "/config/geral"]) {
     test(`vem ligado por padrão, desliga e religa em ${caminho}`, async ({ page }) => {
-      await page.goto(`/#${caminho}`);
+      await irPara(page, caminho);
       const chave = page.getByRole("switch", { name: /iniciar com o sistema/i });
       await expect(chave).toBeChecked();
       await chave.uncheck();
@@ -49,7 +50,7 @@ test.describe("F-05 iniciar com o sistema (RF-05.2)", () => {
   }
 
   test("a escolha vale nas duas telas na mesma sessão", async ({ page }) => {
-    await page.goto("/#/bandeja");
+    await irPara(page, "/bandeja");
     await page.getByRole("switch", { name: /iniciar com o sistema/i }).uncheck();
     await page.getByRole("link", { name: "Geral" }).click();
     await expect(page.getByRole("switch", { name: /iniciar com o sistema/i })).not.toBeChecked();

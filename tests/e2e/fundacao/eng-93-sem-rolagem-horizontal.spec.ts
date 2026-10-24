@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { irPara } from "../helpers/navegar";
 import { instalarTauri } from "../ditado/tauri-mock";
 
 const telas = [
@@ -16,7 +17,7 @@ test.describe("ENG-93 · sem rolagem horizontal abaixo de 720 px", () => {
       test(`${tela} em ${largura} px não rola na horizontal`, async ({ page }) => {
         await instalarTauri(page, {});
         await page.setViewportSize({ width: largura, height: 800 });
-        await page.goto(`/#${tela}`);
+        await irPara(page, tela);
         await expect(page.getByRole("navigation", { name: "Principal" })).toBeVisible();
         const medidas = await page.evaluate(() => {
           const largura = (seletor: string) => document.querySelector(seletor)?.scrollWidth ?? 0;
