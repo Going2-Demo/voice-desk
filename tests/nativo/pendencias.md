@@ -13,3 +13,5 @@ Itens que só se conferem em máquina real; o BD roda um roteiro por épico.
 | ENG-66 | E1 | Limite de 10 min | Gravar sem parar | Aviso aos 9:30; aos 10:00 segue para o processamento | macOS, Windows |
 | ENG-69 | E1 | Chave no cofre do sistema | Salvar uma chave do Groq real em Configurações › Provedores e chaves; abrir Keychain / Gerenciador de Credenciais | Entrada do Voice Desk com a chave; nada em arquivo comum; "válida" em até 10 s | macOS, Windows |
 | ENG-69 | E1 | Ditado sem chave | Apagar a chave e ditar num modo com Groq | Aviso "Cadastre a chave do Groq" | macOS, Windows |
+| ENG-72 | E1 | Instalar a partir da página do projeto em máquina limpa | Baixar o instalador da página (após release pública), executar e abrir | App instala e abre o primeiro uso (F-06) | macOS, Windows |
+| ENG-72 | E1 | Link da tela Sobre no app real | Abrir Sobre e clicar em "Página do projeto" | Abre no navegador padrão | macOS, Windows |
