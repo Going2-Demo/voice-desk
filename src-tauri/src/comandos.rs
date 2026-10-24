@@ -39,13 +39,22 @@ pub struct Sobre {
 /// Página pública do projeto (F-27), publicada pelo GitHub Pages.
 pub const URL_PROJETO: &str = "https://going2-demo.github.io/voice-desk/";
 
+/// Commit do build (o `build.rs` define `local` fora do CI).
+pub const COMMIT: &str = env!("VOICE_DESK_COMMIT");
+
+/// Marcador estático e contíguo no binário, lido pela fumaça do CI (`build-dev.yml`). Só a
+/// constante `COMMIT` pode ser quebrada pelo compilador em `mov` com imediatos (x86_64), e aí o
+/// `grep` do SHA não a acha; um `static` com `#[used]` fica inteiro na seção de dados.
+#[used]
+pub static MARCA_COMMIT: &str = concat!("VOICE_DESK_COMMIT=", env!("VOICE_DESK_COMMIT"), ";");
+
 // --- fundacao / app -----------------------------------------------------------------------
 #[tauri::command]
 #[specta::specta]
 pub fn app_sobre() -> Result<Sobre, ErroApp> {
     Ok(Sobre {
         versao: env!("CARGO_PKG_VERSION").into(),
-        commit: option_env!("VOICE_DESK_COMMIT").unwrap_or("local").into(),
+        commit: COMMIT.into(),
         licenca: env!("CARGO_PKG_LICENSE").into(),
         url_projeto: URL_PROJETO.into(),
     })

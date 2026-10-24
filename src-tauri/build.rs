@@ -10,9 +10,8 @@ fn main() {
     // isto, num build com cache restaurado um dos alvos do instalador universal do Mac saiu com
     // o commit antigo (ENG-68). Repassar por `rustc-env` muda a linha de comando do rustc.
     println!("cargo:rerun-if-env-changed=VOICE_DESK_COMMIT");
-    if let Ok(commit) = env::var("VOICE_DESK_COMMIT") {
-        println!("cargo:rustc-env=VOICE_DESK_COMMIT={commit}");
-    }
+    let commit = env::var("VOICE_DESK_COMMIT").unwrap_or_else(|_| "local".into());
+    println!("cargo:rustc-env=VOICE_DESK_COMMIT={commit}");
     let mut nomes: Vec<String> = fs::read_dir(&pasta)
         .unwrap()
         .filter_map(|e| e.ok())

@@ -142,14 +142,16 @@ jobs:
           if grep -qiE 'panic|erro_interno' "$log"; then echo "log com panic ou erro"; tail -30 "$log"; exit 1; fi
           export LC_ALL=C
           ls -l "$EXE"
+          marca="VOICE_DESK_COMMIT=${{ github.sha }};"
           if [ "${{ matrix.nome }}" = "mac" ]; then
             # Instalador universal: cada arquitetura precisa trazer o commit do build.
+            shasum "$EXE"
             for arq in arm64 x86_64; do
               lipo "$EXE" -thin "$arq" -output "$RUNNER_TEMP/fina-$arq"
-              grep -aqF "${{ github.sha }}" "$RUNNER_TEMP/fina-$arq" || { echo "versão de $arq diferente do commit; encontrado: $(grep -aoE '[0-9a-f]{40}' "$RUNNER_TEMP/fina-$arq" | sort -u | head -3 | tr '\n' ' ')"; exit 1; }
+              grep -aqF "$marca" "$RUNNER_TEMP/fina-$arq" || { echo "versão de $arq diferente do commit; marcadores encontrados: $(grep -aoE 'VOICE_DESK_COMMIT=[0-9a-z]*;' "$RUNNER_TEMP/fina-$arq" | sort -u | head -3 | tr '\n' ' ')"; exit 1; }
             done
           else
-            grep -aqF "${{ github.sha }}" "$EXE" || { echo "versão do executável diferente do commit"; exit 1; }
+            grep -aqF "$marca" "$EXE" || { echo "versão do executável diferente do commit"; exit 1; }
           fi
           echo "fumaça ok: app vivo, app_iniciado no log, versão = ${{ github.sha }}"
       - name: Guardar o log
