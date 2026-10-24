@@ -1,0 +1,150 @@
+.provedores .cartao {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-1);
+  padding: var(--espaco-5);
+  max-width: 640px;
+}
+.provedores h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  margin: 0 0 var(--espaco-2);
+  font-size: 18px;
+}
+.provedores .dica {
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+  margin: 0 0 var(--espaco-3);
+}
+.provedores .selo {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px var(--espaco-3);
+  border-radius: var(--raio-pilula);
+  background: var(--cor-superficie-2);
+  color: var(--cor-texto-suave);
+}
+.provedores .selo.ok {
+  background: var(--cor-sucesso-suave);
+  color: var(--cor-sucesso);
+}
+.provedores .selo.erro {
+  background: var(--cor-erro-suave);
+  color: var(--cor-erro);
+}
+.provedores .selo.alerta {
+  background: var(--cor-alerta-suave);
+  color: var(--cor-alerta);
+}
+.provedores .linha-chave {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--espaco-4);
+  padding: var(--espaco-3) 0;
+}
+.provedores .linha-chave .dica {
+  display: block;
+  margin: 0;
+}
+.provedores .mono {
+  font-family: var(--fonte-mono);
+  font-size: 16px;
+}
+.provedores .campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  max-width: 460px;
+  margin-bottom: var(--espaco-3);
+}
+.provedores .campo input {
+  font: inherit;
+  padding: var(--espaco-2) var(--espaco-3);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+.provedores .campo input[aria-invalid="true"] {
+  border-color: var(--cor-erro);
+}
+.provedores .erro-campo {
+  color: var(--cor-erro);
+  font-size: 13px;
+  min-height: 1.2em;
+}
+.provedores .acoes {
+  display: flex;
+  gap: var(--espaco-2);
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: var(--espaco-3);
+}
+.provedores .btn,
+.provedores dialog .btn {
+  font: inherit;
+  padding: var(--espaco-2) var(--espaco-4);
+  min-height: 36px;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  cursor: pointer;
+}
+.provedores .btn.primario {
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
+}
+.provedores .btn.primario:hover:not(:disabled) {
+  background: var(--cor-primaria-hover);
+}
+.provedores .btn.perigo {
+  color: var(--cor-erro);
+  border-color: var(--cor-erro);
+}
+.provedores .btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.provedores .link {
+  font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--cor-primaria);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.provedores .aviso {
+  padding: var(--espaco-3);
+  border-radius: var(--raio-md);
+  margin-bottom: var(--espaco-3);
+  font-size: 14px;
+}
+.provedores .aviso.erro {
+  background: var(--cor-erro-suave);
+  color: var(--cor-erro);
+}
+.provedores .aviso.alerta {
+  background: var(--cor-alerta-suave);
+  color: var(--cor-alerta);
+}
+.provedores dialog {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-lg);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  box-shadow: var(--sombra-3);
+  padding: var(--espaco-5);
+  max-width: 420px;
+}
+.provedores dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+.provedores dialog h3 {
+  margin-top: 0;
+}

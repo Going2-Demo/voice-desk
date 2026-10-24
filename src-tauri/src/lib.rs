@@ -1,6 +1,7 @@
 //! Núcleo do Voice Desk: montagem do app, plugins e janelas.
 
 pub mod bandeja;
+pub mod chaves;
 pub mod comandos;
 pub mod configuracao;
 pub mod ditado;
@@ -15,7 +16,12 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
         comandos::app_sobre,
         bandeja::bandeja_estado,
         bandeja::bandeja_iniciar_com_o_sistema,
-        bandeja::bandeja_definir_iniciar_com_o_sistema
+        bandeja::bandeja_definir_iniciar_com_o_sistema,
+        comandos::chaves_estado,
+        comandos::chaves_salvar,
+        comandos::chaves_testar,
+        comandos::chaves_apagar,
+        comandos::chaves_abrir_pagina,
     ])
 }
 
@@ -62,6 +68,9 @@ pub fn run() {
             if !std::env::args().any(|a| a == bandeja::ARGUMENTO_OCULTO) {
                 bandeja::abrir_principal(app.handle(), None);
             }
+            let cofre: comandos::CofreEstado =
+                std::sync::Arc::new(chaves::cofre::CofreSistema::novo());
+            app.manage(cofre);
             Ok(())
         })
         .build(tauri::generate_context!())

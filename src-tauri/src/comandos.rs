@@ -1,9 +1,23 @@
 //! Lista única de comandos e eventos, um bloco por área, na ordem da seção 10 da arquitetura.
 //! Cada história só acrescenta linhas no bloco da própria área.
 
+use crate::chaves::cofre::Cofre;
+use crate::chaves::{EstadoChave, Provedor, groq, servico as chaves};
 use crate::nucleo::ErroApp;
+use rusqlite::Connection;
 use serde::Serialize;
 use specta::Type;
+use std::sync::{Arc, Mutex};
+use tauri::State;
+use tauri_plugin_opener::OpenerExt;
+
+/// Cofre de chaves registrado no estado do app (o do sistema; nos testes, um em memória).
+pub type CofreEstado = Arc<dyn Cofre>;
+type Banco = Mutex<Connection>;
+
+fn banco<'a>(b: &'a Banco) -> Result<std::sync::MutexGuard<'a, Connection>, ErroApp> {
+    b.lock().map_err(|_| ErroApp::interno("banco bloqueado"))
+}
 
 #[derive(Debug, Clone, Serialize, Type)]
 pub struct Sobre {
@@ -23,6 +37,74 @@ pub fn app_sobre() -> Result<Sobre, ErroApp> {
 
 // --- ditado, audio, atalhos, plataforma-*, permissoes -------------------------------------
 // --- chaves, transcricao, transcricao-local, refinamento ----------------------------------
+#[tauri::command]
+#[specta::specta]
+pub fn chaves_estado(
+    cofre: State<'_, CofreEstado>,
+    bd: State<'_, Banco>,
+) -> Result<Vec<EstadoChave>, ErroApp> {
+    let conexao = banco(&bd)?;
+    Provedor::todos()
+        .iter()
+        .map(|p| chaves::estado(cofre.as_ref(), &conexao, *p))
+        .collect()
+}
+
+/// Valida o formato, testa a chave no provedor (até 10 s) e guarda no cofre.
+#[tauri::command]
+#[specta::specta]
+pub async fn chaves_salvar(
+    cofre: State<'_, CofreEstado>,
+    bd: State<'_, Banco>,
+    provedor: Provedor,
+    chave: String,
+) -> Result<EstadoChave, ErroApp> {
+    let chave = chaves::validar_formato(&chave)?;
+    let teste = testar_no_provedor(provedor, &chave).await;
+    let conexao = banco(&bd)?;
+    chaves::registrar(cofre.as_ref(), &conexao, provedor, &chave, &teste)
+}
+
+/// Testa de novo a chave já guardada (por exemplo, depois de uma falha de rede).
+#[tauri::command]
+#[specta::specta]
+pub async fn chaves_testar(
+    cofre: State<'_, CofreEstado>,
+    bd: State<'_, Banco>,
+    provedor: Provedor,
+) -> Result<EstadoChave, ErroApp> {
+    let chave = chaves::obter(cofre.as_ref(), provedor)?;
+    let teste = testar_no_provedor(provedor, &chave).await;
+    let conexao = banco(&bd)?;
+    chaves::registrar_teste(cofre.as_ref(), &conexao, provedor, &teste)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn chaves_apagar(
+    cofre: State<'_, CofreEstado>,
+    bd: State<'_, Banco>,
+    provedor: Provedor,
+) -> Result<EstadoChave, ErroApp> {
+    let conexao = banco(&bd)?;
+    chaves::apagar(cofre.as_ref(), &conexao, provedor)
+}
+
+/// Abre no navegador padrão a página do provedor onde se obtém a chave (RF-04.4).
+#[tauri::command]
+#[specta::specta]
+pub fn chaves_abrir_pagina(app: tauri::AppHandle, provedor: Provedor) -> Result<(), ErroApp> {
+    app.opener()
+        .open_url(provedor.pagina_da_chave(), None::<&str>)
+        .map_err(ErroApp::interno)
+}
+
+async fn testar_no_provedor(provedor: Provedor, chave: &str) -> crate::chaves::ResultadoTeste {
+    match provedor {
+        Provedor::Groq => groq::testar(groq::URL_BASE, chave).await,
+    }
+}
+
 // --- bandeja, primeiro-uso ----------------------------------------------------------------
 // --- modos (+ programas, atalho, gatilho), contexto ---------------------------------------
 // --- vocabulario, substituicoes, limpeza --------------------------------------------------
