@@ -70,7 +70,7 @@ fn banco(app: &AppHandle) -> &Banco {
 }
 
 /// Identificador estável desta máquina (carimbos de sincronização).
-fn maquina_id(conexao: &Connection) -> Result<String, ErroApp> {
+pub(crate) fn maquina_id(conexao: &Connection) -> Result<String, ErroApp> {
     let atual: Option<String> = conexao
         .query_row(
             "SELECT valor FROM preferencia_local WHERE chave = 'maquina_id'",

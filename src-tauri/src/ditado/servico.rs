@@ -18,6 +18,8 @@ pub struct EstadoGravador {
     pub segundos: u32,
     /// Programa que estava em foco quando o ditado começou.
     pub programa: Option<String>,
+    /// Atalho oferecido no gravador: `abrir_chaves` (sem chave do provedor, RF-04.1).
+    pub acao: Option<String>,
 }
 
 pub const MSG_GRAVANDO: &str = "Gravando… acione o atalho de novo para parar";
@@ -49,6 +51,10 @@ pub trait Efeitos: Send + Sync + 'static {
     /// Maior amplitude capturada até agora, se a captura está aberta.
     fn pico_da_captura(&self) -> Option<f32>;
     fn escutar_esc(&self, ligar: bool);
+    /// Confere, antes de gravar, o que a transcrição do modo ativo exige (ex.: chave cadastrada).
+    fn conferir_transcricao(&self) -> Result<(), ErroApp>;
+    /// Abre a tela de chaves (atalho do aviso "cadastre a chave").
+    fn abrir_chaves(&self);
     /// Roda o processamento fora da thread atual e chama `ao_fim` quando termina.
     fn processar(
         &self,
@@ -68,6 +74,7 @@ pub struct Ditado<E: Efeitos> {
 const SILENCIO_DIGITAL_MS: u64 = 1500;
 const OCULTAR_APOS_OK_MS: u64 = 900;
 const OCULTAR_APOS_AVISO_MS: u64 = 4000;
+const OCULTAR_APOS_AVISO_COM_ACAO_MS: u64 = 10_000;
 
 impl<E: Efeitos> Ditado<E> {
     pub fn novo(efeitos: E) -> Arc<Self> {
@@ -92,7 +99,13 @@ impl<E: Efeitos> Ditado<E> {
             mensagem: mensagem.into(),
             segundos,
             programa,
+            acao: None,
         });
+    }
+
+    /// O atalho do aviso no gravador foi clicado.
+    pub fn abrir_chaves(&self) {
+        self.efeitos.abrir_chaves();
     }
 
     /// O atalho global foi acionado.
@@ -156,7 +169,11 @@ impl<E: Efeitos> Ditado<E> {
 
     fn iniciar(self: &Arc<Self>) {
         *self.programa.lock().expect("programa") = self.efeitos.programa_em_foco();
-        if let Err(e) = self.efeitos.iniciar_captura() {
+        if let Err(e) = self
+            .efeitos
+            .conferir_transcricao()
+            .and_then(|()| self.efeitos.iniciar_captura())
+        {
             self.falhar_ao_iniciar(&e);
             return;
         }
@@ -173,8 +190,19 @@ impl<E: Efeitos> Ditado<E> {
             m.falha_ao_iniciar();
         }
         self.efeitos.mostrar_gravador();
-        self.estado("erro", &erro.mensagem, 0);
-        self.efeitos.ocultar_gravador(OCULTAR_APOS_AVISO_MS);
+        let com_acao = erro.codigo == "chave_ausente";
+        self.efeitos.emitir_estado(&EstadoGravador {
+            fase: "erro".into(),
+            mensagem: erro.mensagem.clone(),
+            segundos: 0,
+            programa: self.programa.lock().ok().and_then(|p| p.clone()),
+            acao: com_acao.then(|| "abrir_chaves".to_string()),
+        });
+        self.efeitos.ocultar_gravador(if com_acao {
+            OCULTAR_APOS_AVISO_COM_ACAO_MS
+        } else {
+            OCULTAR_APOS_AVISO_MS
+        });
         *self.programa.lock().expect("programa") = None;
     }
 
@@ -230,6 +258,7 @@ mod testes {
         eventos: Mutex<Vec<String>>,
         estados: Mutex<Vec<EstadoGravador>>,
         sem_microfone: Mutex<bool>,
+        sem_chave: Mutex<bool>,
         pico: Mutex<Option<f32>>,
         pendente: Mutex<Option<Fim>>,
         contexto: Mutex<Option<Contexto>>,
@@ -276,6 +305,15 @@ mod testes {
         }
         fn escutar_esc(&self, ligar: bool) {
             self.registra(&format!("esc:{ligar}"));
+        }
+        fn conferir_transcricao(&self) -> Result<(), ErroApp> {
+            if *self.sem_chave.lock().unwrap() {
+                return Err(ErroApp::novo("chave_ausente", "Cadastre a chave do Groq"));
+            }
+            Ok(())
+        }
+        fn abrir_chaves(&self) {
+            self.registra("abrir_chaves");
         }
         fn processar(&self, contexto: Contexto, _: Option<Gravacao>, ao_fim: Fim) {
             self.registra("processar");
@@ -330,6 +368,21 @@ mod testes {
 
     fn ultimo(f: &Falso) -> EstadoGravador {
         f.estados.lock().unwrap().last().unwrap().clone()
+    }
+
+    #[test]
+    fn sem_chave_avisa_antes_de_gravar_com_atalho_para_as_chaves() {
+        let (f, d) = montar();
+        *f.sem_chave.lock().unwrap() = true;
+        d.atalho();
+        assert!(!eventos(&f).contains(&"captura:iniciar".to_string()));
+        let e = ultimo(&f);
+        assert_eq!(e.fase, "erro");
+        assert_eq!(e.mensagem, "Cadastre a chave do Groq");
+        assert_eq!(e.acao.as_deref(), Some("abrir_chaves"));
+        assert_eq!(d.fase(), Fase::Ocioso);
+        d.abrir_chaves();
+        assert_eq!(eventos(&f).last().unwrap(), "abrir_chaves");
     }
 
     #[test]

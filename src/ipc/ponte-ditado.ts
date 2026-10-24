@@ -9,6 +9,8 @@ export type PonteDitado = {
   obterAtalho: () => Promise<Atalho>;
   salvarAtalho: (combinacao: string) => Promise<ResultadoAtalho>;
   alternarDitado: () => Promise<void>;
+  /** Abre a tela de chaves (atalho do aviso "cadastre a chave"). */
+  abrirChaves: () => Promise<void>;
   aoEstado: (ouvinte: (e: Estado) => void) => Promise<Cancelar>;
   aoNivel: (ouvinte: (nivel: number) => void) => Promise<Cancelar>;
 };
@@ -27,6 +29,9 @@ export const ponteReal: PonteDitado = {
   },
   async alternarDitado() {
     await commands.ditadoAlternar();
+  },
+  async abrirChaves() {
+    await commands.ditadoAbrirChaves();
   },
   aoEstado: (ouvinte) => events.ditadoEstado.listen((e) => ouvinte(e.payload)),
   aoNivel: (ouvinte) => events.ditadoNivel.listen((e) => ouvinte(e.payload ?? 0)),

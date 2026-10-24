@@ -15,6 +15,12 @@ export const commands = {
 	atalhosSalvar: (combinacao: string) => typedError<Atalho, ErroApp_Serialize>(__TAURI_INVOKE("atalhos_salvar", { combinacao })),
 	/**  Mesmo efeito do atalho global (botão "Testar ditado" e testes). */
 	ditadoAlternar: () => __TAURI_INVOKE<void>("ditado_alternar"),
+	/**  Atalho do aviso "cadastre a chave" no gravador: abre a tela de chaves. */
+	ditadoAbrirChaves: () => __TAURI_INVOKE<void>("ditado_abrir_chaves"),
+	/**  Provedor, modelo e idioma da transcrição de um modo (sem `modo_id`, o do modo ativo). */
+	transcricaoObter: (modoId: string | null) => typedError<ConfigTranscricao, ErroApp_Serialize>(__TAURI_INVOKE("transcricao_obter", { modoId })),
+	/**  Grava provedor, modelo e idioma da transcrição do modo (RF-02.1 e RF-02.2). */
+	transcricaoSalvar: (modoId: string, config: ConfigTranscricao) => typedError<ConfigTranscricao, ErroApp_Serialize>(__TAURI_INVOKE("transcricao_salvar", { modoId, config })),
 	bandejaEstado: () => typedError<EstadoIcone, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_estado")),
 	bandejaIniciarComOSistema: () => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_iniciar_com_o_sistema")),
 	bandejaDefinirIniciarComOSistema: (ligado: boolean) => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_definir_iniciar_com_o_sistema", { ligado })),
@@ -42,6 +48,12 @@ export type Atalho = {
 	exibicao: string,
 	/**  Sugestão do primeiro uso nesta plataforma. */
 	padrao: string,
+};
+
+export type ConfigTranscricao = {
+	provedor: ProvedorTranscricao,
+	modelo: string,
+	idioma: Idioma,
 };
 
 /**  Estado do gravador, enviado a cada mudança. */
@@ -103,6 +115,8 @@ export type EstadoGravador_Deserialize = {
 	segundos: number,
 	/**  Programa que estava em foco quando o ditado começou. */
 	programa?: string | null,
+	/**  Atalho oferecido no gravador: `abrir_chaves` (sem chave do provedor, RF-04.1). */
+	acao?: string | null,
 };
 
 /**  O que o gravador mostra. `fase`: `gravando`, `processando`, `ok`, `aviso` ou `erro`. */
@@ -112,11 +126,17 @@ export type EstadoGravador_Serialize = {
 	segundos: number,
 	/**  Programa que estava em foco quando o ditado começou. */
 	programa: string | null,
+	/**  Atalho oferecido no gravador: `abrir_chaves` (sem chave do provedor, RF-04.1). */
+	acao: string | null,
 };
 
 export type EstadoIcone = "parado" | "gravando" | "processando" | "erro";
 
+export type Idioma = "pt-BR" | "en" | "auto";
+
 export type Provedor = "groq";
+
+export type ProvedorTranscricao = "groq" | "whisper_local";
 
 export type Sobre = {
 	versao: string,

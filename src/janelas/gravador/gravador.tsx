@@ -65,6 +65,11 @@ export function Gravador({ ponte = ponteReal }: { ponte?: PonteDitado }) {
       <span className="estado" role="status">
         {estado.mensagem}
       </span>
+      {estado.acao === "abrir_chaves" && (
+        <button type="button" className="acao" onClick={() => void ponte.abrirChaves()}>
+          Abrir chaves
+        </button>
+      )}
       {gravando && <span className="tempo">{formatarTempo(estado.segundos)}</span>}
     </div>
   );
