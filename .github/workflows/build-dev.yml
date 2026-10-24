@@ -57,7 +57,7 @@ jobs:
         shell: bash
         run: |
           for alvo in aarch64-apple-darwin x86_64-apple-darwin; do
-            cargo clean --manifest-path src-tauri/Cargo.toml --release --target "$alvo" -p voice-desk -p voice_desk_lib || true
+            cargo clean --manifest-path src-tauri/Cargo.toml --release --target "$alvo" -p voice-desk
           done
           touch src-tauri/build.rs src-tauri/src/comandos.rs src-tauri/src/lib.rs
       - name: Compilar o instalador
