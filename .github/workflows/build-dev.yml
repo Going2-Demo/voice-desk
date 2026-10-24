@@ -24,8 +24,20 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - { os: macos-14, nome: mac, alvos: "aarch64-apple-darwin,x86_64-apple-darwin", args: "--target universal-apple-darwin", glob: "src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg" }
-          - { os: windows-latest, nome: win, alvos: "", args: "", glob: "src-tauri/target/release/bundle/nsis/*.exe" }
+          - {
+              os: macos-14,
+              nome: mac,
+              alvos: "aarch64-apple-darwin,x86_64-apple-darwin",
+              args: "--target universal-apple-darwin",
+              glob: "src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg",
+            }
+          - {
+              os: windows-latest,
+              nome: win,
+              alvos: "",
+              args: "",
+              glob: "src-tauri/target/release/bundle/nsis/*.exe",
+            }
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
