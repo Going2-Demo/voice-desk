@@ -37,4 +37,5 @@ App de desktop de ditado por voz para macOS 14+ e Windows 10/11, software livre.
 - Erros dos comandos: `{ codigo, mensagem, campo? }`, mensagem já em português.
 
 ## Armadilhas conhecidas
-- (vazio; acrescente quando um agente errar algo de forma recorrente)
+- Windows: o binário de teste da lib não leva o manifesto Common Controls v6; plugin com UI nativa (`tauri-plugin-dialog`/`rfd`) faz `cargo test` falhar com `STATUS_ENTRYPOINT_NOT_FOUND` (0xc0000139). Por isso o `dialog` não está instalado no F-00: a história que o precisar (F-20/F-21) deve embutir o manifesto nos testes (`build.rs`, `cargo:rustc-link-arg-tests`) e validar no CI do Windows.
+- (acrescente quando um agente errar algo de forma recorrente)
