@@ -1,0 +1,35 @@
+.sobre .cartao {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-1);
+  padding: var(--espaco-5);
+  max-width: 640px;
+}
+.sobre .meta {
+  display: flex;
+  gap: var(--espaco-6, 32px);
+  margin: 0 0 var(--espaco-3);
+}
+.sobre dt {
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+}
+.sobre dd {
+  margin: 0;
+  font-weight: 600;
+}
+.sobre .link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--cor-primaria);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+.sobre .aviso {
+  background: var(--cor-superficie-2);
+  border-radius: var(--raio-md);
+  padding: var(--espaco-3);
+}

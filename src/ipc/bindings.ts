@@ -6,6 +6,8 @@ import * as __TAURI_EVENT from "@tauri-apps/api/event";
 /** Commands */
 export const commands = {
 	appSobre: () => typedError<Sobre, ErroApp_Serialize>(__TAURI_INVOKE("app_sobre")),
+	/**  Abre a página do projeto no navegador padrão (RF-27.4). */
+	appAbrirProjeto: () => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("app_abrir_projeto")),
 	atalhosObter: () => typedError<Atalho, ErroApp_Serialize>(__TAURI_INVOKE("atalhos_obter")),
 	/**  Confere o formato e conflitos sem gravar (resposta rápida enquanto o usuário digita). */
 	atalhosValidar: (combinacao: string) => typedError<Atalho, ErroApp_Serialize>(__TAURI_INVOKE("atalhos_validar", { combinacao })),
@@ -119,6 +121,10 @@ export type Provedor = "groq";
 export type Sobre = {
 	versao: string,
 	commit: string,
+	/**  Identificador SPDX da licença do pacote (RF-27.4). */
+	licenca: string,
+	/**  Página pública do projeto (RF-27.4). */
+	url_projeto: string,
 };
 
 export type Validade = 
