@@ -1,0 +1,17 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.2/schema.json",
+  "files": {
+    "includes": [
+      "**",
+      "!src/ipc/bindings.ts",
+      "!src-tauri",
+      "!node_modules",
+      "!dist",
+      "!docs",
+      "!**/*.md"
+    ]
+  },
+  "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
+  "linter": { "enabled": true },
+  "assist": { "enabled": false }
+}
