@@ -85,7 +85,10 @@ test("RF-06.2 / aceite: pulando a chave do Groq o primeiro uso termina e Chaves 
   await page.getByRole("button", { name: "Concluir" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Primeiro uso" })).toHaveCount(0);
 
-  await page.getByRole("link", { name: "Provedores e chaves" }).click();
+  await page
+    .getByRole("navigation", { name: "Principal" })
+    .getByRole("link", { name: "Provedores e chaves" })
+    .click();
   await expect(page.getByRole("heading", { name: "Provedores e chaves" })).toBeVisible();
 });
 
