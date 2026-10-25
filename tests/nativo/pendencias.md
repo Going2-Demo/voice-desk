@@ -36,3 +36,4 @@ Itens que só se conferem em máquina real; o BD roda um roteiro por épico.
 | ENG-95 | E1 | Ditado em silêncio | Acionar o atalho e parar sem falar | Gravador mostra "Não ouvi fala" (não "Pronto"); nada colado | Windows, macOS |
 | ENG-95 | E1 | Captura sem "buffer underrun" (Windows) | Ditar 3 vezes seguidas e ver o log | Sem `erro_no_fluxo_de_audio` repetido; se aparecer, abrir bug da captura | Windows |
 | ENG-96 | E1 | Início mostra o atalho atual | Abrir o app instalado; ler "Como ditar"; trocar o atalho em Atalhos e voltar | Início exibe o atalho vigente (kbd), e Testar ditado inicia a gravação | macOS, Windows |
+| ENG-99 | E1 | Indicador do microfone atualiza sozinho após conceder (Mac) | Primeiro uso › Permissões › Conceder microfone; habilitar o Voice Desk em Privacidade e Segurança › Microfone; voltar ao app sem reabrir | Indicador passa a verde em até ~3 s, sem reabrir o app | macOS |
