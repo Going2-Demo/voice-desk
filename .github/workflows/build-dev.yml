@@ -71,7 +71,9 @@ jobs:
           dmg=$(ls ${{ matrix.glob }} | head -1)
           hdiutil attach "$dmg" -mountpoint /tmp/vd -nobrowse -quiet
           archs=$(lipo -archs "/tmp/vd/Voice Desk.app/Contents/MacOS/voice-desk")
+          chave=$(/usr/libexec/PlistBuddy -c "Print :NSMicrophoneUsageDescription" "/tmp/vd/Voice Desk.app/Contents/Info.plist" || true)
           hdiutil detach /tmp/vd -quiet
+          [ -n "$chave" ] || { echo "Info.plist do app sem NSMicrophoneUsageDescription"; exit 1; }
           echo "arquiteturas: $archs"
           case "$archs" in *x86_64*arm64*|*arm64*x86_64*) ;; *) echo "instalador não é universal"; exit 1;; esac
       - name: Renomear
