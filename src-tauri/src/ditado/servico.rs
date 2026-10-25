@@ -27,6 +27,7 @@ pub const MSG_PROCESSANDO: &str = "Processando…";
 pub const MSG_AGUARDE: &str = "Aguarde: ainda processando";
 pub const MSG_LIMITE: &str = "Parando automaticamente em 30 s";
 pub const MSG_PRONTO: &str = "Pronto";
+pub const MSG_SEM_FALA: &str = "Não ouvi fala. Tente de novo, falando mais perto do microfone.";
 
 /// Aviso de RF-03.4, com o atalho da plataforma.
 pub fn mensagem_nao_colado() -> String {
@@ -229,6 +230,13 @@ impl<E: Efeitos> Ditado<E> {
                 self.estado("aviso", &mensagem_nao_colado(), 0);
                 self.efeitos.ocultar_gravador(OCULTAR_APOS_AVISO_MS);
             }
+            Ok(contexto)
+                if contexto.transcricao_provedor.is_some() && contexto.texto_final.is_empty() =>
+            {
+                // Transcrição vazia: nada foi colado, então "Pronto" seria enganoso.
+                self.estado("aviso", MSG_SEM_FALA, 0);
+                self.efeitos.ocultar_gravador(OCULTAR_APOS_AVISO_MS);
+            }
             Ok(_) => {
                 self.estado("ok", MSG_PRONTO, 0);
                 self.efeitos.ocultar_gravador(OCULTAR_APOS_OK_MS);
@@ -360,6 +368,21 @@ mod testes {
             ..Contexto::default()
         }));
         assert_eq!(ultimo(&f).fase, "ok");
+    }
+
+    #[test]
+    fn transcricao_vazia_avisa_em_vez_de_pronto() {
+        let (f, d) = montar();
+        d.atalho();
+        d.atalho();
+        let fim = f.pendente.lock().unwrap().take().unwrap();
+        fim(Ok(Contexto {
+            transcricao_provedor: Some(crate::transcricao::ProvedorTranscricao::Groq),
+            ..Contexto::default()
+        }));
+        let e = ultimo(&f);
+        assert_eq!(e.fase, "aviso");
+        assert_eq!(e.mensagem, MSG_SEM_FALA);
     }
 
     fn eventos(f: &Falso) -> Vec<String> {
