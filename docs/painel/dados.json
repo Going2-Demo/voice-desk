@@ -1,0 +1,1446 @@
+{
+  "versao": 1,
+  "gerado_em": "2026-10-25T08:02:41-03:00",
+  "_campos_timeline": "action=status_changed; details.from (origem), details.to (destino); created_at (data). Ação created = criação do card, status inicial backlog.",
+  "produto": {
+    "nome": "Voice Desk",
+    "projeto_id": "5f6b94c4-d698-4372-b688-96b5bbc7fef9",
+    "card_mae": "ENG-50",
+    "prioridade": "high",
+    "repositorio": "going2-demo/voice-desk"
+  },
+  "resumo": {
+    "historias_total": 34,
+    "historias_concluidas": 14,
+    "percentual": 41.2,
+    "ciclo_medio_horas": 3.5,
+    "ciclo_medio_4_semanas_horas": 3.5,
+    "wip_atual": 0,
+    "aguardando_bd": 1,
+    "bloqueios": 0,
+    "reinicios_total": 6
+  },
+  "epicos": [
+    {
+      "identificador": "ENG-58",
+      "titulo": "Épico 1 · Ditado de ponta a ponta",
+      "status": "in_review",
+      "total": 14,
+      "concluidas": 14,
+      "percentual": 100.0,
+      "ciclo_medio_horas": 3.5,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 8,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 10,
+          "concluidas": 10
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 14,
+          "concluidas": 14
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-59",
+      "titulo": "Épico 2 · Texto do jeito do BD",
+      "status": "backlog",
+      "total": 3,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 3,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 3,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 3,
+          "concluidas": 0
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-60",
+      "titulo": "Épico 3 · Modos e refinamento por IA",
+      "status": "backlog",
+      "total": 6,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 6,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 6,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 6,
+          "concluidas": 0
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-61",
+      "titulo": "Épico 4 · Histórico",
+      "status": "backlog",
+      "total": 4,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 4,
+          "concluidas": 0
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-62",
+      "titulo": "Épico 5 · Mesma configuração nas duas máquinas",
+      "status": "backlog",
+      "total": 2,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 2,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 2,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 2,
+          "concluidas": 0
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-63",
+      "titulo": "Épico 6 · Uso sem internet",
+      "status": "backlog",
+      "total": 1,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 1,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 1,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 1,
+          "concluidas": 0
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-64",
+      "titulo": "Épico 7 · Conforto na gravação",
+      "status": "backlog",
+      "total": 4,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 4,
+          "concluidas": 0
+        }
+      ]
+    }
+  ],
+  "fluxo_cumulativo": [
+    {
+      "data": "2026-10-23",
+      "backlog": 27,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 0,
+      "blocked": 0,
+      "in_review": 1
+    },
+    {
+      "data": "2026-10-24",
+      "backlog": 20,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 10,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-10-25",
+      "backlog": 20,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 14,
+      "blocked": 0,
+      "in_review": 0
+    }
+  ],
+  "vazao_semanal": [
+    {
+      "semana": "S43",
+      "ano": 2026,
+      "concluidas": 14
+    }
+  ],
+  "wip_por_dev": [
+    {
+      "dev": "Roberval",
+      "cards": []
+    },
+    {
+      "dev": "Bia",
+      "cards": []
+    },
+    {
+      "dev": "Davi",
+      "cards": []
+    }
+  ],
+  "historias": [
+    {
+      "identificador": "ENG-65",
+      "titulo": "E1.1 · Fundação percorrível",
+      "epico": "ENG-58",
+      "tipo": "História",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 1,
+      "reinicios": 0,
+      "inicio": "2026-10-23T21:17:53-03:00",
+      "fim": "2026-10-24T10:12:38-03:00",
+      "ciclo_horas": 12.9,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-23T21:13:03-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-23T21:17:53-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-23T21:26:55-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-23T21:27:47-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-23T21:28:26-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-23T21:30:00-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-23T21:30:46-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-23T21:40:29-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-23T22:05:34-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-23T22:06:13-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-23T22:26:57-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-23T22:28:25-03:00",
+          "de": "em_teste",
+          "para": "in_review"
+        },
+        {
+          "em": "2026-10-24T09:51:50-03:00",
+          "de": "in_review",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T09:58:53-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T10:00:33-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T10:03:59-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T10:04:25-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T10:11:48-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T10:12:38-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-66",
+      "titulo": "E1.2 · Gravar com atalho global e gravador flutuante",
+      "epico": "ENG-58",
+      "tipo": "História",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 1,
+      "inicio": "2026-10-24T10:13:57-03:00",
+      "fim": "2026-10-24T16:02:08-03:00",
+      "ciclo_horas": 5.8,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T10:13:38-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T10:13:57-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T10:30:55-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T10:54:45-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T11:09:10-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T11:39:17-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T11:43:15-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T11:59:26-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T12:31:03-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T16:02:08-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-67",
+      "titulo": "E1.3 · Transcrição na nuvem (Groq)",
+      "epico": "ENG-58",
+      "tipo": "História",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-24T16:04:07-03:00",
+      "fim": "2026-10-24T18:03:12-03:00",
+      "ciclo_horas": 2.0,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T16:03:47-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T16:04:07-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T16:15:28-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T16:48:48-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T16:53:44-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T17:05:37-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T17:11:16-03:00",
+          "de": "in_progress",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T17:33:30-03:00",
+          "de": "deploy_dev",
+          "para": "blocked"
+        },
+        {
+          "em": "2026-10-24T17:34:01-03:00",
+          "de": "blocked",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T18:00:38-03:00",
+          "de": "in_progress",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T18:03:12-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-68",
+      "titulo": "E1.4 · Colar no programa em foco",
+      "epico": "ENG-58",
+      "tipo": "História",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-24T16:04:07-03:00",
+      "fim": "2026-10-24T18:03:21-03:00",
+      "ciclo_horas": 2.0,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T16:03:50-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T16:04:07-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T16:13:24-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T16:25:14-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T16:25:46-03:00",
+          "de": "in_progress",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T16:48:25-03:00",
+          "de": "deploy_dev",
+          "para": "blocked"
+        },
+        {
+          "em": "2026-10-24T16:48:45-03:00",
+          "de": "blocked",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T16:52:06-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T16:52:25-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T16:55:43-03:00",
+          "de": "in_progress",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T17:05:19-03:00",
+          "de": "deploy_dev",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T17:15:56-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T17:33:53-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T17:34:57-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T18:00:59-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T18:01:31-03:00",
+          "de": "in_progress",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T18:03:21-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-69",
+      "titulo": "E1.5 · Chaves de API no cofre do sistema",
+      "epico": "ENG-58",
+      "tipo": "História",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 1,
+      "inicio": "2026-10-24T10:13:56-03:00",
+      "fim": "2026-10-24T16:02:20-03:00",
+      "ciclo_horas": 5.8,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T10:13:45-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T10:13:56-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T10:23:21-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T10:50:52-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T10:54:11-03:00",
+          "de": "in_progress",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T10:54:26-03:00",
+          "de": "deploy_dev",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T10:59:03-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T10:59:26-03:00",
+          "de": "revisao_codigo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T11:06:51-03:00",
+          "de": "in_progress",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T12:31:32-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T16:02:20-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-70",
+      "titulo": "E1.6 · Ícone na bandeja ou barra de menus e iniciar com o sistema",
+      "epico": "ENG-58",
+      "tipo": "História",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 1,
+      "reinicios": 3,
+      "inicio": "2026-10-24T10:14:07-03:00",
+      "fim": "2026-10-24T19:01:26-03:00",
+      "ciclo_horas": 8.8,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T10:13:52-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T10:14:07-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T10:23:13-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T10:33:42-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T10:50:32-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T10:51:32-03:00",
+          "de": "em_teste",
+          "para": "in_review"
+        },
+        {
+          "em": "2026-10-24T12:16:46-03:00",
+          "de": "in_review",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T16:02:35-03:00",
+          "de": "em_teste",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T16:04:51-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T16:10:26-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T16:24:51-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T19:01:26-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-71",
+      "titulo": "E1.7 · Primeiro uso guiado",
+      "epico": "ENG-58",
+      "tipo": "História",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-24T19:02:13-03:00",
+      "fim": "2026-10-24T23:43:28-03:00",
+      "ciclo_horas": 4.7,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T19:02:00-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T19:02:13-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T19:13:20-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T19:17:27-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T19:32:14-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T23:43:28-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-72",
+      "titulo": "E1.8 · Instaladores públicos e página do projeto",
+      "epico": "ENG-58",
+      "tipo": "História",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 1,
+      "inicio": "2026-10-24T12:01:46-03:00",
+      "fim": "2026-10-24T16:02:23-03:00",
+      "ciclo_horas": 4.0,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T12:01:27-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T12:01:46-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T12:08:42-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T12:32:22-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T12:41:55-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T16:02:23-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-73",
+      "titulo": "E2.1 · Vocabulário personalizado",
+      "epico": "ENG-59",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-74",
+      "titulo": "E2.2 · Substituição de palavras",
+      "epico": "ENG-59",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-75",
+      "titulo": "E2.3 · Remoção de palavras de preenchimento e formatação",
+      "epico": "ENG-59",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-76",
+      "titulo": "E3.1 · Modos",
+      "epico": "ENG-60",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-77",
+      "titulo": "E3.2 · Refinamento por IA (Groq e Ollama)",
+      "epico": "ENG-60",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-78",
+      "titulo": "E3.3 · Troca automática de modo pelo programa em foco",
+      "epico": "ENG-60",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-79",
+      "titulo": "E3.4 · Contexto do texto selecionado e da área de transferência",
+      "epico": "ENG-60",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-80",
+      "titulo": "E3.5 · Atalho por modo",
+      "epico": "ENG-60",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-81",
+      "titulo": "E3.6 · Palavra-gatilho falada",
+      "epico": "ENG-60",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-82",
+      "titulo": "E4.1 · Histórico com busca e detalhe",
+      "epico": "ENG-61",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-83",
+      "titulo": "E4.2 · Retenção automática",
+      "epico": "ENG-61",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-84",
+      "titulo": "E4.3 · Transcrever de novo",
+      "epico": "ENG-61",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-85",
+      "titulo": "E4.4 · Exportar o histórico em CSV",
+      "epico": "ENG-61",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-86",
+      "titulo": "E5.1 · Sincronização da configuração entre máquinas",
+      "epico": "ENG-62",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-87",
+      "titulo": "E5.2 · Exportar e importar a configuração",
+      "epico": "ENG-62",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-88",
+      "titulo": "E6.1 · Transcrição local (Whisper)",
+      "epico": "ENG-63",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-89",
+      "titulo": "E7.1 · Escolha do microfone",
+      "epico": "ENG-64",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-90",
+      "titulo": "E7.2 · Sons de início e fim",
+      "epico": "ENG-64",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-91",
+      "titulo": "E7.3 · Pausar a mídia durante o ditado",
+      "epico": "ENG-64",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-92",
+      "titulo": "E7.4 · Descartar ditado sem fala",
+      "epico": "ENG-64",
+      "tipo": "História",
+      "status": "backlog",
+      "dev": "Helena - Scrum Master",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": null,
+      "fim": null,
+      "ciclo_horas": null,
+      "historico_incompleto": false,
+      "transicoes": []
+    },
+    {
+      "identificador": "ENG-93",
+      "titulo": "Bug: rolagem horizontal em Configurações abaixo de 720 px (casca da fundação)",
+      "epico": "ENG-58",
+      "tipo": "Bug",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-24T18:13:05-03:00",
+      "fim": "2026-10-24T18:20:14-03:00",
+      "ciclo_horas": 0.1,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T18:12:53-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T18:13:05-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T18:15:30-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T18:19:07-03:00",
+          "de": "revisao_codigo",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T18:20:14-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-94",
+      "titulo": "Bug: casca do app não recolhe a lateral abaixo de 720 px",
+      "epico": "ENG-58",
+      "tipo": "Bug",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-24T17:01:41-03:00",
+      "fim": "2026-10-24T18:11:54-03:00",
+      "ciclo_horas": 1.2,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-24T17:01:31-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-24T17:01:41-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-24T17:18:48-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-24T18:02:15-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-24T18:10:07-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-24T18:11:54-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-95",
+      "titulo": "Bug: ditado não cola o texto no Windows (gravador mostra pronto)",
+      "epico": "ENG-58",
+      "tipo": "Bug",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-25T01:35:50-03:00",
+      "fim": "2026-10-25T02:11:27-03:00",
+      "ciclo_horas": 0.6,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-25T01:35:37-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-25T01:35:50-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-25T01:43:52-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-25T02:01:17-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-25T02:09:08-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-25T02:11:27-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-96",
+      "titulo": "Bug: tela inicial do app vazia após a instalação (Modos provisória)",
+      "epico": "ENG-58",
+      "tipo": "Bug",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-25T01:36:02-03:00",
+      "fim": "2026-10-25T01:55:17-03:00",
+      "ciclo_horas": 0.3,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-25T01:35:47-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-25T01:36:02-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-25T01:40:28-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-25T01:44:12-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-25T01:52:08-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-25T01:55:17-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-97",
+      "titulo": "Bug: instalador do Mac bloqueado pelo Gatekeeper (app sem assinatura e notarização)",
+      "epico": "ENG-58",
+      "tipo": "Bug",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-25T02:02:39-03:00",
+      "fim": "2026-10-25T02:29:19-03:00",
+      "ciclo_horas": 0.4,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-25T02:02:25-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-25T02:02:39-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-25T02:03:46-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-25T02:10:03-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-25T02:28:45-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-25T02:29:19-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-98",
+      "titulo": "Bug: Mac não pede permissão de microfone (falta NSMicrophoneUsageDescription)",
+      "epico": "ENG-58",
+      "tipo": "Bug",
+      "status": "done",
+      "dev": "Marta - QA",
+      "retornos": 0,
+      "reinicios": 0,
+      "inicio": "2026-10-25T01:35:56-03:00",
+      "fim": "2026-10-25T02:01:27-03:00",
+      "ciclo_horas": 0.4,
+      "historico_incompleto": false,
+      "transicoes": [
+        {
+          "em": "2026-10-25T01:35:42-03:00",
+          "de": "backlog",
+          "para": "todo"
+        },
+        {
+          "em": "2026-10-25T01:35:56-03:00",
+          "de": "todo",
+          "para": "in_progress"
+        },
+        {
+          "em": "2026-10-25T01:41:56-03:00",
+          "de": "in_progress",
+          "para": "revisao_codigo"
+        },
+        {
+          "em": "2026-10-25T01:52:47-03:00",
+          "de": "revisao_codigo",
+          "para": "deploy_dev"
+        },
+        {
+          "em": "2026-10-25T02:00:35-03:00",
+          "de": "deploy_dev",
+          "para": "em_teste"
+        },
+        {
+          "em": "2026-10-25T02:01:27-03:00",
+          "de": "em_teste",
+          "para": "done"
+        }
+      ]
+    }
+  ],
+  "retornos_por_card": [
+    {
+      "identificador": "ENG-65",
+      "retornos": 1
+    },
+    {
+      "identificador": "ENG-70",
+      "retornos": 1
+    }
+  ],
+  "aguardando_bd": [
+    {
+      "identificador": "ENG-58",
+      "titulo": "Épico 1 · Ditado de ponta a ponta",
+      "desde": "2026-10-25T02:30:15-03:00",
+      "motivo": "Retrospectiva do épico"
+    }
+  ],
+  "bloqueios": []
+}
