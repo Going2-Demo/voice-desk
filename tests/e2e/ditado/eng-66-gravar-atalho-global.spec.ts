@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { irPara } from "../helpers/navegar";
 import { emitir, instalarTauri } from "./tauri-mock";
 
 const atalhoPadrao = {
@@ -77,7 +78,7 @@ test.describe("ENG-66 · RF-01.1 atalho nas configurações", () => {
         padrao: "Ctrl+Alt+Space",
       }),
     });
-    await page.goto("/#/config/atalhos");
+    await irPara(page, "/config/atalhos");
     const campo = page.getByLabel("Atalho");
     await expect(campo).toHaveValue("Ctrl+Alt+Espaço");
     await campo.fill("Ctrl+Shift+D");
@@ -95,7 +96,7 @@ test.describe("ENG-66 · RF-01.1 atalho nas configurações", () => {
         throw { mensagem: "Escolha uma combinação com pelo menos uma tecla modificadora." };
       },
     });
-    await page.goto("/#/config/atalhos");
+    await irPara(page, "/config/atalhos");
     await page.getByLabel("Atalho").fill("A");
     await page.getByRole("button", { name: "Salvar atalho" }).click();
     await expect(page.getByRole("alert")).toContainText("modificadora");
@@ -111,7 +112,7 @@ test.describe("ENG-66 · RF-01.1 atalho nas configurações", () => {
         return atalhoPadrao;
       },
     });
-    await page.goto("/#/config/atalhos");
+    await irPara(page, "/config/atalhos");
     await page.getByLabel("Atalho").fill("");
     await page.getByRole("button", { name: "Salvar atalho" }).click();
     await expect(page.getByRole("alert")).toContainText("Digite uma combinação");
@@ -120,7 +121,7 @@ test.describe("ENG-66 · RF-01.1 atalho nas configurações", () => {
 
   test("informa o Esc duplo (RF-01.4) e a regra de tecla modificadora", async ({ page }) => {
     await instalarTauri(page, { atalhos_obter: atalhoPadrao });
-    await page.goto("/#/config/atalhos");
+    await irPara(page, "/config/atalhos");
     await expect(page.getByText("pelo menos uma tecla modificadora")).toBeVisible();
     await expect(page.getByText("Cancelar o ditado")).toBeVisible();
   });
