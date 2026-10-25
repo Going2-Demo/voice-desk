@@ -76,11 +76,6 @@ jobs:
           [ -n "$chave" ] || { echo "Info.plist do app sem NSMicrophoneUsageDescription"; exit 1; }
           echo "arquiteturas: $archs"
           case "$archs" in *x86_64*arm64*|*arm64*x86_64*) ;; *) echo "instalador não é universal"; exit 1;; esac
-      - name: Assinar com identidade estável (Mac)
-        if: matrix.nome == 'mac'
-        run: |
-          dmg=$(ls ${{ matrix.glob }} | head -1)
-          ./scripts/assinar-dmg-mac.sh "$dmg"
       - name: Renomear
         shell: bash
         run: |

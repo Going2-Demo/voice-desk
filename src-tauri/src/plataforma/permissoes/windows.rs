@@ -34,10 +34,6 @@ pub fn acessibilidade() -> Situacao {
 
 pub fn pedir_microfone() {}
 
-pub fn detalhe() -> String {
-    String::new()
-}
-
 pub fn endereco(permissao: Permissao) -> Option<&'static str> {
     match permissao {
         Permissao::Microfone => Some("ms-settings:privacy-microphone"),

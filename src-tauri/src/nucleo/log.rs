@@ -6,12 +6,7 @@ use tracing_appender::non_blocking::WorkerGuard;
 use tracing_appender::rolling::{RollingFileAppender, Rotation};
 
 /// Lista fechada de eventos permitidos. Acrescentar um evento exige passar pelo Otávio.
-pub const EVENTOS: &[&str] = &[
-    "app_iniciado",
-    "migracao_aplicada",
-    "erro_interno",
-    "permissoes_lidas",
-];
+pub const EVENTOS: &[&str] = &["app_iniciado", "migracao_aplicada", "erro_interno"];
 
 pub fn iniciar(pasta: &Path) -> Result<WorkerGuard, String> {
     let arquivo = RollingFileAppender::builder()

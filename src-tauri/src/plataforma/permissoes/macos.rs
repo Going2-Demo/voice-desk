@@ -92,15 +92,12 @@ fn traduzir_microfone(estado: isize, confirmar: impl FnOnce() -> bool) -> Situac
 }
 
 /// Pergunta ao sistema a decisão atual do usuário (só chamar com o estado já decidido).
-fn decisao_atual_do_microfone(
-    classe: &objc2::runtime::AnyClass,
-    tipo: *const c_void,
-    espera: std::time::Duration,
-) -> bool {
+fn decisao_atual_do_microfone(classe: &objc2::runtime::AnyClass, tipo: *const c_void) -> bool {
     use block2::RcBlock;
     use objc2::msg_send;
     use objc2::runtime::{AnyObject, Bool};
     use std::sync::mpsc;
+    use std::time::Duration;
 
     let (envia, recebe) = mpsc::channel();
     let bloco = RcBlock::new(move |concedido: Bool| {
@@ -115,68 +112,34 @@ fn decisao_atual_do_microfone(
             completionHandler: &*bloco
         ];
     }
-    recebe.recv_timeout(espera).unwrap_or(false)
+    recebe
+        .recv_timeout(Duration::from_millis(500))
+        .unwrap_or(false)
 }
 
-/// `AVAuthorizationStatus` atual do microfone (0 = o sistema ainda não perguntou).
-fn estado_do_microfone() -> Option<(&'static objc2::runtime::AnyClass, isize)> {
+pub fn microfone() -> Situacao {
     use objc2::msg_send;
     use objc2::runtime::{AnyClass, AnyObject};
-    let classe = AnyClass::get(c"AVCaptureDevice")?;
-    // SAFETY: `authorizationStatusForMediaType:` é método de classe que devolve NSInteger; o
-    // símbolo é constante do framework AVFoundation.
-    let estado: isize = unsafe {
-        msg_send![classe, authorizationStatusForMediaType: tipo_audio() as *const AnyObject]
-    };
-    Some((classe, estado))
-}
-
-fn tipo_audio() -> *const c_void {
     #[link(name = "AVFoundation", kind = "framework")]
     unsafe extern "C" {
         static AVMediaTypeAudio: *const c_void;
     }
-    // SAFETY: lê o símbolo constante do framework já ligado acima.
-    unsafe { AVMediaTypeAudio }
-}
-
-pub fn microfone() -> Situacao {
-    let Some((classe, estado)) = estado_do_microfone() else {
+    let Some(classe) = AnyClass::get(c"AVCaptureDevice") else {
         return Situacao::Pendente;
     };
+    // SAFETY: `authorizationStatusForMediaType:` é método de classe que devolve NSInteger.
+    let estado: isize = unsafe {
+        msg_send![classe, authorizationStatusForMediaType: AVMediaTypeAudio as *const AnyObject]
+    };
+    // SAFETY: lê o símbolo constante do framework já ligado acima.
     traduzir_microfone(estado, || {
-        decisao_atual_do_microfone(classe, tipo_audio(), std::time::Duration::from_millis(500))
+        decisao_atual_do_microfone(classe, unsafe { AVMediaTypeAudio })
     })
 }
 
-/// Só o estado "o sistema ainda não perguntou" pede o diálogo.
-fn precisa_pedir(estado: isize) -> bool {
-    estado == 0
-}
-
-/// Pede o microfone ao sistema (diálogo na primeira vez) e depois abre um fluxo de entrada, que
-/// também provoca o diálogo caso o pedido explícito não tenha efeito.
+/// Abrir um fluxo de entrada faz o macOS mostrar o diálogo de microfone na primeira vez.
 pub fn pedir_microfone() {
-    if let Some((classe, estado)) = estado_do_microfone()
-        && precisa_pedir(estado)
-    {
-        decisao_atual_do_microfone(classe, tipo_audio(), std::time::Duration::from_secs(60));
-    }
     crate::audio::captura::sondar_entrada();
-}
-
-/// Valores crus lidos do sistema, para o log de diagnóstico (sem dado do usuário).
-pub fn detalhe() -> String {
-    // SAFETY: função do sistema sem argumentos, só consulta.
-    let ax_confiavel = unsafe { AXIsProcessTrusted() };
-    let av = estado_do_microfone().map(|(_, e)| e);
-    let exe = std::env::current_exe()
-        .map(|c| c.display().to_string())
-        .unwrap_or_default();
-    format!(
-        "av_estado={av:?} ax_confiavel={ax_confiavel} ax_responde={} exe={exe}",
-        acessibilidade_responde()
-    )
 }
 
 pub fn endereco(permissao: Permissao) -> Option<&'static str> {
@@ -193,13 +156,6 @@ pub fn endereco(permissao: Permissao) -> Option<&'static str> {
 #[cfg(test)]
 mod testes {
     use super::*;
-
-    #[test]
-    fn so_pede_quando_o_sistema_ainda_nao_perguntou() {
-        assert!(precisa_pedir(0));
-        assert!(!precisa_pedir(2));
-        assert!(!precisa_pedir(3));
-    }
 
     #[test]
     fn acessibilidade_confiavel_nao_consulta_o_sistema_de_novo() {
