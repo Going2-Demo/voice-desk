@@ -34,6 +34,11 @@ pub fn situacao(permissao: Permissao) -> Situacao {
     }
 }
 
+/// Valores crus do sistema para o log de diagnóstico (vazio fora do Mac).
+pub fn detalhe() -> String {
+    sistema::detalhe()
+}
+
 /// Provoca o pedido do sistema (só o microfone tem diálogo próprio) e devolve a situação nova.
 pub fn pedir(permissao: Permissao) -> Situacao {
     if permissao == Permissao::Microfone {
