@@ -1,16 +1,14 @@
 //! Teclas simuladas para colar (Cmd+V no Mac, Ctrl+V no Windows) e para o Enter final (RF-03).
-//! No Mac, sem a permissão de Acessibilidade o `Enigo::new` falha e o chamador cai em "não colado".
+//! No Mac as teclas vão por CGEvent (`macos.rs`), com o Command marcado no próprio evento da tecla
+//! V; sem a permissão de Acessibilidade o chamador cai em "não colado". No Windows, por enigo.
 
+#[cfg(not(target_os = "macos"))]
 use enigo::{Direction, Enigo, Key, Keyboard, Settings};
 
 #[cfg(target_os = "macos")]
-const TECLA_MODIFICADORA: Key = Key::Meta;
-#[cfg(not(target_os = "macos"))]
-const TECLA_MODIFICADORA: Key = Key::Control;
+mod macos;
 
-// Códigos físicos da tecla V: independem do layout do teclado.
-#[cfg(target_os = "macos")]
-const TECLA_V: Key = Key::Other(9); // kVK_ANSI_V
+// Código físico da tecla V: independe do layout do teclado.
 #[cfg(not(target_os = "macos"))]
 const TECLA_V: Key = Key::Other(0x56); // VK_V
 
@@ -23,6 +21,7 @@ pub const fn atalho_manual() -> &'static str {
     }
 }
 
+#[cfg(not(target_os = "macos"))]
 fn teclado() -> Result<Enigo, String> {
     let ajustes = Settings {
         open_prompt_to_get_permissions: false,
@@ -31,16 +30,28 @@ fn teclado() -> Result<Enigo, String> {
     Enigo::new(&ajustes).map_err(|e| e.to_string())
 }
 
+#[cfg(target_os = "macos")]
+pub fn simular_colar() -> Result<(), String> {
+    macos::colar()
+}
+
+#[cfg(not(target_os = "macos"))]
 pub fn simular_colar() -> Result<(), String> {
     let mut e = teclado()?;
     let erro = |x: enigo::InputError| x.to_string();
-    e.key(TECLA_MODIFICADORA, Direction::Press).map_err(erro)?;
+    e.key(Key::Control, Direction::Press).map_err(erro)?;
     let colou = e.key(TECLA_V, Direction::Click).map_err(erro);
     // Solta o modificador mesmo se o V falhou, para não deixá-lo preso.
-    let soltou = e.key(TECLA_MODIFICADORA, Direction::Release).map_err(erro);
+    let soltou = e.key(Key::Control, Direction::Release).map_err(erro);
     colou.and(soltou)
 }
 
+#[cfg(target_os = "macos")]
+pub fn simular_enter() -> Result<(), String> {
+    macos::enter()
+}
+
+#[cfg(not(target_os = "macos"))]
 pub fn simular_enter() -> Result<(), String> {
     teclado()?
         .key(Key::Return, Direction::Click)
