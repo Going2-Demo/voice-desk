@@ -21,6 +21,14 @@ pub fn executar(contexto: &mut Contexto) -> Result<Fluxo, ErroApp> {
         gravacao,
         None,
     )?;
+    tracing::info!(
+        evento = "transcricao_concluida",
+        vazio = texto.is_empty(),
+        amostras = gravacao.amostras.len(),
+        taxa_hz = gravacao.taxa_hz
+    );
+    // As etapas seguintes (substituir, limpar, refinar) transformam `texto_final`; sem elas, é o transcrito.
+    contexto.texto_final = texto.clone();
     contexto.texto_transcrito = texto;
     contexto.transcricao_provedor = Some(contexto.config_transcricao.provedor);
     contexto.transcricao_modelo = Some(contexto.config_transcricao.modelo.clone());
@@ -88,6 +96,7 @@ mod testes {
         let (mut c, pedidos) = contexto(Ok("  hello  ".into()), cfg);
         assert_eq!(executar(&mut c).unwrap(), Fluxo::Seguir);
         assert_eq!(c.texto_transcrito, "hello");
+        assert_eq!(c.texto_final, "hello");
         assert_eq!(c.transcricao_provedor, Some(ProvedorTranscricao::Groq));
         assert_eq!(c.transcricao_modelo.as_deref(), Some("whisper-large-v3"));
         assert_eq!(
