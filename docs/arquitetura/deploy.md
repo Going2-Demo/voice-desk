@@ -43,7 +43,7 @@ Deploy automático por push: **ligado** (é só build; nada vai para usuário fi
 | `GITHUB_TOKEN` | publicar release | automático do Actions |
 | `APPLE_CERT_P12`, `APPLE_CERT_PASSWORD`, `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD` | assinar e notarizar no Mac | GitHub › Settings › Secrets (**não usados na v1**: o BD decidiu não ter custo de assinatura, pergunta 6) |
 | `WIN_CERT_PFX`, `WIN_CERT_PASSWORD` | assinar no Windows | idem |
-Sem certificado pago, o Mac (Gatekeeper) e o Windows (SmartScreen) mostram aviso na primeira abertura; a página do projeto traz as instruções para liberar. Decisão do BD em 2026-10-23: sem custo. Valores nunca vão para o repositório.
+Sem certificado pago, o Mac (Gatekeeper) e o Windows (SmartScreen) mostram aviso na primeira abertura; a página do projeto traz as instruções para liberar. No macOS 15 o "botão direito › Abrir" não libera mais: o caminho é OK › Ajustes do Sistema › Privacidade e Segurança › Abrir Assim Mesmo, ou `xattr -dr com.apple.quarantine "/Applications/Voice Desk.app"` no Terminal (ENG-97). Decisão do BD em 2026-10-23: sem custo. Valores nunca vão para o repositório.
 
 ## URL de dev
 - Pré-releases: `https://github.com/going2-demo/voice-desk/releases` (tag `dev-<sha>`)
