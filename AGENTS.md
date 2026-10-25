@@ -8,7 +8,7 @@ App de desktop de ditado por voz para macOS 14+ e Windows 10/11, software livre.
 - Mexa só nas áreas da sua história (seção 10 da arquitetura). Pontos compartilhados seguem a tabela da seção 8.
 - Código específico de Mac ou Windows só em `src-tauri/src/plataforma/`.
 - Escrita em tabela sincronizável só por `configuracao::gravar()`.
-- Nunca registrar em log texto ditado, contexto, áudio ou chave de API. Chaves só no cofre do sistema.
+- Nunca registrar em log texto ditado, contexto, áudio ou chave de API. Chaves só no cofre em arquivo cifrado do app (`chaves/cofre.rs`, ADR-10); nunca em texto puro.
 - Nada de texto, prompt, ícone, som ou código do VoiceInk.
 - `src/ipc/bindings.ts` é gerado: não edite; em conflito, regere.
 

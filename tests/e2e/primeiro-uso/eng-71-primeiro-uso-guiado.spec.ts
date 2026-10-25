@@ -118,7 +118,7 @@ test("RF-06.4: o passo da chave explica como obter uma e valida chave vazia e in
 
   await page.getByLabel("Chave de API do Groq").fill("gsk_boa_1234");
   await page.getByRole("button", { name: "Salvar e testar chave" }).click();
-  await expect(page.getByText("Chave guardada no cofre do sistema.")).toBeVisible();
+  await expect(page.getByText("Chave guardada neste computador.")).toBeVisible();
 });
 
 test("RF-06.4: 'Usar transcrição local' pula a chave e segue para a sincronização", async ({

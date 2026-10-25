@@ -19,6 +19,10 @@ impl Caminhos {
         }
     }
 
+    pub fn raiz(&self) -> &Path {
+        &self.raiz
+    }
+
     pub fn banco(&self) -> PathBuf {
         self.raiz.join("voice-desk.db")
     }

@@ -1,5 +1,5 @@
-//! Chaves de API dos provedores de nuvem (F-04). Ficam só no cofre do sistema (serviço
-//! `voice-desk`, uma conta por provedor); nunca no banco, em log, na exportação nem na
+//! Chaves de API dos provedores de nuvem (F-04). Ficam só no cofre em arquivo cifrado do app
+//! (`chaves.vdk`, uma conta por provedor; ADR-10); nunca no banco, em log, na exportação nem na
 //! sincronização. A interface só recebe a máscara `••••abcd`.
 
 pub mod cofre;
@@ -16,7 +16,7 @@ pub enum Provedor {
 }
 
 impl Provedor {
-    /// Conta no cofre do sistema.
+    /// Conta no cofre.
     pub fn conta(self) -> &'static str {
         match self {
             Provedor::Groq => "groq",

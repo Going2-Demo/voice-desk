@@ -145,6 +145,7 @@ pub fn run() {
             app.manage(guarda);
             tracing::info!(evento = "app_iniciado");
             let conexao = nucleo::banco::abrir(&caminhos.banco())?;
+            let pasta_chaves = caminhos.raiz().to_path_buf();
             app.manage(caminhos);
             app.manage(std::sync::Mutex::new(conexao));
             bandeja::iniciar(app.handle())?;
@@ -153,7 +154,7 @@ pub fn run() {
                 bandeja::abrir_principal(app.handle(), None);
             }
             let cofre: comandos::CofreEstado =
-                std::sync::Arc::new(chaves::cofre::CofreSistema::novo());
+                std::sync::Arc::new(chaves::cofre::CofreArquivo::novo(&pasta_chaves)?);
             app.manage(cofre);
             criar_janela_gravador(app)?;
             montar_ditado(app)?;

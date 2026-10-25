@@ -184,7 +184,7 @@ describe("primeiro uso guiado (F-06)", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Salvar e testar chave" }));
     await waitFor(() => expect(c.salvar).toHaveBeenCalledWith("groq", "gsk_123abcd"));
-    expect(await screen.findByText("Chave guardada no cofre do sistema.")).toBeInTheDocument();
+    expect(await screen.findByText("Chave guardada neste computador.")).toBeInTheDocument();
     expect(a.cumprir).toHaveBeenCalledWith("provedor");
     expect(screen.getByLabelText("Chave de API do Groq")).toHaveValue("");
   });

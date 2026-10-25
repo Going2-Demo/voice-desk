@@ -25,7 +25,7 @@ Versões estáveis conferidas em 2026-10-23 (npm, crates.io, nodejs.org, rust-la
 | Áudio | cpal (captura) · rubato (reamostragem 16 kHz) · flacenc/claxon (FLAC) · rodio (sons) · earshot (detecção de fala) | 0.18 · 5.0 · 0.5/0.4 · 0.23 · 1.2 | Multiplataforma, sem dependência de serviço |
 | Transcrição local | whisper-rs (whisper.cpp) com Metal no Mac e CPU no Windows | 0.16 | Mesmo motor que o VoiceInk usa; modelo `ggml-large-v3-turbo-q5_0.bin` (574 MB). ADR-05 |
 | HTTP para provedores | reqwest (rustls) + tokio | 0.13 · 1.54 | TLS obrigatório (RNF-06) |
-| Cofre de chaves | keyring (Keychain no Mac, Gerenciador de Credenciais no Windows) | 4.2 | RF-04, RNF-06 |
+| Cofre de chaves | arquivo cifrado do app (XChaCha20-Poly1305, chave derivada do id da máquina; ADR-10) | chacha20poly1305 0.11 | RF-04, RNF-06 |
 | Teclado e colagem | tauri-plugin-global-shortcut · handy-keys (escuta sem consumir, para o Esc duplo) · enigo (teclas simuladas) · arboard (área de transferência) | 2.4 · 0.3 · 0.6 · 3.7 | Usados juntos em produção pelo Handy (app livre de ditado em Tauri, MIT) |
 | Janela sem roubar foco | tauri-nspanel (Mac, painel não ativável) · estilo `WS_EX_NOACTIVATE` via crate `windows` (Windows) | 2.1 · 0.62 | RF-01.2: o gravador não tira o foco |
 | Plugins Tauri | autostart · single-instance · positioner · dialog · opener | 2.7 · 2.5 · 2.4 · 2.8 · 2.7 | Iniciar com o sistema (RF-05.2), instância única, menu junto do ícone, escolher pasta/arquivo, abrir links |
@@ -146,7 +146,7 @@ erDiagram
 - Áudio: `audios/AAAA/MM/<id do item>.flac`, 16 kHz mono (cerca de 1 MB por minuto). Só o módulo `audio` lê e grava esse formato.
 - Modelo local: `modelos/ggml-large-v3-turbo-q5_0.bin`. O download vai para `.parcial` e só é renomeado depois da conferência do SHA-256.
 - Logs: `logs/voice-desk.AAAA-MM-DD.log`.
-- Chaves de API e a chave da sincronização: só no cofre do sistema (serviço `voice-desk`, contas `groq` e `sincronizacao`).
+- Chaves de API e a chave da sincronização: só no cofre em arquivo cifrado do app (`chaves.vdk` na pasta de dados, contas `groq` e `sincronizacao`; ADR-10).
 - Pasta de dados: a pasta de dados do app de cada sistema, com o identificador `br.com.going2.voicedesk`.
 
 ## 5. APIs
@@ -196,7 +196,7 @@ Cada provedor implementa um contrato do núcleo (`Transcritor` ou `Refinador`, e
 
 - **Sem login.** Cada instalação pertence a quem a instalou (PRD 2.1). Não há perfis nem checagem de permissão de usuário. O que se protege são as chaves, os dados ditados e a sincronização.
 - **Superfície da ponte:** só os comandos registrados no núcleo são chamáveis; capacidades Tauri (`src-tauri/capabilities/`) liberam para as janelas só os plugins usados. Sem `shell`, sem `fs` liberado para a interface. A interface carrega só arquivos locais do app (CSP sem origens remotas).
-- **Chaves de API (RNF-06):** só no cofre do sistema. Nunca no banco, em arquivo, no log, na exportação ou na sincronização. O núcleo lê a chave na hora da chamada e não a devolve à interface; o comando de estado devolve `••••` + 4 últimos caracteres.
+- **Chaves de API (RNF-06):** só no cofre cifrado do app (ADR-10). Nunca no banco, em texto puro, no log, na exportação ou na sincronização. O núcleo lê a chave na hora da chamada e não a devolve à interface; o comando de estado devolve `••••` + 4 últimos caracteres.
 - **Rede:** só HTTPS para Groq e Hugging Face (rustls); Ollama só por endereço local por padrão (se o usuário trocar para outro endereço, a tela avisa que o texto sai da máquina).
 - **Dados ditados (RNF-07, LGPD):** áudio, textos e contexto ficam só no banco e na pasta de dados da máquina; saem apenas para o provedor do modo. Sem telemetria. Retenção (F-17) e "apagar tudo" (RF-17.3) apagam o arquivo do áudio e a linha; o SQLite roda com `secure_delete` ligado e `VACUUM` depois de apagar tudo.
 - **Sincronização (RF-20.7, RNF-07):** a pasta pertence ao usuário; tudo o que vai para lá é cifrado com XChaCha20-Poly1305, com chave derivada da **frase secreta da sincronização** por Argon2id (sal aleatório guardado no cabeçalho do espaço). A frase não sai da máquina; a chave derivada fica no cofre do sistema. Ninguém sem a frase lê o conteúdo, nem o provedor de nuvem.
@@ -492,6 +492,12 @@ flowchart LR
 - **Decisão proposta:** **MIT**. O código do VoiceInk é Swift/AppKit, preso ao macOS; nada dele serve a um núcleo Rust multiplataforma, então a vantagem da GPL-3.0 (poder reaproveitar esse código) é nula aqui. As dependências escolhidas (Tauri, whisper.cpp, crates e pacotes da seção 2) são MIT ou Apache-2.0, compatíveis com MIT. A GPL-3.0 só faria sentido se o BD quisesse obrigar quem distribuir versões modificadas a abrir o código.
 - **Alternativas consideradas:** GPL-3.0 (ver acima); Apache-2.0 (equivalente na prática, com cláusula de patentes; também serve).
 - **Consequências:** com MIT, nenhum código do VoiceInk entra (RNF-13 continua valendo). Dependência nova com licença GPL ou desconhecida precisa de parecer antes de entrar.
+
+### ADR-10 — Chaves em arquivo cifrado do app, no lugar do Keychain e do Gerenciador de Credenciais
+- **Contexto:** o app não é assinado. O Keychain do Mac amarra a permissão à identidade de código, que muda a cada build ad-hoc; o macOS pedia a senha do login ao salvar a chave do Groq (ENG-102). O BD decidiu não assinar o app por enquanto e não ter esse pedido.
+- **Decisão:** `chaves.vdk` na pasta de dados: versão + nonce aleatório de 24 bytes + JSON `{conta: chave}` cifrado com XChaCha20-Poly1305. A chave de cifragem sai do identificador da máquina por HKDF-SHA256. Mesmo modelo no Mac e no Windows; gravação atômica (temporário + renomear) e permissão 0600 no Unix.
+- **Alternativas consideradas:** assinar o app e manter o Keychain (US$ 99/ano e segredos no CI; mais forte, adiado pelo BD); chave de cifragem guardada no Keychain (traz o pedido de senha de volta).
+- **Consequências:** protege contra leitura casual, backup e cópia do arquivo para outra máquina (não abre). Não protege contra um programa rodando como o mesmo usuário na mesma máquina; é mais fraco que o cofre do sistema. Quem já salvou chave no Keychain precisa colar de novo (sem migração, o app é pré-lançamento). Reavaliar se o app passar a ser assinado.
 
 ## 12. Adiado
 

@@ -96,8 +96,8 @@ function CartaoGroq({ estado }: { estado: EstadoChave }) {
         </span>
       </h2>
       <p className="dica">
-        Transcrição e refinamento na nuvem. O custo de uso é seu, na sua conta. A chave fica no
-        cofre do sistema; nunca em arquivo, na exportação nem na sincronização.
+        Transcrição e refinamento na nuvem. O custo de uso é seu, na sua conta. A chave fica cifrada
+        neste computador; nunca vai para a exportação nem para a sincronização.
       </p>
 
       {estado.salva && (
@@ -219,7 +219,7 @@ function ConfirmarApagar(props: {
     <dialog ref={ref} aria-labelledby="titulo-apagar" onCancel={props.aoCancelar}>
       <h3 id="titulo-apagar">Apagar a chave do Groq?</h3>
       <p>
-        Ela sai do cofre do sistema. Modos que usam o Groq vão falhar até você cadastrar outra ou
+        Ela sai deste computador. Modos que usam o Groq vão falhar até você cadastrar outra ou
         trocar o provedor.
       </p>
       <div className="acoes">
