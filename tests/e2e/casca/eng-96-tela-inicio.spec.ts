@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { irPara } from "../helpers/navegar";
 
-test("aceite: a janela principal abre em Início com como ditar e o atalho atual", async ({ page }) => {
+test("aceite: a janela principal abre em Início com como ditar e o atalho atual", async ({
+  page,
+}) => {
   await irPara(page, "/inicio");
   await expect(page.getByRole("heading", { level: 1, name: "Início" })).toBeVisible();
   await expect(page.getByRole("heading", { level: 2, name: "Como ditar" })).toBeVisible();
@@ -11,7 +13,9 @@ test("aceite: a janela principal abre em Início com como ditar e o atalho atual
   await expect(page.getByText("Tela ainda não implementada")).toHaveCount(0);
 });
 
-test("aceite: Início tem Testar ditado e links para primeiro uso, provedores e atalhos", async ({ page }) => {
+test("aceite: Início tem Testar ditado e links para primeiro uso, provedores e atalhos", async ({
+  page,
+}) => {
   await irPara(page, "/inicio");
   await expect(page.getByRole("button", { name: "Testar ditado" })).toBeVisible();
   await page.getByRole("main").getByRole("link", { name: "Provedores e chaves" }).click();
