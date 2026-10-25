@@ -36,6 +36,18 @@ describe("página do projeto (F-27)", () => {
     }
   });
 
+  it("ENG-97: ensina a liberar o app do Mac bloqueado pelo Gatekeeper (macOS 15 inclusive)", () => {
+    for (const t of [
+      "Abrir Assim Mesmo",
+      "Privacidade e Segurança",
+      "xattr -dr com.apple.quarantine",
+      "/Applications/Voice Desk.app",
+    ]) {
+      expect(html).toContain(t);
+    }
+    expect(html).not.toContain("clique com o botão direito no app");
+  });
+
   it("RF-27.3: cada versão tem número, data ISO e lista do que mudou", () => {
     expect(versoes.length).toBeGreaterThan(0);
     for (const v of versoes) {
