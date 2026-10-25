@@ -262,7 +262,7 @@ function PassoProvedor({
       setFeito(
         e.validade === "invalida"
           ? "A chave foi guardada, mas o Groq a recusou. Confira se copiou inteira."
-          : "Chave guardada no cofre do sistema.",
+          : "Chave guardada neste computador.",
       );
       if (e.validade !== "invalida") aoSalvar();
     },
