@@ -3,7 +3,7 @@
 Produto: Voice Desk · Épico: ENG-58 · Período: 2026-10-24 a 2026-10-25 · Escrita por Helena - Scrum Master
 
 ## Resumo
-O épico entregou as oito histórias planejadas (ENG-65 a ENG-72) e seis bugs: dois achados na conferência visual (ENG-93 e ENG-94) e quatro no teste nativo do BD (ENG-95 a ENG-98). Os 14 cards estão em `done`. Ditado com atalho global, transcrição no Groq, colagem no programa em foco, chaves no cofre, ícone na bandeja, primeiro uso guiado e instaladores públicos existem em dev. O principal destaque foi o fluxo paralelo com três Devs, sem história sobrepondo áreas. O principal problema foi a reprovação recorrente de CI na primeira história (ENG-65), que consumiu a maior parte do ciclo dela.
+O épico entregou as oito histórias planejadas (ENG-65 a ENG-72) e oito bugs: dois achados na conferência visual (ENG-93 e ENG-94), quatro no teste nativo do BD (ENG-95 a ENG-98) e dois no segundo teste no Mac (ENG-99 e ENG-100). Os 16 cards estão em `done`. Ditado com atalho global, transcrição no Groq, colagem no programa em foco, chaves no cofre, ícone na bandeja, primeiro uso guiado e instaladores públicos existem em dev. O principal destaque foi o fluxo paralelo com três Devs, sem história sobrepondo áreas. O principal problema foi a reprovação recorrente de CI na primeira história (ENG-65), que consumiu a maior parte do ciclo dela.
 
 ## Entregue vs planejado
 | História | Planejada? | Status | Dev | Retornos | Ciclo (todo → done) |
@@ -22,6 +22,8 @@ O épico entregou as oito histórias planejadas (ENG-65 a ENG-72) e seis bugs: d
 | Bug · tela inicial vazia após a instalação (ENG-96) | acrescentado (teste nativo do BD) | entregue | Davi | 0 | 20 min |
 | Bug · Mac não pede permissão de microfone (ENG-98) | acrescentado (teste nativo do BD) | entregue | Bia | 0 | 26 min |
 | Bug · instalador do Mac bloqueado pelo Gatekeeper (ENG-97) | acrescentado (teste nativo do BD) | entregue com passo manual documentado | Bia | 0 | 27 min |
+| Bug · indicador de permissão do microfone não atualiza (ENG-99) | acrescentado (segundo teste no Mac) | entregue | Davi | 0 | 32 min |
+| Bug · ditado no Mac não cola o texto automaticamente (ENG-100) | acrescentado (segundo teste no Mac) | entregue | Roberval | 0 | 52 min |
 
 A coluna Dev mostra "—" onde o card não registra o Dev de origem. Nenhuma história foi cancelada.
 
@@ -34,6 +36,7 @@ Requisitos do PRD cobertos: F-01 a F-06 do Épico 1 (E-01), com F-02 (ENG-67), F
 ## Pendências
 - **Decisão do BD:** o Mac do instalador segue sem assinatura nem notarização. ENG-97 entregou o passo manual (aviso e "Abrir Assim Mesmo" no `site/index.html`). Assinar e notarizar exige conta Apple Developer e segredos no CI; fica para decisão do BD, sem card aberto.
 - Nenhuma pendência de história. Sem roteiro nativo pendente em `tests/nativo/pendencias.md` (arquivo ausente).
+- Mac: a permissão do microfone (ENG-99) e a colagem automática (ENG-100) estão corrigidas em `done`, mas ainda não foram confirmadas pelo BD no Mac. Esse é o teste que falta antes da aprovação.
 - Para depois, sem card aberto: avaliar se a checagem de formatação entre Windows e macOS deve rodar antes do PR (ver ações).
 
 ## Retornos e causas
@@ -52,9 +55,9 @@ Total: 2 retornos em 2 histórias (ENG-65 e ENG-70). Além disso, o Igor reprovo
 Total: 6, pelo metadado `reinicios_total` do vigia. ENG-66 (1), ENG-69 (1), ENG-70 (3, todos com o card visto em `em_teste`) e ENG-72 (1).
 
 ## Tempo de ciclo
-Médio: 3,3 h (de `todo` a `done`, nos 14 cards). Sem as histórias de funcionalidade, a média dos quatro bugs do teste nativo é de 27 min.
+Médio: 3,0 h (de `todo` a `done`, nos 16 cards). Os bugs do teste nativo e do segundo teste no Mac levaram entre 20 e 52 min cada.
 Mais rápido: ENG-93, 7 min. Mais lento: ENG-65, 13 h, por três rodadas de CI reprovado no Windows e a correção do build universal do Mac.
-Vazão no período: S43 (2026-10-24 a 2026-10-25): 14 cards concluídos, sendo 8 histórias e 6 bugs.
+Vazão no período: S43 (2026-10-24 a 2026-10-25): 16 cards concluídos, sendo 8 histórias e 8 bugs.
 
 ## Aprendizados
 - O que funcionou: três Devs em paralelo com WIP 1 e dependências explícitas; nenhuma colisão de áreas; a conferência visual pela Nina pegou o desvio do ícone da bandeja antes do `done`.
