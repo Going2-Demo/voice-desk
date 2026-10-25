@@ -82,11 +82,6 @@ jobs:
           hdiutil detach /tmp/vd -quiet
           echo "arquiteturas: $archs"
           case "$archs" in *x86_64*arm64*|*arm64*x86_64*) ;; *) echo "instalador não é universal"; exit 1;; esac
-      - name: Assinar com identidade estável (Mac)
-        if: matrix.nome == 'mac'
-        run: |
-          dmg=$(ls ${{ matrix.glob }} | head -1)
-          ./scripts/assinar-dmg-mac.sh "$dmg"
       - name: Renomear
         shell: bash
         run: |

@@ -65,27 +65,7 @@ fn estado_atual() -> EstadoPermissoes {
 #[tauri::command]
 #[specta::specta]
 pub fn permissoes_estado() -> Result<EstadoPermissoes, ErroApp> {
-    let estado = estado_atual();
-    registrar_se_mudou(&estado);
-    Ok(estado)
-}
-
-/// Grava no log o estado lido e os valores crus do sistema, só quando muda (a tela consulta a
-/// cada 3 s). É o diagnóstico que o BD envia quando o indicador não bate com os Ajustes.
-fn registrar_se_mudou(estado: &EstadoPermissoes) {
-    static ULTIMO: std::sync::Mutex<Option<(SituacaoApp, SituacaoApp)>> =
-        std::sync::Mutex::new(None);
-    let atual = (estado.microfone, estado.acessibilidade);
-    let mut ultimo = ULTIMO.lock().unwrap_or_else(|e| e.into_inner());
-    if *ultimo != Some(atual) {
-        *ultimo = Some(atual);
-        tracing::info!(
-            evento = "permissoes_lidas",
-            microfone = ?estado.microfone,
-            acessibilidade = ?estado.acessibilidade,
-            detalhe = %sistema::detalhe()
-        );
-    }
+    Ok(estado_atual())
 }
 
 /// Provoca o pedido do sistema (quando existe) e devolve o estado novo de todas.
