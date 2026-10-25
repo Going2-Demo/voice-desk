@@ -45,7 +45,7 @@ export default function Pagina(props: Props) {
     onSuccess: (novo) => {
       guardar(novo);
       sessionStorage.removeItem(CHAVE_POSICAO);
-      navegar("/modos");
+      navegar("/inicio");
     },
   });
 

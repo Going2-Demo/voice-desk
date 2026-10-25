@@ -14,6 +14,13 @@ const pagina = (carregar: () => Promise<{ default: ComponentType }>) => lazy(car
 /** Todas as rotas do design 2.2; cada história troca só o conteúdo da própria página. */
 export const rotas: Rota[] = [
   {
+    caminho: "/inicio",
+    rotulo: "Início",
+    grupo: "Ditado",
+    naLateral: true,
+    Pagina: pagina(() => import("../modulos/inicio/pagina")),
+  },
+  {
     caminho: "/modos",
     rotulo: "Modos",
     grupo: "Ditado",
@@ -134,4 +141,4 @@ export const rotas: Rota[] = [
   },
 ];
 
-export const rotaInicial = "/modos";
+export const rotaInicial = "/inicio";

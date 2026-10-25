@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, it } from "vitest";
@@ -6,9 +7,13 @@ import { rotas } from "./rotas";
 
 const desenhar = (caminho: string) =>
   render(
-    <MemoryRouter initialEntries={[caminho]}>
-      <App />
-    </MemoryRouter>,
+    <QueryClientProvider
+      client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
+    >
+      <MemoryRouter initialEntries={[caminho]}>
+        <App />
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
 
 describe("rotas da janela principal", () => {
@@ -16,6 +21,7 @@ describe("rotas da janela principal", () => {
     const caminhos = rotas.map((r) => r.caminho).sort();
     expect(caminhos).toEqual(
       [
+        "/inicio",
         "/modos",
         "/modos/:id",
         "/historico",
@@ -39,6 +45,7 @@ describe("rotas da janela principal", () => {
 
   it("lista na lateral só as rotas sem parâmetro", () => {
     desenhar("/modos");
+    expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute("href", "/inicio");
     expect(screen.getByRole("link", { name: "Vocabulário" })).toHaveAttribute(
       "href",
       "/vocabulario",
@@ -53,8 +60,8 @@ describe("rotas da janela principal", () => {
     ).toBeInTheDocument();
   });
 
-  it("volta para Modos numa rota desconhecida", async () => {
+  it("volta para o Início numa rota desconhecida", async () => {
     desenhar("/nao-existe");
-    expect(await screen.findByRole("heading", { name: "Modos" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Início" })).toBeInTheDocument();
   });
 });
