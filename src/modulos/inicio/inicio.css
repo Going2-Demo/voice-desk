@@ -1,0 +1,18 @@
+.inicio .cartao {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-1);
+  padding: var(--espaco-5);
+  max-width: 640px;
+  margin-bottom: var(--espaco-4, 16px);
+}
+.inicio h2 {
+  margin-top: 0;
+}
+.inicio kbd {
+  font-weight: 600;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  padding: 1px 6px;
+}

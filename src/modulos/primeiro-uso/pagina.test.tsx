@@ -91,7 +91,7 @@ function desenhar(props: { api?: ApiPrimeiroUso; ponte?: PonteDitado; chaves?: A
               <Pagina api={a} ponte={props.ponte ?? ponte()} chaves={props.chaves ?? chaves()} />
             }
           />
-          <Route path="/modos" element={<h1>Modos</h1>} />
+          <Route path="/inicio" element={<h1>Início</h1>} />
           <Route path="/config/local" element={<h1>Modelo local</h1>} />
         </Routes>
       </MemoryRouter>
@@ -132,7 +132,7 @@ describe("primeiro uso guiado (F-06)", () => {
     seguir(1);
     fireEvent.click(screen.getByRole("button", { name: "Concluir" }));
     await waitFor(() => expect(a.concluir).toHaveBeenCalled());
-    expect(await screen.findByRole("heading", { name: "Modos" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Início" })).toBeInTheDocument();
   });
 
   it("não deixa pular as boas-vindas nem o teste", () => {
