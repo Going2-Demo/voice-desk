@@ -35,3 +35,4 @@ Itens que só se conferem em máquina real; o BD roda um roteiro por épico.
 | ENG-95 | E1 | Ditado cola o texto no campo em foco (Windows) | Instalar o `.exe` do `dev-5a965d9`, cadastrar a chave Groq, abrir o Bloco de Notas, acionar o atalho, falar uma frase e acionar de novo | Texto transcrito colado no campo; log com `transcricao_concluida` e `colagem_resultado` | Windows, macOS |
 | ENG-95 | E1 | Ditado em silêncio | Acionar o atalho e parar sem falar | Gravador mostra "Não ouvi fala" (não "Pronto"); nada colado | Windows, macOS |
 | ENG-95 | E1 | Captura sem "buffer underrun" (Windows) | Ditar 3 vezes seguidas e ver o log | Sem `erro_no_fluxo_de_audio` repetido; se aparecer, abrir bug da captura | Windows |
+| ENG-96 | E1 | Início mostra o atalho atual | Abrir o app instalado; ler "Como ditar"; trocar o atalho em Atalhos e voltar | Início exibe o atalho vigente (kbd), e Testar ditado inicia a gravação | macOS, Windows |
