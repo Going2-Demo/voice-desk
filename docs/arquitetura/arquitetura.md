@@ -1,10 +1,12 @@
 # Arquitetura: Voice Desk
 
-> Status: rascunho para aprovação · Versão: 1 · Atualizado em: 2026-10-23
-> Fontes: [prd.md](../produto/prd.md) v2, [design.md](../design/design.md) v1 e protótipo, [relatório de engenharia reversa](../produto/engenharia-reversa/relatorio.md) (só como referência de comportamento), [deploy.md](deploy.md) (Igor, ENG-56, commit `5e14374`)
+> Status: mudança de escopo para aprovação (ENG-104) · Versão: 2 · Atualizado em: 2026-10-27
+> Fontes: [prd.md](../produto/prd.md) v3, [design.md](../design/design.md) (escopo v3) e protótipo, [relatório de engenharia reversa](../produto/engenharia-reversa/relatorio.md) (só como referência de comportamento), [deploy.md](deploy.md) (Igor, ENG-56, commit `5e14374`)
 > Paradigma: app de desktop com núcleo nativo em Rust e interface web local (Tauri 2), monólito modular organizado por área do sistema, sem servidor
 
 ## 1. Resumo
+
+> **Escopo v1 depois da ENG-104:** o BD tirou da v1 os Épicos 3 (modos e refinamento), 4 (histórico), 5 (sincronização e exportação) e 6 (transcrição local). A v1 é E-01 → E-02 → E-07, só com o Groq. **Nada muda no esquema do banco**: as tabelas dos épicos cortados ficam vazias até eles voltarem. Os módulos `refinamento`, `modelo_local`, `historico` (telas), `sincronizacao` e `modos/escolha` não são construídos na v1. As opções de cada ditado ficam no modo padrão "Ditado", sem tela de modos, e cada ditado guarda só dados técnicos (ADR-11). Efeitos, lacunas e ordem do que fica: [impacto-corte-epicos-3-a-6.md](impacto-corte-epicos-3-a-6.md). O resto deste documento descreve a arquitetura completa; o que é dos épicos cortados vale como referência para a volta deles.
 
 O Voice Desk é **um único app de desktop** para macOS 14+ e Windows 10 22H2/11, feito com **Tauri 2**. O **núcleo em Rust** faz tudo o que é sistema e tempo crítico: atalho global, captura de áudio, transcrição (Groq ou whisper.cpp local), limpeza do texto, refinamento (Groq ou Ollama), colagem no programa em foco, cofre de chaves, banco SQLite local, retenção e sincronização. A **interface em React + TypeScript** roda no webview do sistema (WebKit no Mac, WebView2 no Windows) e desenha as três superfícies do design: gravador flutuante, menu do ícone e janela de configuração. Não há back-end nosso. A sincronização entre máquinas usa **uma pasta de nuvem do próprio usuário** (OneDrive, Google Drive, Dropbox ou iCloud Drive), com o conteúdo cifrado por uma frase secreta dele. Conforme o `deploy.md` do Igor, não há Dokploy: o GitHub Actions gera os instaladores a cada merge (pré-release `dev-<sha>`), o GitHub Releases guarda as versões e o GitHub Pages publica a página do projeto. As telas também rodam no navegador em **modo simulado**, para os testes da Marta e a conferência da Nina.
 
@@ -332,6 +334,8 @@ Cada provedor implementa um contrato do núcleo (`Transcritor` ou `Refinador`, e
 | preferencias-gerais | `src/modulos/configuracoes/geral/*` (cada seção é de uma funcionalidade) | `preferencia_local` |
 | site | `site/`, `src/modulos/sobre` (`#/sobre`), `.github/workflows/release.yml` | — |
 
+**Na v1 (ENG-104)**: valem só as linhas de F-00 a F-09 e de F-23 a F-27. F-10 a F-22 estão fora da v1. As dependências de F-10 e F-20/F-22 deixam de existir: F-05 depende só de F-01, F-09 só de F-02 e F-06 de F-01 a F-05. O F-09 passa a entregar o bloco "Texto do ditado" de Configurações › Geral (idioma, limpeza, formatação, Enter), gravado na linha do modo padrão. A ordem do que falta está na seção 4 do [impacto](impacto-corte-epicos-3-a-6.md); as ondas abaixo são o plano completo, para a volta dos épicos.
+
 **Funcionalidades × dependências × áreas**
 
 | ID | Funcionalidade | Depende de | Áreas que cria/altera | Pontos compartilhados | Onda |
@@ -499,7 +503,15 @@ flowchart LR
 - **Alternativas consideradas:** assinar o app e manter o Keychain (US$ 99/ano e segredos no CI; mais forte, adiado pelo BD); chave de cifragem guardada no Keychain (traz o pedido de senha de volta).
 - **Consequências:** protege contra leitura casual, backup e cópia do arquivo para outra máquina (não abre). Não protege contra um programa rodando como o mesmo usuário na mesma máquina; é mais fraco que o cofre do sistema. Quem já salvou chave no Keychain precisa colar de novo (sem migração, o app é pré-lançamento). Reavaliar se o app passar a ser assinado.
 
+### ADR-11 — Na v1, cada ditado guarda só dados técnicos; o áudio fica só nas falhas (ENG-104)
+- **Contexto:** sem histórico (F-16) e sem retenção (F-17), nada do que o app guarda de um ditado aparece ao usuário nem é apagado. A premissa do PRD v3 era guardar áudio e texto de todos.
+- **Decisão:** o áudio é gravado em `audios/` antes de transcrever (RNF-08). Ditado colado, não colado ou cancelado no processamento: item em `historico_item` só com dados técnicos (estado, programa, duração, provedor, modelo, tempos), sem textos, e o áudio é apagado. Ditado que falhou ou foi interrompido pelo fechamento do app: item `falhou` com o áudio. Sem fala: nada fica. Mesmo esquema da seção 4; só a etapa `registrar` decide o que preencher.
+- **Alternativas consideradas:** guardar áudio e texto de todos sem apagar (premissa do PRD; dados de clientes acumulam sem limite e sem jeito de apagar); trazer a F-17 de volta (volta uma tela e uma história ao escopo).
+- **Consequências:** atende RF-03.5, RNF-08, M-1 e M-2 sem acumular dados pessoais (RNF-07). O botão "Apagar dados guardados" não é necessário na v1. Os testes que pediam ouvir o áudio (RF-23.1, RF-24.2) usam um ditado com falha forçada. Quando E-04 voltar, o histórico mostra o que já estiver guardado, e a regra volta a ser a da seção 3.
+
 ## 12. Adiado
+
+- **Épicos 3, 4, 5 e 6 (ENG-104):** fora da v1 por decisão do BD; esquema, áreas e ADR-03, ADR-04 e ADR-05 ficam como plano para a volta deles.
 
 - **Aceleração por GPU no Windows (Vulkan) para o whisper:** decidir depois da medição da F-22 no Windows do BD.
 - **Atualização automática** (plugin updater do Tauri): v2, como o PRD prevê; a base já permite.
@@ -522,6 +534,6 @@ flowchart LR
 - **Tempo da transcrição local no Windows (RNF-01c):** ver ADR-05.
 - **Sincronização depende de um cliente de nuvem do usuário:** quem não tiver nenhum usa exportar/importar (F-21). A página do projeto precisa explicar isso (F-27).
 - **Dependências em versão RC (tauri-specta/specta):** ver ADR-06.
-- **F-06 é a última onda** porque o primeiro uso passa pela sincronização (F-20) e pela transcrição local (RF-06.4, F-22). Se o BD quiser o primeiro uso mais cedo, a Helena pode dividi-lo em duas histórias: permissões, atalho, chave e teste (depende de F-01 a F-05) e, depois, os passos de sincronização e modelo local.
+- (Antes da ENG-104) **F-06 é a última onda** porque o primeiro uso passa pela sincronização (F-20) e pela transcrição local (RF-06.4, F-22). Se o BD quiser o primeiro uso mais cedo, a Helena pode dividi-lo em duas histórias: permissões, atalho, chave e teste (depende de F-01 a F-05) e, depois, os passos de sincronização e modelo local.
 - [PREMISSA] O modo padrão (`modo_padrao_id`) faz parte da configuração sincronizável, junto com os modos. Se o BD preferir um modo padrão por máquina, ele passa para `preferencia_local` sem outra mudança.
 - [PREMISSA] O estado `cancelado` (RF-03.5) só aparece para cancelamento durante o processamento; cancelar durante a gravação não cria item (RF-01.4 e F-16).
