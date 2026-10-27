@@ -38,7 +38,8 @@ Requisitos do PRD cobertos: F-01 a F-06 do Épico 1 (E-01), com F-02 (ENG-67), F
 ## Pendências
 - **Decisão do BD:** o Mac do instalador segue sem assinatura nem notarização. ENG-97 entregou o passo manual (aviso e "Abrir Assim Mesmo" no `site/index.html`). Assinar e notarizar exige conta Apple Developer e segredos no CI; fica para decisão do BD, sem card aberto.
 - Nenhuma pendência de história.
-- **Roteiro nativo do épico (ENG-103, `todo` com a Marta):** 36 linhas pendentes em `tests/nativo/pendencias.md`, de ENG-66 a ENG-101. Algumas já foram conferidas pelo BD no Mac e no Windows (permissões, Gatekeeper, colagem e acessibilidade), mas o roteiro ainda não foi fechado. Resultado a citar aqui quando o card terminar.
+- **Roteiro nativo do épico (ENG-103):** o card foi fechado sem o resultado completo do BD. O roteiro (22 itens, `tests/nativo/roteiro-epico-1.md`, PR #40) segue sem resposta por item. Itens de Windows e do restante do Mac ficam como não testados até o BD responder no formato `1 ok · 2 falhou · 3 não testei`.
+- **ENG-105 (bug, backlog, comigo):** permissões de microfone e acessibilidade e colagem automática no Mac, não resolvidas após ENG-99, ENG-100, ENG-101 e ENG-102. O BD decidiu tratar no fim do desenvolvimento e mandou seguir com o épico para aprovação, com essa pendência explícita. Windows funciona.
 - **Armazenamento das chaves:** decisão do BD de guardar em arquivo cifrado (`chaves.vdk`), sem o Keychain. O registro de arquitetura está em `docs/arquitetura/arquitetura.md` (ADR-1). O app segue sem assinatura.
 - Para depois, sem card aberto: avaliar se a checagem de formatação entre Windows e macOS deve rodar antes do PR (ver ações).
 
