@@ -12,6 +12,7 @@ pub mod permissoes;
 pub mod plataforma;
 pub mod primeiro_uso;
 pub mod transcricao;
+pub mod vocabulario;
 
 use tauri::Manager;
 use tauri_specta::{Builder, collect_commands, collect_events};
@@ -43,6 +44,10 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
             primeiro_uso::primeiro_uso_pular,
             primeiro_uso::primeiro_uso_cumprir,
             primeiro_uso::primeiro_uso_concluir,
+            comandos::vocabulario_listar,
+            comandos::vocabulario_adicionar,
+            comandos::vocabulario_editar,
+            comandos::vocabulario_remover,
         ])
         .events(collect_events![
             ditado::efeitos_tauri::DitadoEstado,

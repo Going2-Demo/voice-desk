@@ -7,6 +7,7 @@ use crate::nucleo::{ErroApp, relogio::Relogio};
 use rusqlite::{Connection, OptionalExtension};
 
 pub const ID_DITADO: &str = "ditado";
+pub const ID_VOCABULARIO: &str = "vocabulario";
 pub const ID_HISTORICO: &str = "historico";
 pub const ID_CONFIG: &str = "config";
 pub const ID_SAIR: &str = "sair";
@@ -43,6 +44,7 @@ pub fn modelo(estado: EstadoIcone, modos: Vec<ModoMenu>) -> Vec<ItemModelo> {
     }
     itens.extend([
         ItemModelo::Separador,
+        acao(ID_VOCABULARIO, "Adicionar palavra ao vocabulário…"),
         acao(ID_HISTORICO, "Abrir histórico"),
         acao(ID_CONFIG, "Abrir configurações"),
         ItemModelo::Separador,
@@ -183,7 +185,7 @@ mod testes {
     }
 
     #[test]
-    fn menu_tem_os_cinco_itens_do_rf_05_1() {
+    fn menu_tem_os_itens_do_rf_05_1_e_a_caixa_rapida_do_rf_07_3() {
         let modos = vec![ModoMenu {
             id: "a".into(),
             rotulo: "Ditado".into(),
@@ -194,6 +196,7 @@ mod testes {
             rotulos(&itens),
             [
                 "Iniciar ditado",
+                "Adicionar palavra ao vocabulário…",
                 "Abrir histórico",
                 "Abrir configurações",
                 "Sair do Voice Desk"

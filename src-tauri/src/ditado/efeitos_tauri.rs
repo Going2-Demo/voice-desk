@@ -67,6 +67,16 @@ impl EfeitosTauri {
         Ok((modo, config))
     }
 
+    /// Dica do vocabulário para o provedor; sem ela (vazio ou erro de leitura) a transcrição segue.
+    fn dica_do_vocabulario(&self) -> Option<String> {
+        let banco = self.app.state::<Mutex<Connection>>();
+        let c = banco.lock().ok()?;
+        crate::vocabulario::dica(&c)
+            .inspect_err(|e| tracing::warn!(evento = "vocabulario_dica_falhou", codigo = %e.codigo))
+            .ok()
+            .flatten()
+    }
+
     /// Guarda o áudio e o item "falhou" no histórico (RF-02.3).
     fn registrar_falha(&self, contexto: &Contexto, erro: &ErroApp) {
         let caminhos = self.app.state::<Caminhos>();
@@ -213,6 +223,7 @@ impl Efeitos for Arc<EfeitosTauri> {
             let cofre: CofreEstado = Arc::clone(&este.app.state::<CofreEstado>());
             contexto.modo_id = modo_id;
             contexto.config_transcricao = config;
+            contexto.dica_vocabulario = este.dica_do_vocabulario();
             contexto.gravacao = gravacao;
             contexto.fabrica_transcritor = Some(crate::transcricao::fabrica_com_cofre(cofre));
             let resultado = pipeline::executar(&mut contexto).map(|_| ());

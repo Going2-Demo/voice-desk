@@ -33,6 +33,8 @@ pub struct Contexto {
     /// Modo ativo e a configuração de transcrição dele (F-02).
     pub modo_id: Option<String>,
     pub config_transcricao: ConfigTranscricao,
+    /// Dica de vocabulário enviada ao provedor (F-07); `None` com o vocabulário vazio.
+    pub dica_vocabulario: Option<String>,
     pub fabrica_transcritor: Option<FabricaCompartilhada>,
     pub transcricao_provedor: Option<ProvedorTranscricao>,
     pub transcricao_modelo: Option<String>,

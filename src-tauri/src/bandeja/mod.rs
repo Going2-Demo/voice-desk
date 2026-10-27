@@ -31,6 +31,7 @@ pub const EVENTO_NAVEGAR: &str = "bandeja:navegar";
 pub enum Acao {
     AlternarDitado,
     EscolherModo(String),
+    AdicionarPalavra,
     AbrirHistorico,
     AbrirConfiguracoes,
     Sair,
@@ -39,6 +40,7 @@ pub enum Acao {
 pub fn acao_do_item(id: &str) -> Option<Acao> {
     match id {
         menu::ID_DITADO => Some(Acao::AlternarDitado),
+        menu::ID_VOCABULARIO => Some(Acao::AdicionarPalavra),
         menu::ID_HISTORICO => Some(Acao::AbrirHistorico),
         menu::ID_CONFIG => Some(Acao::AbrirConfiguracoes),
         menu::ID_SAIR => Some(Acao::Sair),
@@ -188,6 +190,33 @@ pub fn abrir_principal(app: &AppHandle, rota: Option<&str>) {
     }
 }
 
+/// Janela da caixa rápida de vocabulário (RF-07.3): pequena, no topo, sem abrir as configurações.
+pub const JANELA_CAIXA_RAPIDA: &str = "caixa-rapida";
+
+fn abrir_caixa_rapida(app: &AppHandle) {
+    if let Some(j) = app.get_webview_window(JANELA_CAIXA_RAPIDA) {
+        let _ = j.show();
+        let _ = j.set_focus();
+        return;
+    }
+    let janela = tauri::WebviewWindowBuilder::new(
+        app,
+        JANELA_CAIXA_RAPIDA,
+        tauri::WebviewUrl::App("menu.html".into()),
+    )
+    .title("Adicionar ao vocabulário")
+    .inner_size(380.0, 150.0)
+    .resizable(false)
+    .minimizable(false)
+    .maximizable(false)
+    .always_on_top(true)
+    .center()
+    .build();
+    if let Err(e) = janela {
+        tracing::error!(evento = "caixa_rapida_falhou", detalhe = %e);
+    }
+}
+
 fn confirmar_e_sair(app: &AppHandle) {
     let app = app.clone();
     app.dialog()
@@ -227,6 +256,7 @@ fn executar(app: &AppHandle, acao: Acao) {
                 .expect("estado envenenado");
             let _ = aplicar_estado(app, estado);
         }
+        Acao::AdicionarPalavra => abrir_caixa_rapida(app),
         Acao::AbrirHistorico => abrir_principal(app, Some("/historico")),
         Acao::AbrirConfiguracoes => abrir_principal(app, Some("/config/geral")),
         Acao::Sair => confirmar_e_sair(app),
@@ -291,6 +321,7 @@ mod testes {
     #[test]
     fn cada_item_do_menu_leva_a_sua_acao() {
         assert_eq!(acao_do_item("ditado"), Some(Acao::AlternarDitado));
+        assert_eq!(acao_do_item("vocabulario"), Some(Acao::AdicionarPalavra));
         assert_eq!(acao_do_item("historico"), Some(Acao::AbrirHistorico));
         assert_eq!(acao_do_item("config"), Some(Acao::AbrirConfiguracoes));
         assert_eq!(acao_do_item("sair"), Some(Acao::Sair));
