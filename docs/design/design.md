@@ -1,5 +1,7 @@
 # Design: Voice Desk
 
+> **Escopo v3 (ENG-104, decisão do BD):** os Épicos 3 (modos e refinamento por IA), 4 (histórico), 5 (mesma configuração nas duas máquinas) e 6 (uso sem internet) estão **fora da v1**. As telas Modos, Editor de modo, Histórico, Sincronização, Modelo local e Dados e retenção saíram do protótipo (a rota mostra "Fora da v1") e as seções deste documento que as descrevem valem só como referência histórica, marcadas com ~~fora da v1~~. O Épico 7 segue inteiro. Há um único jeito de ditar (o "Padrão"), sem modos, sem IA e sem histórico; o único provedor é o Groq.
+
 > Status: rascunho para aprovação · Versão: 1 · Atualizado em: 2026-10-23
 > Fontes: docs/produto/prd.md (v2), docs/produto/resumo.md, relatório de engenharia reversa (só como referência de fluxo; nenhuma marca, texto ou visual do VoiceInk foi usado)
 > Protótipo: docs/design/prototipo/index.html (abrir com duplo clique)
@@ -81,39 +83,30 @@ Sombras: `--sombra-1` (cartões, 1 px suave), `--sombra-2` (menu da bandeja, gra
 ## Parte 2 — Experiência
 
 ### 2.1 Fundamentos
-Aplicativo de **desktop para macOS 14+ e Windows 10 (22H2)/11**, mesma experiência nas duas plataformas; diferem só as teclas (⌘/⌥/⌃/⇧ no Mac; Ctrl/Alt/Shift no Windows) e o local do ícone (barra de menus no topo; bandeja embaixo). Interface em **português do Brasil**. Não há login, conta, perfis nem administração: um único perfil (BD e usuário compartilhado usam o mesmo app, cada um na própria instalação). Biblioteca de componentes: decisão do Otávio; os tokens acima valem em qualquer uma. O app tem três superfícies: **gravador flutuante** (sobre qualquer programa, sem tirar o foco), **menu do ícone** e **janela de configuração** (modos, texto, histórico, sincronização, configurações). Mais a **página pública do projeto** (web).
+Aplicativo de **desktop para macOS 14+ e Windows 10 (22H2)/11**, mesma experiência nas duas plataformas; diferem só as teclas (⌘/⌥/⌃/⇧ no Mac; Ctrl/Alt/Shift no Windows) e o local do ícone (barra de menus no topo; bandeja embaixo). Interface em **português do Brasil**. Não há login, conta, perfis nem administração: um único perfil (BD e usuário compartilhado usam o mesmo app, cada um na própria instalação). Biblioteca de componentes: decisão do Otávio; os tokens acima valem em qualquer uma. O app tem três superfícies: **gravador flutuante** (sobre qualquer programa, sem tirar o foco), **menu do ícone** e **janela de configuração** (testar ditado, texto e configurações). Mais a **página pública do projeto** (web).
 
 ### 2.2 Arquitetura de informação
 ```
-Ícone (barra de menus / bandeja) → Menu: iniciar/parar, modo padrão, vocabulário rápido, histórico, configurações, sair
+Ícone (barra de menus / bandeja) → Menu: iniciar/parar, vocabulário rápido, configurações, sair
 Janela
  ├─ Ditado: Testar ditado (só protótipo: simula o ditado e os estados do gravador)
- ├─ Modos → editor de modo
- ├─ Histórico → detalhe do item
  ├─ Texto: Vocabulário · Substituições · Limpeza do texto
- ├─ Máquinas: Sincronização (+ exportar e importar)
- └─ App: Configurações (Geral · Atalhos · Provedores e chaves · Modelo local · Dados e retenção · Permissões) · Ícone e menu · Primeiro uso · Sobre
+ └─ App: Configurações (Geral · Atalhos · Chave do Groq · Permissões) · Ícone e menu · Primeiro uso · Sobre
 Página do projeto (web): baixar · instalar · requisitos · versões · código aberto
 ```
 A tela **Testar ditado** existe no protótipo para o BD ver o fluxo; no produto o ditado acontece nos outros programas. Se o time quiser uma tela assim no produto, é decisão nova (não está no PRD).
 
 | Tela | Rota no protótipo | Perfis | Funcionalidades (F-xx) |
 |---|---|---|---|
-| Gravador flutuante | `app.html#/ditado` | todos | F-01, F-02, F-03, F-10.3, F-23.2, F-26 |
-| Modos (lista) | `app.html#/modos` | todos | F-10, F-12 |
-| Editor de modo | `app.html#/modos/email` | todos | F-09.1, F-10, F-11, F-12, F-13, F-14, F-15, F-22.3 |
+| Gravador flutuante | `app.html#/ditado` | todos | F-01, F-02, F-03, F-23.2, F-26 |
 | Vocabulário | `app.html#/vocabulario` | todos | F-07 |
 | Substituições | `app.html#/substituicoes` | todos | F-08 |
 | Limpeza do texto | `app.html#/limpeza` | todos | F-09 |
-| Histórico e detalhe | `app.html#/historico`, `#/historico/101` | todos | F-16, F-18, F-19, F-03.5, F-11.4 |
-| Sincronização, exportar/importar | `app.html#/sincronizacao` | todos | F-20, F-21 |
-| Config. Geral | `app.html#/config/geral` | todos | F-05.2, F-23, F-24, F-25, F-26 |
-| Config. Atalhos | `app.html#/config/atalhos` | todos | F-01.1, F-01.4, F-14 |
-| Config. Provedores e chaves | `app.html#/config/provedores` | todos | F-04, F-11.1 |
-| Config. Modelo local | `app.html#/config/local` | todos | F-22 |
-| Config. Dados e retenção | `app.html#/config/dados` | todos | F-17, RNF-09 |
-| Config. Permissões | `app.html#/config/permissoes` | todos | F-03.4, F-06.2, F-13.3 |
-| Ícone e menu | `app.html#/bandeja` | todos | F-05, F-07.3, F-10.2 |
+| Config. Geral (**inclui o bloco "Texto do ditado"**: idioma, remover preenchimento, formatar, Enter depois de colar) | `app.html#/config/geral` | todos | F-02, F-03, F-05.2, F-09, F-23, F-24, F-25, F-26 |
+| Config. Atalhos | `app.html#/config/atalhos` | todos | F-01.1, F-01.4 |
+| Config. Chave do Groq | `app.html#/config/provedores` | todos | F-04 |
+| Config. Permissões | `app.html#/config/permissoes` | todos | F-03.4, F-06.2 |
+| Ícone e menu | `app.html#/bandeja` | todos | F-05, F-07.3 |
 | Primeiro uso | `app.html#/primeiro-uso` | todos | F-06 |
 | Sobre | `app.html#/sobre` | todos | F-27.4 |
 | Página do projeto | `projeto.html` | qualquer pessoa | F-27 |
@@ -122,61 +115,47 @@ A tela **Testar ditado** existe no protótipo para o BD ver o fluxo; no produto 
 #### Fluxo UJ-1 — BD responde um e-mail no Windows ditando
 Personagem: BD, no Outlook com a resposta aberta.
 1. Aciona `Ctrl+Alt+Espaço` com o cursor no corpo da resposta (gravador aparece em ≤ 300 ms, foco não sai do campo).
-2. Gravador mostra “✉️ E-mail” (modo escolhido pelo Outlook), nível de áudio e tempo; ele fala.
-3. Aciona o atalho de novo: gravador “Processando…” e as etapas transcrever → limpar → refinar → colar.
-4. Texto formal é colado no corpo do e-mail; gravador “Texto colado” e some.
-Momento de valor: texto pronto em até 6 s. · Caminho de erro: IA não responde em 15 s → cola o texto limpo e o gravador e um toast dizem “Colado sem refinamento: …”. · No protótipo: `app.html?plat=win#/ditado` (cenário “A IA não responde”).
+2. Gravador mostra “✍️ Padrão”, nível de áudio e tempo; ele fala.
+3. Aciona o atalho de novo: gravador “Processando…” e as etapas transcrever → limpar → colar.
+4. O texto limpo é colado no corpo do e-mail; gravador “Texto colado” e some.
+Momento de valor: texto pronto em até 6 s. · Caminho de erro: sem conexão → o gravador mostra “Falhou: sem conexão” e o áudio fica guardado na máquina. · No protótipo: `app.html?plat=win#/ditado` (cenário “Sem internet na transcrição”).
 
 #### Fluxo UJ-2 — BD manda uma mensagem rápida no Slack (Mac)
 Personagem: BD conversando com a Tâmara Quintanilha.
-1. Atalho com o cursor na caixa do Slack; gravador “💬 Chat”.
+1. Atalho com o cursor na caixa do Slack; gravador “✍️ Padrão”.
 2. Fala a frase com o nome incomum; atalho de novo.
-3. Texto quase literal, nome certo pelo vocabulário, colado e Enter enviado (marcado “↵”).
+3. Nome certo pelo vocabulário, texto colado e, **se o BD ligou “Apertar Enter depois de colar” em Configurações › Geral** (desligado por padrão, vale para todo programa), Enter enviado (marcado “↵”).
 Caminho de erro: desiste → `Esc` duas vezes em 1,5 s cancela; nada é colado, enviado ou guardado. `Esc` uma vez passa para o programa. · No protótipo: `app.html?plat=mac#/ditado`, programa Slack.
 
-#### Fluxo UJ-3 — Termo novo no Mac vale no Windows
-Personagem: BD com uma sigla de projeto novo.
-1. No Mac: Vocabulário › adiciona a sigla; Substituições › cria “ess el ei → SLA”.
-2. Sincronização mostra “Em dia”; no dia seguinte o Windows recebe sozinho (até 5 min).
-3. Dita a sigla no Windows: sai certa.
-Caminho de erro: Windows sem internet → “Sem conexão” com “2 alterações aguardam envio”; sincroniza ao reconectar. · No protótipo: `#/vocabulario`, `#/substituicoes`, `#/sincronizacao` (botão “Simular: sem internet”).
+#### ~~Fluxo UJ-3 — Termo novo no Mac vale no Windows~~ (fora da v1)
+Dependia de sincronização, histórico ou transcrição local (Épicos 3 a 6). Removido do protótipo.
 
-#### Fluxo UJ-4 — BD recupera um ditado que não colou
-1. Recebe o toast/gravador “Texto copiado — cole com ⌘V”.
-2. Clica no campo certo e cola; ou abre Histórico, busca uma palavra e abre o item.
-3. No detalhe, “Copiar texto final”.
-Caminho de erro: transcrição falhou sem internet → item “Falhou” com áudio; “Transcrever de novo…” escolhe o modo e copia o resultado. · No protótipo: `#/historico` (itens 103 e 105).
+#### ~~Fluxo UJ-4 — BD recupera um ditado que não colou~~ (fora da v1)
+Dependia de sincronização, histórico ou transcrição local (Épicos 3 a 6). Removido do protótipo.
 
-#### Fluxo UJ-5 — BD dita sem internet
-1. Modo “📝 Notas” usa Whisper local e Ollama.
-2. Dita normalmente; texto colado sem rede.
-Caminho de erro: modelo não baixado → o gravador avisa **antes** de gravar e aponta Configurações › Modelo local. · No protótipo: `#/config/local` (Apagar modelo) e `#/ditado` com o programa Notas.
+#### ~~Fluxo UJ-5 — BD dita sem internet~~ (fora da v1)
+Dependia de sincronização, histórico ou transcrição local (Épicos 3 a 6). Removido do protótipo.
 
 #### Fluxo UJ-6 — BD instala numa máquina nova
-1. Primeiro uso: Boas-vindas → Permissões → Atalho → Provedor → Sincronização → Teste.
+1. Primeiro uso: Boas-vindas → Permissões → Atalho → Chave do Groq → Teste.
 2. Cada permissão traz uma frase do porquê e o estado; qualquer passo pode ser pulado.
-3. Liga a sincronização; os modos e o dicionário chegam; faz o ditado de teste.
+3. Cola a chave do Groq e faz o ditado de teste.
 Caminho de erro: permissão negada → aviso “o que deixa de funcionar” e como conceder depois (Configurações › Permissões). · No protótipo: `app.html?plat=win#/primeiro-uso`.
 
 #### Fluxo UJ-7 — Colega da Going2 começa a usar
 Personagem: Ana, do time comercial.
 1. Baixa o instalador na página do projeto e instala (aviso de segurança explicado).
-2. No primeiro uso, cadastra a própria chave do Groq (ou escolhe só local).
-3. Importa o arquivo do BD: modal mostra “Agora × Depois” e pede confirmação.
-4. Dita um e-mail.
-Caminho de erro: sem chave → o passo explica como obter ou usar só o local; arquivo inválido → recusado, “Nada foi alterado”. · No protótipo: `projeto.html`, `#/primeiro-uso`, `#/sincronizacao` › Importar.
+2. No primeiro uso, cadastra a própria chave do Groq.
+3. Dita um e-mail.
+Caminho de erro: sem chave → o passo explica como obter a chave; não há alternativa local na v1 (sem chave não há ditado). · No protótipo: `projeto.html`, `#/primeiro-uso`.
 
 ### 2.4 Estados por tela
 | Tela | Vazio | Carregando | Erro | Sem permissão | Outros |
 |---|---|---|---|---|---|
-| Modos | “Nenhum modo ainda” + Criar modo (o padrão sempre existe) | esqueletos | aviso com “Tentar de novo” | — | modo padrão não pode ser excluído (botão com aviso) |
 | Vocabulário | “Seu vocabulário está vazio” + campo | esqueletos | “Tentar de novo” | — | busca sem resultado; duplicata e limite de 500 com mensagem |
 | Substituições | explicação + formulário | esqueletos | “Tentar de novo” | — | duplicata recusada; desativada fica esmaecida |
 | Limpeza | “Lista vazia” | esqueletos | “Tentar de novo” | — | prévia ao vivo |
-| Histórico | “Nenhum ditado ainda” + ir ao teste | esqueletos | “Tentar de novo” | — | busca sem resultado; áudio apagado pela retenção; itens colado/não colado/falhou |
-| Sincronização | “Desligada nesta máquina” + Ligar | “Sincronizando” | aviso “Não foi possível sincronizar” + Tentar agora | — | em dia · sincronizando · sem conexão (alterações pendentes) · erro |
-| Config. Provedores | sem chave: formulário + link | esqueletos | chave inválida; Ollama fechado | — | testando a chave (≤ 10 s) |
-| Config. Modelo local | “Não baixado” + Baixar | progresso | download interrompido: retomar ou recomeçar | — | pausado; baixado |
+| Config. Chave do Groq | sem chave: formulário + link | esqueletos | chave inválida | — | testando a chave (≤ 10 s) |
 | Config. Permissões | — | — | — | microfone/acessibilidade negados com “o que deixa de funcionar” | concedida |
 | Gravador | — | processando | falhou; modelo ausente; sem permissão do microfone | texto copiado (colagem recusada) | colado sem refinamento; nenhuma fala; microfone padrão em uso; aguarde |
 | Primeiro uso | — | — | — | permissão pendente com aviso | passo pulado |
@@ -186,9 +165,7 @@ Caminho de erro: sem chave → o passo explica como obter ou usar só o local; a
 |---|---|
 | Formulário | Validação ao enviar; o erro aparece abaixo do campo, em texto, com borda vermelha e o foco volta ao campo; mensagem diz como corrigir. |
 | Interruptor | Efeito imediato e toast curto “Preferência salva”; nunca precisa de “Salvar”. |
-| Editor de modo | Botão “Salvar modo” explícito; “Cancelar” descarta; seção de IA só aparece com “Refinar com IA” ligado; contador do prompt (4.000). |
 | Ação destrutiva | Modal com o nome do item e botão vermelho com verbo (“Excluir modo”); apagar tudo repete a quantidade. |
-| Associar programa/gatilho | Programa ou palavra que já pertence a outro modo é recusado dizendo qual; um item por modo. |
 | Atalho | Precisa de modificador; atalho do sistema é recusado; vale sem reiniciar o app. |
 | Chave de API | Salvar testa no provedor (≤ 10 s) e mostra válida/inválida; depois só os 4 últimos caracteres; trocar e apagar (com confirmação). |
 | Busca (vocabulário, histórico) | Filtra ao digitar; “nenhum resultado” com ação de limpar. |
@@ -216,3 +193,7 @@ O produto é de desktop, mas a janela pode ser redimensionada e o protótipo é 
 - [PREMISSA] Licença exibida em “Sobre” como “a definir” até a pergunta 5 do PRD ser decidida.
 - [PREMISSA] No Windows, a permissão de colagem aparece como “Colar em outros programas” apenas como orientação; o comportamento real depende do Otávio.
 - Divergência com o PRD: nenhuma. O PRD não pede uma tela de “início/painel”, por isso a janela abre em Modos/Testar ditado e o uso diário acontece pelo atalho e pelo ícone.
+- [PREMISSA] (ENG-104) Idioma, remoção de preenchimento, formatação e Enter depois de colar ficam em **Configurações › Geral, bloco "Texto do ditado"**, valendo para todos os ditados. A lista de palavras de preenchimento continua em "Limpeza do texto". Enter vem **desligado**.
+- [PREMISSA] (ENG-104) O menu do ícone da v1 tem: iniciar/parar ditado, adicionar palavra ao vocabulário, abrir configurações e sair. O primeiro uso tem 5 passos: Boas-vindas, Permissões, Atalho, Chave do Groq e Teste. Não há alternativa sem chave.
+- [PREMISSA] (ENG-104) Sem histórico nem retenção, o app não oferece tela para ver ou apagar áudios e textos guardados; é decisão para o BD/Otávio (ver premissa do PRD). Se o BD quiser, basta um botão "Apagar dados guardados" em Configurações › Geral.
+- Os componentes de modo (cartão de modo, editor, emoji do modo no gravador, linha de histórico) nas seções 1.6, 2.5 e 2.6 ficam sem uso na v1; o gravador mostra apenas "✍️ Padrão".

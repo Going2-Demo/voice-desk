@@ -16,34 +16,27 @@
 
     <section aria-labelledby="fluxos">
       <h2 id="fluxos">Comece pelos fluxos (jornadas do PRD)</h2>
+      <p class="suave pequeno">v3 do escopo: modos, histórico, sincronização, modelo local e retenção (Épicos 3 a 6) saíram da v1 por decisão do BD.</p>
       <div class="fluxos">
-        <div class="cartao"><h3>UJ-1 · Responder um e-mail ditando (Windows)</h3><p class="suave pequeno">Atalho → gravador → modo E-mail pelo Outlook → texto refinado colado. Teste o erro “IA não responde”.</p><a class="btn primario" href="app.html?plat=win#/ditado">Abrir fluxo</a></div>
-        <div class="cartao"><h3>UJ-2 · Mensagem rápida no Slack (Mac)</h3><p class="suave pequeno">Modo Chat, nome certo pelo vocabulário, Enter enviado. Cancele com Esc duas vezes.</p><a class="btn primario" href="app.html?plat=mac#/ditado">Abrir fluxo</a></div>
-        <div class="cartao"><h3>UJ-3 · Termo novo no Mac vale no Windows</h3><p class="suave pequeno">Vocabulário e substituição, depois o estado da sincronização entre máquinas.</p><a class="btn primario" href="app.html#/vocabulario">Abrir fluxo</a></div>
-        <div class="cartao"><h3>UJ-4 · Recuperar um ditado que não colou</h3><p class="suave pequeno">Aviso de texto copiado, busca no histórico, copiar e transcrever de novo.</p><a class="btn primario" href="app.html#/historico">Abrir fluxo</a></div>
-        <div class="cartao"><h3>UJ-5 · Ditar sem internet</h3><p class="suave pequeno">Modo Notas com Whisper local; modelo ausente avisa antes de gravar.</p><a class="btn primario" href="app.html#/config/local">Abrir fluxo</a></div>
-        <div class="cartao"><h3>UJ-6 · Instalar numa máquina nova</h3><p class="suave pequeno">Primeiro uso guiado: permissões, atalho, chave, sincronização e ditado de teste.</p><a class="btn primario" href="app.html?plat=win#/primeiro-uso">Abrir fluxo</a></div>
-        <div class="cartao"><h3>UJ-7 · Colega começa a usar</h3><p class="suave pequeno">Baixa na página do projeto, cadastra a própria chave e importa a configuração do BD.</p><a class="btn primario" href="projeto.html">Abrir fluxo</a></div>
+        <div class="cartao"><h3>UJ-1 · Responder um e-mail ditando (Windows)</h3><p class="suave pequeno">Atalho → gravador → texto limpo colado no Outlook. Teste o erro “sem conexão”.</p><a class="btn primario" href="app.html?plat=win#/ditado">Abrir fluxo</a></div>
+        <div class="cartao"><h3>UJ-2 · Mensagem rápida no Slack (Mac)</h3><p class="suave pequeno">Nome certo pelo vocabulário e Enter depois de colar, ligado em Configurações › Geral. Cancele com Esc duas vezes.</p><a class="btn primario" href="app.html?plat=mac#/ditado">Abrir fluxo</a></div>
+        <div class="cartao"><h3>UJ-6 · Instalar numa máquina nova</h3><p class="suave pequeno">Primeiro uso guiado: permissões, atalho, chave do Groq e ditado de teste.</p><a class="btn primario" href="app.html?plat=win#/primeiro-uso">Abrir fluxo</a></div>
+        <div class="cartao"><h3>UJ-7 · Colega começa a usar</h3><p class="suave pequeno">Baixa na página do projeto, cadastra a própria chave do Groq e faz o primeiro ditado.</p><a class="btn primario" href="projeto.html">Abrir fluxo</a></div>
       </div>
     </section>
 
     <section aria-labelledby="telas">
       <h2 id="telas">Telas por funcionalidade (F-xx)</h2>
       <div class="tabela-wrap"><table class="tabela-resp"><thead><tr><th>Tela</th><th>Funcionalidades</th><th>Abrir</th></tr></thead><tbody>
-        <tr><td>Testar ditado e gravador flutuante</td><td>F-01, F-02, F-03, F-26 (e estados do gravador: F-10.3, F-23.2)</td><td><a href="app.html#/ditado">#/ditado</a></td></tr>
-        <tr><td>Modos (lista e editor)</td><td>F-10, F-11, F-12, F-13, F-14, F-15, F-09.1</td><td><a href="app.html#/modos">#/modos</a> · <a href="app.html#/modos/email">editor</a></td></tr>
+        <tr><td>Testar ditado e gravador flutuante</td><td>F-01, F-02, F-03, F-26 (e estados do gravador: F-23.2)</td><td><a href="app.html#/ditado">#/ditado</a></td></tr>
         <tr><td>Vocabulário</td><td>F-07</td><td><a href="app.html#/vocabulario">#/vocabulario</a></td></tr>
         <tr><td>Substituições</td><td>F-08</td><td><a href="app.html#/substituicoes">#/substituicoes</a></td></tr>
         <tr><td>Limpeza do texto</td><td>F-09</td><td><a href="app.html#/limpeza">#/limpeza</a></td></tr>
-        <tr><td>Histórico, detalhe e exportar CSV</td><td>F-16, F-18, F-19</td><td><a href="app.html#/historico">#/historico</a> · <a href="app.html#/historico/101">detalhe</a></td></tr>
-        <tr><td>Sincronização, exportar e importar</td><td>F-20, F-21</td><td><a href="app.html#/sincronizacao">#/sincronizacao</a></td></tr>
-        <tr><td>Configurações: geral (microfone, sons, mídia, sem fala)</td><td>F-05.2, F-23, F-24, F-25, F-26</td><td><a href="app.html#/config/geral">#/config/geral</a></td></tr>
-        <tr><td>Configurações: atalhos</td><td>F-01.1, F-14</td><td><a href="app.html#/config/atalhos">#/config/atalhos</a></td></tr>
-        <tr><td>Configurações: provedores e chaves</td><td>F-04, F-11</td><td><a href="app.html#/config/provedores">#/config/provedores</a></td></tr>
-        <tr><td>Configurações: modelo local</td><td>F-22</td><td><a href="app.html#/config/local">#/config/local</a></td></tr>
-        <tr><td>Configurações: dados e retenção</td><td>F-17, F-19, RNF-09</td><td><a href="app.html#/config/dados">#/config/dados</a></td></tr>
-        <tr><td>Configurações: permissões</td><td>F-03.4, F-06.2, F-13.3</td><td><a href="app.html#/config/permissoes">#/config/permissoes</a></td></tr>
-        <tr><td>Ícone e menu da bandeja / barra de menus</td><td>F-05, F-07.3, F-10.2</td><td><a href="app.html#/bandeja">#/bandeja</a></td></tr>
+        <tr><td>Configurações: geral (idioma, limpeza, Enter, microfone, sons, mídia, sem fala)</td><td>F-02, F-03, F-05.2, F-09, F-23, F-24, F-25, F-26</td><td><a href="app.html#/config/geral">#/config/geral</a></td></tr>
+        <tr><td>Configurações: atalhos</td><td>F-01.1</td><td><a href="app.html#/config/atalhos">#/config/atalhos</a></td></tr>
+        <tr><td>Configurações: chave do Groq</td><td>F-04</td><td><a href="app.html#/config/provedores">#/config/provedores</a></td></tr>
+        <tr><td>Configurações: permissões</td><td>F-03.4, F-06.2</td><td><a href="app.html#/config/permissoes">#/config/permissoes</a></td></tr>
+        <tr><td>Ícone e menu da bandeja / barra de menus</td><td>F-05, F-07.3</td><td><a href="app.html#/bandeja">#/bandeja</a></td></tr>
         <tr><td>Primeiro uso guiado</td><td>F-06</td><td><a href="app.html#/primeiro-uso">#/primeiro-uso</a></td></tr>
         <tr><td>Sobre</td><td>F-27.4</td><td><a href="app.html#/sobre">#/sobre</a></td></tr>
         <tr><td>Página pública do projeto (download)</td><td>F-27</td><td><a href="projeto.html">projeto.html</a></td></tr>
@@ -55,7 +48,7 @@
       <ul>
         <li>O documento <code>docs/design/design.md</code> é o contrato; em caso de conflito com o protótipo, ele vence.</li>
         <li>Tudo é simulado em memória: nada é gravado, enviado ou instalado. Os dados são fictícios.</li>
-        <li>Parâmetros de endereço úteis: <code>app.html?plat=win&amp;tema=escuro&amp;estado=vazio#/modos</code>.</li>
+        <li>Parâmetros de endereço úteis: <code>app.html?plat=win&amp;tema=escuro&amp;estado=vazio#/vocabulario</code>.</li>
       </ul>
     </section>
   </div>

@@ -8,10 +8,10 @@
     plat: qs.get("plat") === "win" ? "win" : "mac",
     estado: ["vazio", "carregando", "erro"].indexOf(qs.get("estado")) >= 0 ? qs.get("estado") : "normal",
     tema: qs.get("tema") === "escuro" ? "escuro" : "claro",
-    modos: clone(D.modos), vocab: D.vocabulario.slice(), subs: clone(D.substituicoes), fill: D.preenchimento.slice(),
+    modos: clone(D.modos).slice(0, 1), vocab: D.vocabulario.slice(), subs: clone(D.substituicoes), fill: D.preenchimento.slice(),
     hist: clone(D.historico),
     cfg: { iniciarComSistema: true, sons: true, som: "Gota", pausarMidia: true, descartarSemFala: true, mic: "Padrão do sistema", micConectado: true,
-           retAudio: "7", retHist: "90", atalhoGlobal: { mac: "⌃⌥Espaço", win: "Ctrl+Alt+Espaço" } },
+           idioma: "pt-BR", enter: false, limpeza: true, formatacao: true, atalhoGlobal: { mac: "⌃⌥Espaço", win: "Ctrl+Alt+Espaço" } },
     chaves: { groq: { salva: true, fim: "a9F2", estado: "válida" } },
     ollama: { url: "http://localhost:11434", ativo: true },
     modelo: { estado: "baixado", pct: 0 },
@@ -91,15 +91,11 @@
   /* ---------- navegação ---------- */
   var MENU = [
     { grupo: "Ditado", itens: [
-      { r: "ditado", ic: "🎙️", t: "Testar ditado" },
-      { r: "modos", ic: "🧩", t: "Modos" },
-      { r: "historico", ic: "🕘", t: "Histórico" } ] },
+      { r: "ditado", ic: "🎙️", t: "Testar ditado" } ] },
     { grupo: "Texto", itens: [
       { r: "vocabulario", ic: "📖", t: "Vocabulário" },
       { r: "substituicoes", ic: "🔁", t: "Substituições" },
       { r: "limpeza", ic: "🧹", t: "Limpeza do texto" } ] },
-    { grupo: "Máquinas", itens: [
-      { r: "sincronizacao", ic: "🔄", t: "Sincronização" } ] },
     { grupo: "App", itens: [
       { r: "config/geral", ic: "⚙️", t: "Configurações" },
       { r: "bandeja", ic: "🔔", t: "Ícone e menu" },
@@ -124,6 +120,8 @@
     document.documentElement.setAttribute("data-tema", S.tema);
     document.documentElement.setAttribute("data-plat", S.plat);
     var r = rotaAtual(), partes = r.split("/"), html = null;
+    if (/^(modos|historico|sincronizacao|config\/local|config\/dados)(\/|$)/.test(r)) html = VD.cabecalho("Fora da v1") + '<div class="aviso info"><span aria-hidden="true">ℹ️</span><div class="conteudo">Esta tela (modos, histórico, sincronização entre máquinas, modelo local e retenção) saiu do escopo da v1 por decisão do BD (ENG-104). Segue só como referência no PRD.</div></div><p style="margin-top:12px"><a href="#/ditado">Voltar ao teste de ditado</a></p>';
+    if (/^(modos|historico|sincronizacao|config\/local|config\/dados)(\/|$)/.test(r)) html = VD.cabecalho("Fora da v1") + '<div class="aviso info"><span aria-hidden="true">ℹ️</span><div class="conteudo">Esta tela (modos, histórico, sincronização entre máquinas, modelo local e retenção) saiu do escopo da v1 por decisão do BD (ENG-104). Segue só como referência no PRD.</div></div><p style="margin-top:12px"><a href="#/ditado">Voltar ao teste de ditado</a></p>';
     for (var i = 0; i < VD.rotas.length && html === null; i++) {
       var p = VD.rotas[i].padrao.split("/");
       if (p.length !== partes.length) continue;

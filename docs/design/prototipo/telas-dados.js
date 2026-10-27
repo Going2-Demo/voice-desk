@@ -132,7 +132,7 @@
   /* ================= VOCABULÁRIO ================= */
   var buscaVoc = "";
   VD.rota("vocabulario", function () {
-    return VD.cabecalho("Vocabulário", "Nomes, siglas e termos que a transcrição deve escrever certo. Vale para todos os modos.",
+    return VD.cabecalho("Vocabulário", "Nomes, siglas e termos que a transcrição deve escrever certo. Vale para todos os ditados.",
       '<span class="selo">' + S.vocab.length + " de 500 palavras</span>") +
       VD.estadoLista(function () {
         var lista = S.vocab.filter(function (p) { return p.toLowerCase().indexOf(buscaVoc.toLowerCase()) >= 0; });
@@ -160,7 +160,7 @@
   /* ================= SUBSTITUIÇÕES ================= */
   var subEd = null;
   VD.rota("substituicoes", function () {
-    return VD.cabecalho("Substituições", "Troca uma palavra ou expressão por outra em todo ditado, antes do refinamento por IA. Não diferencia maiúsculas de minúsculas.") +
+    return VD.cabecalho("Substituições", "Troca uma palavra ou expressão por outra em todo ditado. Não diferencia maiúsculas de minúsculas.") +
       VD.estadoLista(function () {
         return '<div class="cartao"><form data-envia="sub-add" novalidate><div class="duas-col"><div class="campo"><label for="s-de">Quando a transcrição disser</label><input id="s-de" type="text" value="' + esc(subEd ? subEd.de : "") + '" placeholder="Ex.: gou tu"></div><div class="campo"><label for="s-para">Escrever</label><input id="s-para" type="text" value="' + esc(subEd ? subEd.para : "") + '" placeholder="Ex.: Going2"></div></div><span class="erro-campo" id="s-erro" role="alert"></span><div class="acoes"><button class="btn primario">' + (subEd ? "Salvar substituição" : "Adicionar substituição") + "</button>" + (subEd ? '<button type="button" class="btn" data-acao="sub-cancela">Cancelar edição</button>' : "") + "</div></form></div>" +
           '<div class="tabela-wrap" style="margin-top:20px"><table class="tabela-resp"><thead><tr><th>Original</th><th>Substituto</th><th>Ativa</th><th><span class="so-leitor">Ações</span></th></tr></thead><tbody>' +
@@ -190,7 +190,7 @@
   }
   var testeLimpeza = "é… então assim, tipo, preciso falar com o Pereira né sobre o contrato";
   VD.rota("limpeza", function () {
-    return VD.cabecalho("Limpeza do texto", "Etapa sem IA: tira as muletas da fala e arruma a pontuação. Cada modo liga ou desliga a remoção e a formatação.") +
+    return VD.cabecalho("Limpeza do texto", "Etapa sem IA: tira as muletas da fala e arruma a pontuação. Em Configurações › Geral você liga ou desliga a remoção e a formatação.") +
       VD.estadoLista(function () {
         return '<div class="cartao"><h2>Palavras de preenchimento</h2><p class="dica">Em português e inglês. Edite a lista como quiser.</p><ul class="lista-chips" style="list-style:none;padding:0">' + S.fill.map(function (w, i) { return '<li class="chip"><span>' + esc(w) + '</span><button type="button" data-acao="fill-rm" data-i="' + i + '" aria-label="Remover ' + esc(w) + '">×</button></li>'; }).join("") + '</ul><form data-envia="fill-add" class="acoes" style="margin-top:12px"><label class="so-leitor" for="f-nova">Nova palavra</label><input id="f-nova" type="text" style="max-width:240px" placeholder="Ex.: basicamente"><button class="btn">Adicionar</button></form></div>' +
           '<div class="cartao"><h2>Teste a limpeza</h2><p class="dica">Digite uma frase como se tivesse falado e veja o resultado.</p><div class="campo"><label for="f-teste">Texto falado</label><textarea id="f-teste" data-entra="fill-teste" style="min-height:80px">' + esc(testeLimpeza) + '</textarea></div><span class="rotulo">Depois da limpeza</span><div class="texto-bloco" id="f-saida" aria-live="polite">' + esc(limpa(testeLimpeza)) + "</div></div>";
