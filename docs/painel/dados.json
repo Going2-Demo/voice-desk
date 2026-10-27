@@ -1,12 +1,12 @@
 {
   "versao": 1,
-  "gerado_em": "2026-10-26T08:00:00-03:00",
-  "_campos_timeline": "action=status_changed; details.from e details.to (status de origem e destino); created_at (UTC, convertido para America/Sao_Paulo); actor_id identifica quem moveu (Dev = ator da entrada em in_progress)",
+  "gerado_em": "2026-10-27T08:00:00-03:00",
+  "_campos_timeline": "action=status_changed; details.from / details.to; created_at; actor_id",
   "produto": {
     "nome": "Voice Desk",
     "projeto_id": "5f6b94c4-d698-4372-b688-96b5bbc7fef9",
     "card_mae": "ENG-50",
-    "prioridade": "high",
+    "prioridade": null,
     "repositorio": "going2-demo/voice-desk"
   },
   "resumo": {
@@ -22,125 +22,73 @@
   },
   "epicos": [
     {
-      "identificador": "ENG-64",
-      "titulo": "Épico 7 · Conforto na gravação",
-      "status": "backlog",
-      "total": 4,
-      "concluidas": 0,
-      "percentual": 0.0,
-      "ciclo_medio_horas": null,
+      "identificador": "ENG-58",
+      "titulo": "Épico 1 · Ditado de ponta a ponta",
+      "status": "in_progress",
+      "total": 18,
+      "concluidas": 18,
+      "percentual": 100.0,
+      "ciclo_medio_horas": 3.3,
       "burnup": [
         {
           "data": "2026-10-23",
-          "escopo": 4,
+          "escopo": 8,
           "concluidas": 0
         },
         {
           "data": "2026-10-24",
-          "escopo": 4,
-          "concluidas": 0
+          "escopo": 10,
+          "concluidas": 10
         },
         {
           "data": "2026-10-25",
-          "escopo": 4,
-          "concluidas": 0
+          "escopo": 18,
+          "concluidas": 18
         },
         {
           "data": "2026-10-26",
-          "escopo": 4,
-          "concluidas": 0
+          "escopo": 18,
+          "concluidas": 18
+        },
+        {
+          "data": "2026-10-27",
+          "escopo": 18,
+          "concluidas": 18
         }
       ]
     },
     {
-      "identificador": "ENG-63",
-      "titulo": "Épico 6 · Uso sem internet",
+      "identificador": "ENG-59",
+      "titulo": "Épico 2 · Texto do jeito do BD",
       "status": "backlog",
-      "total": 1,
+      "total": 3,
       "concluidas": 0,
       "percentual": 0.0,
       "ciclo_medio_horas": null,
       "burnup": [
         {
           "data": "2026-10-23",
-          "escopo": 1,
+          "escopo": 3,
           "concluidas": 0
         },
         {
           "data": "2026-10-24",
-          "escopo": 1,
+          "escopo": 3,
           "concluidas": 0
         },
         {
           "data": "2026-10-25",
-          "escopo": 1,
+          "escopo": 3,
           "concluidas": 0
         },
         {
           "data": "2026-10-26",
-          "escopo": 1,
-          "concluidas": 0
-        }
-      ]
-    },
-    {
-      "identificador": "ENG-62",
-      "titulo": "Épico 5 · Mesma configuração nas duas máquinas",
-      "status": "backlog",
-      "total": 2,
-      "concluidas": 0,
-      "percentual": 0.0,
-      "ciclo_medio_horas": null,
-      "burnup": [
-        {
-          "data": "2026-10-23",
-          "escopo": 2,
+          "escopo": 3,
           "concluidas": 0
         },
         {
-          "data": "2026-10-24",
-          "escopo": 2,
-          "concluidas": 0
-        },
-        {
-          "data": "2026-10-25",
-          "escopo": 2,
-          "concluidas": 0
-        },
-        {
-          "data": "2026-10-26",
-          "escopo": 2,
-          "concluidas": 0
-        }
-      ]
-    },
-    {
-      "identificador": "ENG-61",
-      "titulo": "Épico 4 · Histórico",
-      "status": "backlog",
-      "total": 4,
-      "concluidas": 0,
-      "percentual": 0.0,
-      "ciclo_medio_horas": null,
-      "burnup": [
-        {
-          "data": "2026-10-23",
-          "escopo": 4,
-          "concluidas": 0
-        },
-        {
-          "data": "2026-10-24",
-          "escopo": 4,
-          "concluidas": 0
-        },
-        {
-          "data": "2026-10-25",
-          "escopo": 4,
-          "concluidas": 0
-        },
-        {
-          "data": "2026-10-26",
-          "escopo": 4,
+          "data": "2026-10-27",
+          "escopo": 3,
           "concluidas": 0
         }
       ]
@@ -173,68 +121,155 @@
           "data": "2026-10-26",
           "escopo": 6,
           "concluidas": 0
+        },
+        {
+          "data": "2026-10-27",
+          "escopo": 6,
+          "concluidas": 0
         }
       ]
     },
     {
-      "identificador": "ENG-59",
-      "titulo": "Épico 2 · Texto do jeito do BD",
+      "identificador": "ENG-61",
+      "titulo": "Épico 4 · Histórico",
       "status": "backlog",
-      "total": 3,
+      "total": 4,
       "concluidas": 0,
       "percentual": 0.0,
       "ciclo_medio_horas": null,
       "burnup": [
         {
           "data": "2026-10-23",
-          "escopo": 3,
+          "escopo": 4,
           "concluidas": 0
         },
         {
           "data": "2026-10-24",
-          "escopo": 3,
+          "escopo": 4,
           "concluidas": 0
         },
         {
           "data": "2026-10-25",
-          "escopo": 3,
+          "escopo": 4,
           "concluidas": 0
         },
         {
           "data": "2026-10-26",
-          "escopo": 3,
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-27",
+          "escopo": 4,
           "concluidas": 0
         }
       ]
     },
     {
-      "identificador": "ENG-58",
-      "titulo": "Épico 1 · Ditado de ponta a ponta",
-      "status": "in_progress",
-      "total": 18,
-      "concluidas": 18,
-      "percentual": 100.0,
-      "ciclo_medio_horas": 3.3,
+      "identificador": "ENG-62",
+      "titulo": "Épico 5 · Mesma configuração nas duas máquinas",
+      "status": "backlog",
+      "total": 2,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
       "burnup": [
         {
           "data": "2026-10-23",
-          "escopo": 8,
+          "escopo": 2,
           "concluidas": 0
         },
         {
           "data": "2026-10-24",
-          "escopo": 10,
-          "concluidas": 10
+          "escopo": 2,
+          "concluidas": 0
         },
         {
           "data": "2026-10-25",
-          "escopo": 18,
-          "concluidas": 18
+          "escopo": 2,
+          "concluidas": 0
         },
         {
           "data": "2026-10-26",
-          "escopo": 18,
-          "concluidas": 18
+          "escopo": 2,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-27",
+          "escopo": 2,
+          "concluidas": 0
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-63",
+      "titulo": "Épico 6 · Uso sem internet",
+      "status": "backlog",
+      "total": 1,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 1,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 1,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 1,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-26",
+          "escopo": 1,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-27",
+          "escopo": 1,
+          "concluidas": 0
+        }
+      ]
+    },
+    {
+      "identificador": "ENG-64",
+      "titulo": "Épico 7 · Conforto na gravação",
+      "status": "backlog",
+      "total": 4,
+      "concluidas": 0,
+      "percentual": 0.0,
+      "ciclo_medio_horas": null,
+      "burnup": [
+        {
+          "data": "2026-10-23",
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-24",
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-25",
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-26",
+          "escopo": 4,
+          "concluidas": 0
+        },
+        {
+          "data": "2026-10-27",
+          "escopo": 4,
+          "concluidas": 0
         }
       ]
     }
@@ -287,6 +322,18 @@
       "done": 18,
       "blocked": 0,
       "in_review": 0
+    },
+    {
+      "data": "2026-10-27",
+      "backlog": 20,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 18,
+      "blocked": 0,
+      "in_review": 0
     }
   ],
   "vazao_semanal": [
@@ -320,10 +367,9 @@
       "identificador": "ENG-101",
       "titulo": "Bug: indicador de acessibilidade não atualiza após conceder (Mac)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Davi",
+      "dev": "Marta",
       "retornos": 1,
       "reinicios": 0,
       "inicio": "2026-10-25T10:19:43-03:00",
@@ -412,10 +458,9 @@
       "identificador": "ENG-102",
       "titulo": "Bug: Mac pede a senha do login ao salvar a chave do Groq (Keychain)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Bia",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-25T10:19:47-03:00",
@@ -469,10 +514,9 @@
       "identificador": "ENG-100",
       "titulo": "Bug: ditado no Mac não cola o texto automaticamente (só o Cmd+V manual funciona)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-25T09:07:48-03:00",
@@ -526,10 +570,9 @@
       "identificador": "ENG-99",
       "titulo": "Bug: indicador de permissão do microfone não atualiza após conceder (Mac)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Davi",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-25T09:07:42-03:00",
@@ -573,10 +616,9 @@
       "identificador": "ENG-97",
       "titulo": "Bug: instalador do Mac bloqueado pelo Gatekeeper (app sem assinatura e notarização)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Bia",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-25T02:02:39-03:00",
@@ -620,10 +662,9 @@
       "identificador": "ENG-95",
       "titulo": "Bug: ditado não cola o texto no Windows (gravador mostra pronto)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-25T01:35:50-03:00",
@@ -667,10 +708,9 @@
       "identificador": "ENG-98",
       "titulo": "Bug: Mac não pede permissão de microfone (falta NSMicrophoneUsageDescription)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Bia",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-25T01:35:56-03:00",
@@ -714,10 +754,9 @@
       "identificador": "ENG-96",
       "titulo": "Bug: tela inicial do app vazia após a instalação (Modos provisória)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Davi",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-25T01:36:02-03:00",
@@ -761,10 +800,9 @@
       "identificador": "ENG-71",
       "titulo": "E1.7 · Primeiro uso guiado",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "História",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-24T19:02:13-03:00",
@@ -808,10 +846,9 @@
       "identificador": "ENG-70",
       "titulo": "E1.6 · Ícone na bandeja ou barra de menus e iniciar com o sistema",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "História",
       "status": "done",
-      "dev": "Davi",
+      "dev": "Marta",
       "retornos": 1,
       "reinicios": 3,
       "inicio": "2026-10-24T10:14:07-03:00",
@@ -885,10 +922,9 @@
       "identificador": "ENG-93",
       "titulo": "Bug: rolagem horizontal em Configurações abaixo de 720 px (casca da fundação)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-24T18:13:05-03:00",
@@ -927,10 +963,9 @@
       "identificador": "ENG-94",
       "titulo": "Bug: casca do app não recolhe a lateral abaixo de 720 px",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "Bug",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-24T17:01:41-03:00",
@@ -974,10 +1009,9 @@
       "identificador": "ENG-68",
       "titulo": "E1.4 · Colar no programa em foco",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "História",
       "status": "done",
-      "dev": "Bia",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-24T16:04:07-03:00",
@@ -1076,10 +1110,9 @@
       "identificador": "ENG-67",
       "titulo": "E1.3 · Transcrição na nuvem (Groq)",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "História",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 0,
       "inicio": "2026-10-24T16:04:07-03:00",
@@ -1148,10 +1181,9 @@
       "identificador": "ENG-72",
       "titulo": "E1.8 · Instaladores públicos e página do projeto",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "História",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 1,
       "inicio": "2026-10-24T12:01:46-03:00",
@@ -1195,10 +1227,9 @@
       "identificador": "ENG-69",
       "titulo": "E1.5 · Chaves de API no cofre do sistema",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "História",
       "status": "done",
-      "dev": "Bia",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 1,
       "inicio": "2026-10-24T10:13:56-03:00",
@@ -1267,10 +1298,9 @@
       "identificador": "ENG-66",
       "titulo": "E1.2 · Gravar com atalho global e gravador flutuante",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "História",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 0,
       "reinicios": 1,
       "inicio": "2026-10-24T10:13:57-03:00",
@@ -1334,10 +1364,9 @@
       "identificador": "ENG-65",
       "titulo": "E1.1 · Fundação percorrível",
       "epico": "ENG-58",
-      "epico_id": "01a16b3f-b46d-7259-bfd7-9616becd37d3",
       "tipo": "História",
       "status": "done",
-      "dev": "Roberval",
+      "dev": "Marta",
       "retornos": 1,
       "reinicios": 0,
       "inicio": "2026-10-23T21:17:53-03:00",
@@ -1446,10 +1475,9 @@
       "identificador": "ENG-92",
       "titulo": "E7.4 · Descartar ditado sem fala",
       "epico": "ENG-64",
-      "epico_id": "01a16b3f-e671-75c6-afef-3fa0612ad08c",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1462,10 +1490,9 @@
       "identificador": "ENG-91",
       "titulo": "E7.3 · Pausar a mídia durante o ditado",
       "epico": "ENG-64",
-      "epico_id": "01a16b3f-e671-75c6-afef-3fa0612ad08c",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1478,10 +1505,9 @@
       "identificador": "ENG-90",
       "titulo": "E7.2 · Sons de início e fim",
       "epico": "ENG-64",
-      "epico_id": "01a16b3f-e671-75c6-afef-3fa0612ad08c",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1494,10 +1520,9 @@
       "identificador": "ENG-89",
       "titulo": "E7.1 · Escolha do microfone",
       "epico": "ENG-64",
-      "epico_id": "01a16b3f-e671-75c6-afef-3fa0612ad08c",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1510,10 +1535,9 @@
       "identificador": "ENG-88",
       "titulo": "E6.1 · Transcrição local (Whisper)",
       "epico": "ENG-63",
-      "epico_id": "01a16b3f-de56-7abc-aa4a-3334667b6d1f",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1526,10 +1550,9 @@
       "identificador": "ENG-87",
       "titulo": "E5.2 · Exportar e importar a configuração",
       "epico": "ENG-62",
-      "epico_id": "01a16b3f-d51e-7a86-b8ba-4d2ae112e6ec",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1542,10 +1565,9 @@
       "identificador": "ENG-86",
       "titulo": "E5.1 · Sincronização da configuração entre máquinas",
       "epico": "ENG-62",
-      "epico_id": "01a16b3f-d51e-7a86-b8ba-4d2ae112e6ec",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1558,10 +1580,9 @@
       "identificador": "ENG-85",
       "titulo": "E4.4 · Exportar o histórico em CSV",
       "epico": "ENG-61",
-      "epico_id": "01a16b3f-ccf0-7241-87c5-a26d46e17dc1",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1574,10 +1595,9 @@
       "identificador": "ENG-84",
       "titulo": "E4.3 · Transcrever de novo",
       "epico": "ENG-61",
-      "epico_id": "01a16b3f-ccf0-7241-87c5-a26d46e17dc1",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1590,10 +1610,9 @@
       "identificador": "ENG-83",
       "titulo": "E4.2 · Retenção automática",
       "epico": "ENG-61",
-      "epico_id": "01a16b3f-ccf0-7241-87c5-a26d46e17dc1",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1606,10 +1625,9 @@
       "identificador": "ENG-82",
       "titulo": "E4.1 · Histórico com busca e detalhe",
       "epico": "ENG-61",
-      "epico_id": "01a16b3f-ccf0-7241-87c5-a26d46e17dc1",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1622,10 +1640,9 @@
       "identificador": "ENG-81",
       "titulo": "E3.6 · Palavra-gatilho falada",
       "epico": "ENG-60",
-      "epico_id": "01a16b3f-c4c0-7251-b1f8-79b82a4ec612",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1638,10 +1655,9 @@
       "identificador": "ENG-80",
       "titulo": "E3.5 · Atalho por modo",
       "epico": "ENG-60",
-      "epico_id": "01a16b3f-c4c0-7251-b1f8-79b82a4ec612",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1654,10 +1670,9 @@
       "identificador": "ENG-79",
       "titulo": "E3.4 · Contexto do texto selecionado e da área de transferência",
       "epico": "ENG-60",
-      "epico_id": "01a16b3f-c4c0-7251-b1f8-79b82a4ec612",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1670,10 +1685,9 @@
       "identificador": "ENG-78",
       "titulo": "E3.3 · Troca automática de modo pelo programa em foco",
       "epico": "ENG-60",
-      "epico_id": "01a16b3f-c4c0-7251-b1f8-79b82a4ec612",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1686,10 +1700,9 @@
       "identificador": "ENG-77",
       "titulo": "E3.2 · Refinamento por IA (Groq e Ollama)",
       "epico": "ENG-60",
-      "epico_id": "01a16b3f-c4c0-7251-b1f8-79b82a4ec612",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1702,10 +1715,9 @@
       "identificador": "ENG-76",
       "titulo": "E3.1 · Modos",
       "epico": "ENG-60",
-      "epico_id": "01a16b3f-c4c0-7251-b1f8-79b82a4ec612",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1718,10 +1730,9 @@
       "identificador": "ENG-75",
       "titulo": "E2.3 · Remoção de palavras de preenchimento e formatação",
       "epico": "ENG-59",
-      "epico_id": "01a16b3f-bc8f-78c1-9ab8-07b97ba84625",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1734,10 +1745,9 @@
       "identificador": "ENG-74",
       "titulo": "E2.2 · Substituição de palavras",
       "epico": "ENG-59",
-      "epico_id": "01a16b3f-bc8f-78c1-9ab8-07b97ba84625",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1750,10 +1760,9 @@
       "identificador": "ENG-73",
       "titulo": "E2.1 · Vocabulário personalizado",
       "epico": "ENG-59",
-      "epico_id": "01a16b3f-bc8f-78c1-9ab8-07b97ba84625",
       "tipo": "História",
       "status": "backlog",
-      "dev": "—",
+      "dev": "Helena",
       "retornos": 0,
       "reinicios": 0,
       "inicio": null,
@@ -1768,7 +1777,7 @@
       "identificador": "ENG-103",
       "titulo": "Teste nativo — Épico 1",
       "desde": "2026-10-25T11:13:06-03:00",
-      "motivo": "Roteiro de teste nativo do Épico 1 (um roteiro por épico, rodado pelo BD)"
+      "motivo": "Teste nativo do Épico 1: roteiro para o BD rodar em máquina real"
     }
   ],
   "bloqueios": []
