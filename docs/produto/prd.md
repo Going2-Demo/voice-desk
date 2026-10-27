@@ -1,6 +1,6 @@
 # PRD: Voice Desk
 
-> Status: rascunho para aprovação · Versão: 2 · Atualizado em: 2026-10-23
+> Status: rascunho para aprovação (mudança de escopo ENG-104) · Versão: 3 · Atualizado em: 2026-10-27
 > Modo: criado do zero a partir do resumo aprovado
 > Fontes: [resumo do produto](resumo.md) (aprovado no ENG-51), [relatório de engenharia reversa do VoiceInk 2.13](engenharia-reversa/relatorio.md), cards ENG-50 (card-mãe), ENG-51 e ENG-53 (inclui as considerações do BD de 2026-10-23)
 
@@ -17,6 +17,8 @@ Hoje o BD tem esse fluxo no Mac com o VoiceInk 2.13, que só existe para macOS e
 O Voice Desk é **software livre (código aberto) e gratuito**. O BD é o primeiro usuário e a referência deste PRD, mas qualquer pessoa com quem ele compartilhar (colegas da Going2, outras empresas) pode baixar e instalar na própria máquina, com as próprias chaves e a própria configuração. Não há conta central, administração nem multiusuário: cada instalação é independente.
 
 A v1 é enxuta de propósito: o fluxo central (gravar → transcrever → limpar o texto → refinar → colar), modos, dicionário, histórico e sincronização da configuração. Ficam de fora a leitura da tela, a troca de modo por site, o assistente e o tempo real. Sucesso é o BD **trocar o VoiceInk pelo Voice Desk nas duas máquinas por 30 dias seguidos**.
+
+> **Mudança de escopo (versão 3, ENG-104):** o BD tirou da v1 os modos e o refinamento por IA (E-03), o histórico (E-04), a sincronização e a exportação da configuração (E-05) e a transcrição local (E-06). A v1 passa a ser: gravar → transcrever na nuvem → limpar o texto com vocabulário, substituições e palavras de preenchimento → colar, com o conforto na gravação (E-07) e os instaladores públicos. O que muda na leitura do resto do documento está na seção 7.3.
 
 ## 2. Usuários
 
@@ -46,6 +48,18 @@ _Os programas citados são exemplos._
 - **UJ-5. BD dita sem internet.** Contexto: está num voo, com o Mac. · Caminho: (1) o modo em uso aponta para a transcrição local; (2) dita normalmente. · Momento de valor: o texto é colado sem depender da rede. · Caso de erro: o modelo local não foi baixado; o Voice Desk avisa antes de gravar e indica onde baixar.
 - **UJ-6. BD instala o Voice Desk numa máquina nova.** Contexto: primeiro uso no Windows. · Caminho: (1) instala e abre; (2) o primeiro uso guiado pede a permissão do microfone e as demais necessárias, a escolha do atalho e as chaves de API; (3) ativa a sincronização. · Momento de valor: em até 10 minutos ele faz o primeiro ditado, com os modos e o dicionário que já tinha no Mac. · Caso de erro: uma permissão é negada; o Voice Desk explica o que deixa de funcionar e como conceder depois.
 - **UJ-7. Uma colega da Going2 começa a usar o Voice Desk.** Contexto: o BD mandou para a Ana, do time comercial, o link de download e o arquivo com os modos dele. · Caminho: (1) a Ana baixa o instalador da página pública do projeto e instala no Windows dela; (2) no primeiro uso, cadastra a própria chave do Groq; (3) importa o arquivo de configuração do BD; (4) dita um e-mail. · Momento de valor: em até 15 minutos ela dita com os modos que o BD já refinou, sem depender dele e sem acesso a nada dele. · Caso de erro: ela não tem chave de API; o primeiro uso explica como obter uma, ou como usar só a transcrição local.
+
+**Jornadas na v1 depois da mudança de escopo (ENG-104):**
+
+| Jornada | Na v1 | O que fica de fora |
+|---|---|---|
+| UJ-1 | Em parte | O texto é transcrito, limpo e colado, mas sem o modo "E-mail" automático e sem refinamento por IA: sai como foi falado. |
+| UJ-2 | Em parte | Texto quase literal com o vocabulário, colado. Não há modo "Chat" por programa: o envio de Enter vale para todos os ditados ou para nenhum (seção 7.3). |
+| UJ-3 | Em parte | A sigla vale na máquina onde foi cadastrada; no Windows, o usuário cadastra de novo. Sem sincronização. |
+| UJ-4 | Em parte | Se não colar, o texto fica na área de transferência com aviso (RF-03.4). Sem busca no histórico e sem transcrever de novo. |
+| UJ-5 | Não | Sem transcrição local; sem internet, o ditado falha com aviso (RF-02.3). |
+| UJ-6 | Em parte | Instalação e primeiro uso guiado; sem o passo de sincronização: modos e dicionário do Mac não chegam ao Windows. |
+| UJ-7 | Em parte | A colega instala e dita com a própria chave do Groq; sem importar a configuração do BD e sem a opção de usar só a transcrição local. |
 
 ## 3. Glossário
 
@@ -88,19 +102,19 @@ _Os programas citados são exemplos._
 | F-07 | Vocabulário personalizado | E-02 Texto do jeito do BD | Essencial | UJ-2, UJ-3 | ER-20, ER-11 |
 | F-08 | Substituição de palavras | E-02 | Importante | UJ-3 | ER-21 |
 | F-09 | Remoção de palavras de preenchimento e formatação | E-02 | Importante | UJ-2 | ER-14 |
-| F-10 | Modos | E-03 Modos e refinamento por IA | Essencial | UJ-1, UJ-2 | ER-17 |
-| F-11 | Refinamento por IA (Groq e Ollama) | E-03 | Essencial | UJ-1 | ER-15 |
-| F-12 | Troca automática de modo pelo programa em foco | E-03 | Essencial | UJ-1, UJ-2 | ER-18 |
-| F-13 | Contexto do texto selecionado e da área de transferência | E-03 | Importante | UJ-1 | ER-16 |
-| F-14 | Atalho por modo | E-03 | Desejável | UJ-1 | ER-01 |
-| F-15 | Palavra-gatilho falada | E-03 | Desejável | UJ-1 | ER-18 |
-| F-16 | Histórico com busca e detalhe | E-04 Histórico | Importante | UJ-4 | ER-23 |
-| F-17 | Retenção automática | E-04 | Importante | UJ-4 | ER-24 |
-| F-18 | Transcrever de novo | E-04 | Desejável | UJ-4 | FL-05 |
-| F-19 | Exportar o histórico em CSV | E-04 | Desejável | UJ-4 | ER-25 |
-| F-20 | Sincronização da configuração entre máquinas | E-05 Mesma configuração nas duas máquinas | Essencial | UJ-3, UJ-6 | resumo ("Mudar"); substitui ER-22 |
-| F-21 | Exportar e importar a configuração | E-05 | Importante | UJ-3, UJ-7 | ER-25 |
-| F-22 | Transcrição local (Whisper) | E-06 Uso sem internet | Importante | UJ-5 | ER-08 |
+| F-10 | Modos — **fora da v1** | E-03 Modos e refinamento por IA | Essencial | UJ-1, UJ-2 | ER-17 |
+| F-11 | Refinamento por IA (Groq e Ollama) — **fora da v1** | E-03 | Essencial | UJ-1 | ER-15 |
+| F-12 | Troca automática de modo pelo programa em foco — **fora da v1** | E-03 | Essencial | UJ-1, UJ-2 | ER-18 |
+| F-13 | Contexto do texto selecionado e da área de transferência — **fora da v1** | E-03 | Importante | UJ-1 | ER-16 |
+| F-14 | Atalho por modo — **fora da v1** | E-03 | Desejável | UJ-1 | ER-01 |
+| F-15 | Palavra-gatilho falada — **fora da v1** | E-03 | Desejável | UJ-1 | ER-18 |
+| F-16 | Histórico com busca e detalhe — **fora da v1** | E-04 Histórico | Importante | UJ-4 | ER-23 |
+| F-17 | Retenção automática — **fora da v1** | E-04 | Importante | UJ-4 | ER-24 |
+| F-18 | Transcrever de novo — **fora da v1** | E-04 | Desejável | UJ-4 | FL-05 |
+| F-19 | Exportar o histórico em CSV — **fora da v1** | E-04 | Desejável | UJ-4 | ER-25 |
+| F-20 | Sincronização da configuração entre máquinas — **fora da v1** | E-05 Mesma configuração nas duas máquinas | Essencial | UJ-3, UJ-6 | resumo ("Mudar"); substitui ER-22 |
+| F-21 | Exportar e importar a configuração — **fora da v1** | E-05 | Importante | UJ-3, UJ-7 | ER-25 |
+| F-22 | Transcrição local (Whisper) — **fora da v1** | E-06 Uso sem internet | Importante | UJ-5 | ER-08 |
 | F-23 | Escolha do microfone | E-07 Conforto na gravação | Importante | UJ-1, UJ-2 | ER-04 |
 | F-24 | Sons de início e fim | E-07 | Desejável | UJ-2 | ER-05 |
 | F-25 | Pausar a mídia durante o ditado | E-07 | Desejável | UJ-1 | ER-06 |
@@ -111,10 +125,12 @@ _Os programas citados são exemplos._
 
 - **E-01 Ditado de ponta a ponta** — o BD dita em qualquer programa, no Mac e no Windows, e o texto é colado onde estava o cursor. Ao fim do épico o produto já é utilizável. Funcionalidades: F-01 a F-06 e F-27.
 - **E-02 Texto do jeito do BD** — nomes, siglas e muletas tratados sem IA, em todo ditado. Funcionalidades: F-07, F-08, F-09.
-- **E-03 Modos e refinamento por IA** — o texto sai no formato certo para cada programa. Funcionalidades: F-10 a F-15.
-- **E-04 Histórico** — nenhum ditado se perde, e os dados não ficam guardados além do prazo. Funcionalidades: F-16 a F-19.
-- **E-05 Mesma configuração nas duas máquinas** — configurou uma vez, vale no Mac e no Windows. Funcionalidades: F-20, F-21.
-- **E-06 Uso sem internet** — ditar sem rede e sem enviar o áudio para fora. Funcionalidade: F-22.
+_Mudança de escopo (ENG-104): os épicos E-03, E-04, E-05 e E-06 saíram da v1 por decisão do BD. A v1 é E-01 → E-02 → E-07. As descrições abaixo ficam como referência._
+
+- **E-03 Modos e refinamento por IA** (**fora da v1**) — o texto sai no formato certo para cada programa. Funcionalidades: F-10 a F-15.
+- **E-04 Histórico** (**fora da v1**) — nenhum ditado se perde, e os dados não ficam guardados além do prazo. Funcionalidades: F-16 a F-19.
+- **E-05 Mesma configuração nas duas máquinas** (**fora da v1**) — configurou uma vez, vale no Mac e no Windows. Funcionalidades: F-20, F-21.
+- **E-06 Uso sem internet** (**fora da v1**) — ditar sem rede e sem enviar o áudio para fora. Funcionalidade: F-22.
 - **E-07 Conforto na gravação** — microfone certo, sons e mídia pausada. Funcionalidades: F-23 a F-26.
 
 ## 5. Funcionalidades
@@ -302,6 +318,8 @@ _Os programas citados são exemplos._
 
 ### F-10 Modos
 
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
+
 **Épico:** E-03 · **Prioridade:** Essencial · **Realiza:** UJ-1, UJ-2 · **Origem:** ER-17
 **Descrição:** o usuário cria modos para cada tipo de texto. O Voice Desk vem com três modos iniciais editáveis: "Ditado" (sem refinamento, modo padrão), "E-mail" (refinamento formal) e "Chat" (limpeza, sem refinamento, com Enter ligado). Os prompts iniciais são escritos pelo time, sem copiar os do VoiceInk.
 
@@ -320,6 +338,8 @@ _Os programas citados são exemplos._
 - Dado o modo "Chat" com Enter ligado, quando o usuário dita no Slack, então o texto é colado e enviado.
 
 ### F-11 Refinamento por IA (Groq e Ollama)
+
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
 
 **Épico:** E-03 · **Prioridade:** Essencial · **Realiza:** UJ-1 · **Origem:** ER-15
 **Descrição:** se o modo tem refinamento ligado, o texto limpo (e o contexto, se o modo permitir) vai ao provedor de IA do modo com o prompt do modo, e a resposta vira o texto final. Na v1, os provedores de IA são o Groq (nuvem, com a chave do usuário) e o Ollama (local, sem chave). Se o refinamento falhar, o ditado não se perde.
@@ -342,6 +362,8 @@ _Os programas citados são exemplos._
 
 ### F-12 Troca automática de modo pelo programa em foco
 
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
+
 **Épico:** E-03 · **Prioridade:** Essencial · **Realiza:** UJ-1, UJ-2 · **Origem:** ER-18 (sem a troca por site)
 **Descrição:** o usuário associa programas a modos. No início do ditado, o Voice Desk vê o programa em foco e aplica o modo associado; se não houver associação, aplica o modo padrão. Como a configuração é sincronizada, um modo pode ter programas do Mac e do Windows ao mesmo tempo (ex.: Mail e Outlook no modo "E-mail").
 
@@ -360,6 +382,8 @@ _Os programas citados são exemplos._
 **Fora do escopo desta funcionalidade:** troca de modo pelo site aberto no navegador (fase 2).
 
 ### F-13 Contexto do texto selecionado e da área de transferência
+
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
 
 **Épico:** E-03 · **Prioridade:** Importante · **Realiza:** UJ-1 · **Origem:** ER-16 (sem o texto da janela e sem o OCR da tela)
 **Descrição:** se o modo permitir, o refinamento recebe como contexto o texto selecionado no programa em foco e o conteúdo de texto da área de transferência no início do ditado. Exemplo: o usuário seleciona o e-mail recebido e dita "responde dizendo que aceito".
@@ -380,6 +404,8 @@ _Os programas citados são exemplos._
 
 ### F-14 Atalho por modo
 
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
+
 **Épico:** E-03 · **Prioridade:** Desejável · **Realiza:** UJ-1 · **Origem:** ER-01
 **Descrição:** além do atalho global, o usuário pode dar a um modo um atalho próprio, que inicia o ditado já naquele modo, sem depender do programa em foco.
 
@@ -397,6 +423,8 @@ _Os programas citados são exemplos._
 
 ### F-15 Palavra-gatilho falada
 
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
+
 **Épico:** E-03 · **Prioridade:** Desejável · **Realiza:** UJ-1 · **Origem:** ER-18
 **Descrição:** o usuário dá a um modo uma ou mais palavras-gatilho. Se o ditado começar com uma delas, o modo é aplicado e a palavra é retirada do texto.
 
@@ -413,6 +441,8 @@ _Os programas citados são exemplos._
 **Notas / perguntas:** como a palavra-gatilho só é conhecida depois da transcrição, o idioma e o provedor de transcrição usados são os do modo escolhido pelas outras regras; só a limpeza e o refinamento seguem o modo do gatilho.
 
 ### F-16 Histórico com busca e detalhe
+
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
 
 **Épico:** E-04 · **Prioridade:** Importante · **Realiza:** UJ-4 · **Origem:** ER-23
 **Descrição:** janela com a lista dos ditados concluídos daquela máquina, do mais recente para o mais antigo, com busca por texto e detalhe de cada item. Ditados cancelados não entram.
@@ -435,6 +465,8 @@ _Os programas citados são exemplos._
 
 ### F-17 Retenção automática
 
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
+
 **Épico:** E-04 · **Prioridade:** Importante · **Realiza:** UJ-4 · **Origem:** ER-24
 **Descrição:** o usuário define por quanto tempo guardar os áudios e, separadamente, os itens do histórico. O que passa do prazo é apagado sozinho.
 
@@ -452,6 +484,8 @@ _Os programas citados são exemplos._
 
 ### F-18 Transcrever de novo
 
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
+
 **Épico:** E-04 · **Prioridade:** Desejável · **Realiza:** UJ-4 · **Origem:** FL-05 do relatório
 **Descrição:** a partir de um item do histórico que ainda tem áudio, o usuário manda processar de novo, no mesmo modo ou em outro. Útil quando a transcrição falhou por falta de rede.
 
@@ -467,6 +501,8 @@ _Os programas citados são exemplos._
 
 ### F-19 Exportar o histórico em CSV
 
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
+
 **Épico:** E-04 · **Prioridade:** Desejável · **Realiza:** UJ-4 · **Origem:** ER-25
 **Descrição:** o usuário exporta o histórico (só texto, sem áudio) para uma planilha.
 
@@ -481,6 +517,8 @@ _Os programas citados são exemplos._
 - Dado um histórico vazio, quando o usuário tenta exportar, então o app avisa "nada para exportar" e não gera arquivo.
 
 ### F-20 Sincronização da configuração entre máquinas
+
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
 
 **Épico:** E-05 · **Prioridade:** Essencial [PREMISSA] · **Realiza:** UJ-3, UJ-6 · **Origem:** resumo ("Mudar"); substitui a sincronização do dicionário pelo iCloud (ER-22)
 **Descrição:** o usuário liga a sincronização em cada máquina. A partir daí, a configuração sincronizável (glossário) é a mesma no Mac e no Windows. Chaves de API, histórico, áudio, atalhos, microfone e modelos baixados ficam em cada máquina.
@@ -510,6 +548,8 @@ _Os programas citados são exemplos._
 
 ### F-21 Exportar e importar a configuração
 
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
+
 **Épico:** E-05 · **Prioridade:** Importante · **Realiza:** UJ-3, UJ-7 · **Origem:** ER-25
 **Descrição:** o usuário salva a configuração sincronizável num arquivo e a carrega em outra máquina ou depois de reinstalar. Serve de cópia de segurança, de alternativa à sincronização e de forma de compartilhar modos e dicionário com outro usuário (UJ-7), já que o arquivo não leva chaves.
 
@@ -528,6 +568,8 @@ _Os programas citados são exemplos._
 **Fora do escopo desta funcionalidade:** importar a configuração do VoiceInk (o formato dele não foi observado; avaliar na v2 se o usuário pedir).
 
 ### F-22 Transcrição local (Whisper)
+
+> **Fora da v1** (mudança de escopo do BD, ENG-104). O texto fica como referência para uma versão futura e não faz parte do contrato da v1.
 
 **Épico:** E-06 · **Prioridade:** Importante · **Realiza:** UJ-5 · **Origem:** ER-08
 **Descrição:** o usuário baixa um modelo Whisper para a máquina e o escolhe como provedor de transcrição de um modo. A transcrição acontece sem internet e sem enviar o áudio para fora. Na v1 há um único modelo oferecido: o equivalente ao large-v3-turbo, que o usuário já usa. [PREMISSA]
@@ -657,35 +699,45 @@ _Os programas citados são exemplos._
 | RNF-13 | Propriedade intelectual | Nenhum texto de interface, prompt, ícone, som ou marca do VoiceInk é usado; os textos, prompts e sons iniciais são criados pelo time. Código do VoiceInk só entra se a licença do Voice Desk for compatível com a GPL-3.0 e com parecer do Otávio e aprovação do BD (seção 10). |
 | RNF-14 | Código aberto | O código-fonte completo de cada versão publicada fica disponível na página do projeto, com a licença; qualquer pessoa consegue gerar o app a partir dele seguindo as instruções do repositório. |
 
+_Mudança de escopo (ENG-104):_ na v1 valem a RNF-01 (a), a RNF-05 só para a colagem (a leitura da seleção é da F-13, fora da v1), a RNF-07 sem a parte de sincronização e retenção (ver a premissa de dados guardados na seção 11) e a RNF-11 só para as telas de configuração. A RNF-01 (b) e (c) não se aplica. As demais seguem iguais.
+
 ## 7. Escopo da v1
 
 ### 7.1 Dentro
 
-As 27 funcionalidades da seção 4 (F-01 a F-27), nas duas plataformas, com os provedores:
-- **Transcrição:** Groq (nuvem) e Whisper local (um modelo).
-- **IA:** Groq (nuvem) e Ollama (local).
+**Versão 3 (ENG-104):** 14 funcionalidades, dos épicos E-01, E-02 e E-07 (F-01 a F-09 e F-23 a F-27), nas duas plataformas, com o provedor:
+- **Transcrição:** Groq (nuvem).
+- **IA:** nenhuma na v1.
 
-Isso cobre tudo o que o resumo aprovado lista como "copiar o comportamento (v1)" e "mudar". Mapa:
+Ordem de entrega: E-01 → E-02 → E-07. Essenciais na v1: F-01 a F-05 e F-07.
 
-| Resumo (v1) | Onde está |
-|---|---|
-| Gravação: atalho, Esc, gravador, microfone, sons, pausar mídia (ER-01 a ER-07) | F-01, F-14, F-23, F-24, F-25, F-26 |
-| Transcrição na nuvem, idioma e dica de vocabulário (ER-09, ER-11) | F-02, F-07 |
-| Vocabulário, substituição, palavras de preenchimento, formatação (ER-14, ER-20, ER-21) | F-07, F-08, F-09 |
-| Colar e enviar Enter (ER-13) | F-03 |
-| Modos, refinamento, contexto, troca por programa (ER-15 a ER-18, sem OCR) | F-10 a F-15 |
-| Histórico, áudio, busca, retenção, CSV (ER-23 a ER-25) | F-16 a F-19 |
-| Cofre de chaves, iniciar com o sistema, primeiro uso (ER-27 a ER-29) | F-04, F-05, F-06 |
-| Mac e Windows com a mesma experiência | RNF-04, RNF-05 |
-| Configuração sincronizada | F-20, F-21 |
-| Transcrição local na v1 | F-22 |
-| Conjunto enxuto de provedores | seção 7.1 |
-| Sem licença, teste ou ativação | seção 7.2 |
+_Até a versão 2 eram as 27 funcionalidades da seção 4 (F-01 a F-27), com transcrição pelo Groq e pelo Whisper local e IA pelo Groq e pelo Ollama. O mapa abaixo é o da versão 2; a coluna "Na v1" mostra o que ficou depois do corte._
+
+O mapa da versão 2 cobria tudo o que o resumo aprovado lista como "copiar o comportamento (v1)" e "mudar":
+
+| Resumo (v1) | Onde está | Na v1 (versão 3) |
+|---|---|---|
+| Gravação: atalho, Esc, gravador, microfone, sons, pausar mídia (ER-01 a ER-07) | F-01, F-14, F-23, F-24, F-25, F-26 | Sim, menos o atalho por modo (F-14) |
+| Transcrição na nuvem, idioma e dica de vocabulário (ER-09, ER-11) | F-02, F-07 | Sim |
+| Vocabulário, substituição, palavras de preenchimento, formatação (ER-14, ER-20, ER-21) | F-07, F-08, F-09 | Sim |
+| Colar e enviar Enter (ER-13) | F-03 | Sim, com Enter numa configuração única |
+| Modos, refinamento, contexto, troca por programa (ER-15 a ER-18, sem OCR) | F-10 a F-15 | Não (E-03 cortado) |
+| Histórico, áudio, busca, retenção, CSV (ER-23 a ER-25) | F-16 a F-19 | Não (E-04 cortado) |
+| Cofre de chaves, iniciar com o sistema, primeiro uso (ER-27 a ER-29) | F-04, F-05, F-06 | Sim |
+| Mac e Windows com a mesma experiência | RNF-04, RNF-05 | Sim |
+| Configuração sincronizada | F-20, F-21 | Não (E-05 cortado) |
+| Transcrição local na v1 | F-22 | Não (E-06 cortado) |
+| Conjunto enxuto de provedores | seção 7.1 | Sim: só o Groq para transcrição |
+| Sem licença, teste ou ativação | seção 7.2 | Sim |
 
 ### 7.2 Fora da v1 (com motivo)
 
 | Item | Motivo | Quando |
 |---|---|---|
+| E-03 Modos e refinamento por IA (F-10 a F-15) | Decisão do BD (ENG-104): não precisa agora | Versão futura, a pedido do BD |
+| E-04 Histórico (F-16 a F-19) | Decisão do BD (ENG-104): não precisa agora | Versão futura, a pedido do BD |
+| E-05 Mesma configuração nas duas máquinas (F-20, F-21) | Decisão do BD (ENG-104): não precisa agora | Versão futura, a pedido do BD |
+| E-06 Uso sem internet (F-22) | Decisão do BD (ENG-104): não precisa agora | Versão futura, a pedido do BD |
 | Contexto por OCR da tela e texto da janela atual (parte do ER-16) | Recursos de captura de tela muito diferentes entre Mac e Windows; risco de privacidade | v2 |
 | Troca de modo pelo site aberto no navegador (parte do ER-18) | Depende de integração por navegador e por sistema | v2 |
 | Transcrição em tempo real, com texto ao vivo (ER-10) | Não é essencial ao fluxo central | v2 |
@@ -702,6 +754,22 @@ Isso cobre tudo o que o resumo aprovado lista como "copiar o comportamento (v1)"
 | Administração central, configuração gerenciada por empresa, compartilhamento de histórico entre pessoas | Cada instalação é individual (decisão do BD) | Não previsto |
 | Importar a configuração do VoiceInk | Formato não observado | Avaliar se o BD pedir |
 
+### 7.3 Efeito do corte nas funcionalidades que ficam (ENG-104)
+
+O texto das funcionalidades de E-01, E-02 e E-07 não foi alterado. Onde ele cita o que saiu da v1, vale esta leitura:
+
+| Onde | Cita | Como vale na v1 |
+|---|---|---|
+| RF-02.1, RF-02.2, RF-03.3, RF-09.1 e critérios da F-09 | Escolha "por modo" (provedor, idioma, Enter, limpeza) | Sem modos, cada opção é uma configuração única que vale para todos os ditados (o modo padrão, que é o único). O usuário continua podendo escolher idioma, Enter e limpeza; o lugar na interface é da Nina. Os critérios da F-09 com "Chat" e "Ditado literal" são testados ligando e desligando as opções nessa configuração. |
+| RF-02.1, RF-06.4, RF-27.2 | Whisper local e "usar sem chave" | Só o Groq. Sem chave do Groq não há ditado: o primeiro uso e a página do projeto explicam como obter a chave e não oferecem a transcrição local. |
+| RF-03.3 | Enter depois de colar | Ligado, vale para todo programa (inclusive e-mail e documentos). O padrão é desligado. [PREMISSA] |
+| RF-02.3, RF-03.4, RF-03.5, RNF-08, RF-23.1, RF-24.2, RF-26.2 | "Histórico" | Sem tela de histórico na v1. Onde o requisito diz que algo fica ou não fica no histórico, a consequência é conferida no registro que o app guarda de cada ditado, sem tela para o usuário. A forma de conferir nos testes fica com o Otávio e a Marta. Quem precisa do texto de um ditado que não colou usa a área de transferência (RF-03.4). |
+| RF-04.3 e critérios da F-04 | Exportação (F-21) e sincronização (F-20) | Não existem na v1; a chave continua fora de logs, da tela e de qualquer arquivo comum (RNF-06). |
+| RF-05.1 | "Escolher o modo padrão" e "abrir o histórico" no menu do ícone | Não fazem parte da v1. O menu do ícone da v1 oferece: iniciar ou parar ditado, adicionar palavra ao vocabulário (RF-07.3), abrir as configurações e sair. |
+| Descrição da F-06 | Passo de ativação da sincronização | Não existe na v1. |
+| RF-08.3 | Aplicar antes do refinamento | Não há refinamento; a substituição é aplicada ao texto transcrito, antes de colar. |
+| Glossário | Modo, refinamento, prompt, contexto, palavra-gatilho, histórico, retenção, configuração sincronizável | Termos mantidos para a versão futura; na v1 só "modo padrão" existe, como a configuração única acima. |
+
 ## 8. Não objetivos
 
 - Não é um produto comercial nem multiusuário: é software livre e gratuito, instalado individualmente, sem contas, planos, pagamentos ou administração.
@@ -714,6 +782,8 @@ Isso cobre tudo o que o resumo aprovado lista como "copiar o comportamento (v1)"
 ## 9. Métricas de sucesso
 
 Todas medidas na própria máquina, pelo histórico e pelo log local (sem telemetria, RNF-07).
+
+_Mudança de escopo (ENG-104):_ sem a tela de histórico, as medidas usam o registro de cada ditado guardado pelo app e o log local (RNF-09). M-1 vale para as funcionalidades da v1 (F-01 a F-09 e F-23 a F-27); M-2 mede só a transcrição na nuvem sem refinamento (RNF-01 a); M-4 e M-C2 ficam suspensas até E-05 e E-03 voltarem. M-3 e M-C1 seguem iguais.
 
 **Primárias:**
 - **M-1 Substituição do VoiceInk** — dias seguidos em que o BD dita só pelo Voice Desk nas duas máquinas, sem abrir o VoiceInk. Medida: itens no histórico de cada máquina por dia, mais a confirmação do BD ao fim do período. Meta: 30 dias seguidos. [PREMISSA] Valida a tese inteira (F-01 a F-22).
@@ -731,6 +801,7 @@ Todas medidas na própria máquina, pelo histórico e pelo log local (sem teleme
 
 - **Licença e marca:** o Voice Desk é software livre (código aberto), por decisão do BD. A licença ainda não foi escolhida (pergunta 5). O VoiceInk é GPL-3.0: o Voice Desk só pode reaproveitar código dele se também for GPL-3.0 (ou compatível); com uma licença permissiva (por exemplo, MIT), nenhum código do VoiceInk entra. Em qualquer caso, nome, ícones, sons, textos e prompts do VoiceInk não são usados (RNF-13), e qualquer reuso de código passa antes por parecer do Otávio e aprovação do BD.
 - **Plataformas:** Mac e Windows desde a v1, com a mesma experiência (RNF-04). O maior risco técnico é colar e ler a seleção em cada sistema: deve ser validado no início do E-01, nas máquinas reais do BD e, se possível, numa máquina de outro usuário.
+- **Mudança de escopo (ENG-104):** na v1 o único provedor externo é o Groq, só para transcrição. Ollama, Whisper local e sincronização ficam para quando E-03, E-05 e E-06 voltarem; os itens abaixo sobre eles são referência.
 - **Provedores externos:** Groq (transcrição e IA, com a chave de cada usuário), Ollama (IA local, instalado por cada usuário) e Whisper local (modelo baixado pelo app). O custo de uso dos provedores é de cada usuário; o projeto não paga nem intermedeia chaves.
 - **Sincronização:** o meio é decisão do Otávio, com estas restrições de produto: (a) os dados de cada usuário ficam sob controle dele, sem servidor central mantido pelo projeto [PREMISSA]; (b) nenhum serviço pago para o usuário nem para o projeto sem aprovação do BD; (c) só a configuração sincronizável trafega, protegida (RNF-07); (d) funciona com o Mac e o Windows em redes diferentes.
 - **Permissões do sistema:** microfone e acessibilidade nas duas plataformas, mais as equivalentes no Mac. O primeiro uso (F-06) guia a concessão.
@@ -757,6 +828,12 @@ Todas medidas na própria máquina, pelo histórico e pelo log local (sem teleme
 - [PREMISSA] Sem atualização automática na v1 e sem loja de apps (seções 7.2 e 10).
 - [PREMISSA] Sucesso = 30 dias seguidos usando só o Voice Desk nas duas máquinas (M-1).
 
+**Premissas da mudança de escopo (ENG-104):**
+- [PREMISSA] Sem retenção (F-17) e sem histórico (F-16), o áudio e o texto que o app guarda de cada ditado ficam na máquina do próprio usuário sem apagamento automático e sem tela para apagar. Nada sai da máquina além do envio ao Groq. Se o BD não aceitar isso, as saídas são: o app não guardar o áudio dos ditados concluídos, ou trazer só a F-17 de volta.
+- [PREMISSA] Enter depois de colar vem desligado e, ligado, vale para todos os ditados (seção 7.3).
+- [PREMISSA] A meta M-1 (30 dias seguidos só com o Voice Desk) continua valendo mesmo sem modos e refinamento por IA.
+- Sem efeito na v1, mantidas para quando os épicos voltarem: as premissas de sincronização (servidor, o que viaja, conflito, F-20 como Essencial), de provedores (Whisper local e Ollama), do modelo local, do limite de contexto (RF-13.2) e da retenção padrão (RF-17.1).
+
 ## 12. Perguntas em aberto
 
 1. Quais provedores de transcrição e de IA o BD usa de fato no dia a dia? Se não forem o Groq, o Whisper local e o Ollama, a seção 7.1 muda. — BD — não bloqueia (o PRD assume os da instalação dele).
@@ -766,12 +843,15 @@ Todas medidas na própria máquina, pelo histórico e pelo log local (sem teleme
 5. Qual a licença de código aberto do Voice Desk: GPL-3.0 (permite reaproveitar código do VoiceInk, mas obriga quem modificar e distribuir o Voice Desk a abrir o código também) ou uma permissiva, como MIT (sem reaproveitar nada do VoiceInk)? — BD, com parecer do Otávio — não bloqueia o design; precisa de resposta antes de a arquitetura fechar.
 6. O projeto vai pagar assinatura de código para os instaladores abrirem sem aviso de segurança no Mac e no Windows (custo anual), ou a v1 aceita o aviso, com instruções na página do projeto? — BD — não bloqueia o design; afeta F-27 e o Igor.
 
+_Mudança de escopo (ENG-104):_ a pergunta 2 não se aplica à v1 (não há histórico nem sincronização). A pergunta 1 se reduz à transcrição: a v1 usa só o Groq.
+
 ## 13. Histórico e reconciliação
 
 | Versão | Data | Mudança | Origem |
 |---|---|---|---|
 | 1 | 2026-10-23 | Versão inicial | Resumo aprovado (ENG-51) + relatório de engenharia reversa do VoiceInk 2.13 |
 | 2 | 2026-10-23 | Voice Desk passa a ser software livre, gratuito e instalado individualmente; outras pessoas (Going2 e outras empresas) podem usar, sem administração nem multiusuário. Novo perfil "Usuário compartilhado", jornada UJ-7, funcionalidade F-27 (instaladores públicos e página do projeto), RF-06.4, RF-20.7, RNF-14; ajustes em RNF-07, RNF-13, seções 2, 7.2, 8, 10, 11 e 12; nos requisitos, "o BD" virou "o usuário". | Comentário do BD no ENG-53 |
+| 3 | 2026-10-27 | Mudança de escopo: E-03 (F-10 a F-15), E-04 (F-16 a F-19), E-05 (F-20, F-21) e E-06 (F-22) saem da v1; E-07 fica inteiro; E-01 e E-02 sem mudança. Texto das funcionalidades cortadas mantido como referência, marcado "fora da v1", sem renumerar. Novas: jornadas na v1 (seção 2.3), seção 7.3 com a leitura das funcionalidades que ficam, notas nas seções 1, 6, 9, 10 e 12, premissas da mudança na seção 11. | Pedido do BD à Helena, card ENG-104 |
 
 Mudança da versão 2 sobre o resumo aprovado: o resumo dizia "Não é para (v1): equipes, venda a terceiros" e tinha a premissa de uso só pelo BD. O BD decidiu que outras pessoas podem usar, cada uma na própria instalação, e que o software é livre. Continua valendo "sem equipes como unidade e sem venda". O resumo não foi alterado; esta decisão do BD prevalece sobre ele.
 
