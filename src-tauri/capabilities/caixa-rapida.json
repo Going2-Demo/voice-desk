@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "caixa-rapida",
+  "description": "Caixa rápida de vocabulário: só os comandos do núcleo",
+  "windows": ["caixa-rapida"],
+  "permissions": ["core:default", "core:window:allow-close"]
+}

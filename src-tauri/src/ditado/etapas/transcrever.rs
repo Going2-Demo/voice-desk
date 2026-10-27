@@ -19,7 +19,7 @@ pub fn executar(contexto: &mut Contexto) -> Result<Fluxo, ErroApp> {
         transcritor.as_ref(),
         &contexto.config_transcricao,
         gravacao,
-        None,
+        contexto.dica_vocabulario.clone(),
     )?;
     tracing::info!(
         evento = "transcricao_concluida",
@@ -45,7 +45,7 @@ mod testes {
     };
     use std::sync::{Arc, Mutex};
 
-    type Pedidos = Arc<Mutex<Vec<(String, Idioma)>>>;
+    type Pedidos = Arc<Mutex<Vec<(String, Idioma, Option<String>)>>>;
 
     struct Falso {
         resposta: Result<String, ErroApp>,
@@ -57,7 +57,7 @@ mod testes {
             self.pedidos
                 .lock()
                 .unwrap()
-                .push((p.modelo.clone(), p.idioma));
+                .push((p.modelo.clone(), p.idioma, p.dica.clone()));
             self.resposta.clone()
         }
     }
@@ -101,8 +101,25 @@ mod testes {
         assert_eq!(c.transcricao_modelo.as_deref(), Some("whisper-large-v3"));
         assert_eq!(
             *pedidos.lock().unwrap(),
-            [("whisper-large-v3".to_string(), Idioma::En)]
+            [("whisper-large-v3".to_string(), Idioma::En, None)]
         );
+    }
+
+    #[test]
+    fn envia_a_dica_do_vocabulario_ao_provedor_e_sem_vocabulario_vai_sem_dica() {
+        let (mut c, pedidos) = contexto(
+            Ok("mandei para a Going2".into()),
+            ConfigTranscricao::default(),
+        );
+        c.dica_vocabulario = Some("Going2, Kubernetes".into());
+        executar(&mut c).unwrap();
+        assert_eq!(
+            pedidos.lock().unwrap()[0].2.as_deref(),
+            Some("Going2, Kubernetes")
+        );
+        let (mut c, pedidos) = contexto(Ok("oi".into()), ConfigTranscricao::default());
+        executar(&mut c).unwrap();
+        assert_eq!(pedidos.lock().unwrap()[0].2, None);
     }
 
     #[test]

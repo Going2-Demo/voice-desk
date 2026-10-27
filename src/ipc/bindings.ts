@@ -40,6 +40,10 @@ export const commands = {
 	primeiroUsoPular: (passo: string) => typedError<EstadoPrimeiroUso, ErroApp_Serialize>(__TAURI_INVOKE("primeiro_uso_pular", { passo })),
 	primeiroUsoCumprir: (passo: string) => typedError<EstadoPrimeiroUso, ErroApp_Serialize>(__TAURI_INVOKE("primeiro_uso_cumprir", { passo })),
 	primeiroUsoConcluir: () => typedError<EstadoPrimeiroUso, ErroApp_Serialize>(__TAURI_INVOKE("primeiro_uso_concluir")),
+	vocabularioListar: (busca: string | null) => typedError<ListaVocabulario, ErroApp_Serialize>(__TAURI_INVOKE("vocabulario_listar", { busca })),
+	vocabularioAdicionar: (palavra: string) => typedError<Palavra, ErroApp_Serialize>(__TAURI_INVOKE("vocabulario_adicionar", { palavra })),
+	vocabularioEditar: (id: string, palavra: string) => typedError<Palavra, ErroApp_Serialize>(__TAURI_INVOKE("vocabulario_editar", { id, palavra })),
+	vocabularioRemover: (id: string) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("vocabulario_remover", { id })),
 };
 
 /** Events */
@@ -153,6 +157,21 @@ export type EstadoPrimeiroUso = {
 };
 
 export type Idioma = "pt-BR" | "en" | "auto";
+
+export type ListaVocabulario = {
+	/**  Palavras que casam com a busca, as mais recentes primeiro. */
+	palavras: Palavra[],
+	/**  Total no vocabulário, sem considerar a busca. */
+	total: number,
+	limite: number,
+	/**  Quantas palavras vão como dica a cada ditado (as mais recentes que cabem). */
+	na_dica: number,
+};
+
+export type Palavra = {
+	id: string,
+	palavra: string,
+};
 
 export type PermissaoApp = "microfone" | "acessibilidade";
 

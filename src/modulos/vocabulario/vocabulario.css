@@ -1,0 +1,116 @@
+.vocabulario {
+  max-width: 720px;
+}
+.vocabulario .cabecalho {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+}
+.vocabulario .selo {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px var(--espaco-3);
+  border-radius: var(--raio-pilula);
+  background: var(--cor-superficie-2);
+  color: var(--cor-texto-suave);
+}
+.vocabulario .suave,
+.vocabulario .dica {
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+}
+.vocabulario .cartao {
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  box-shadow: var(--sombra-1);
+  padding: var(--espaco-4);
+  margin-bottom: var(--espaco-4);
+}
+.vocabulario form {
+  display: flex;
+  gap: var(--espaco-3);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.vocabulario .campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  flex: 1;
+  min-width: 220px;
+}
+.vocabulario input {
+  font: inherit;
+  padding: var(--espaco-2) var(--espaco-3);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+.vocabulario input[aria-invalid="true"] {
+  border-color: var(--cor-erro);
+}
+.vocabulario :focus-visible {
+  outline: 2px solid var(--cor-foco);
+  outline-offset: 2px;
+}
+.vocabulario .erro-campo {
+  color: var(--cor-erro);
+  font-size: 13px;
+}
+.vocabulario button {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-sm);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  padding: var(--espaco-2) var(--espaco-3);
+}
+.vocabulario button.primario {
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
+}
+.vocabulario button.primario:hover {
+  background: var(--cor-primaria-hover);
+}
+.vocabulario button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.vocabulario .lista-chips {
+  list-style: none;
+  padding: 0;
+  margin: var(--espaco-3) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+}
+.vocabulario .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espaco-1);
+  padding: 2px var(--espaco-2) 2px var(--espaco-3);
+  border-radius: var(--raio-pilula);
+  background: var(--cor-primaria-suave);
+  color: var(--cor-texto);
+}
+.vocabulario .chip button {
+  border: none;
+  background: transparent;
+  padding: 2px var(--espaco-2);
+  min-width: 28px;
+  min-height: 28px;
+}
+.vocabulario .vazio {
+  text-align: center;
+  padding: var(--espaco-6) var(--espaco-4);
+}
+.vocabulario .editar {
+  display: flex;
+  gap: var(--espaco-2);
+  align-items: center;
+}

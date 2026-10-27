@@ -9,6 +9,7 @@ use crate::ditado::servico::Ditado;
 use crate::nucleo::{ErroApp, relogio::Relogio};
 use crate::plataforma;
 use crate::transcricao::{self, ConfigTranscricao};
+use crate::vocabulario::{self, ListaVocabulario, Palavra};
 use rusqlite::Connection;
 use serde::Serialize;
 use specta::Type;
@@ -253,6 +254,53 @@ pub fn transcricao_salvar(
 // --- bandeja, primeiro-uso ----------------------------------------------------------------
 // --- modos (+ programas, atalho, gatilho), contexto ---------------------------------------
 // --- vocabulario, substituicoes, limpeza --------------------------------------------------
+#[tauri::command]
+#[specta::specta]
+pub fn vocabulario_listar(
+    busca: Option<String>,
+    bd: State<'_, Banco>,
+) -> Result<ListaVocabulario, ErroApp> {
+    let c = banco(&bd)?;
+    vocabulario::listar(&c, busca.as_deref())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn vocabulario_adicionar(
+    palavra: String,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<Palavra, ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    vocabulario::adicionar(&c, &relogio, &maquina, &palavra)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn vocabulario_editar(
+    id: String,
+    palavra: String,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<Palavra, ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    vocabulario::editar(&c, &relogio, &maquina, &id, &palavra)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn vocabulario_remover(
+    id: String,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<(), ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    vocabulario::remover(&c, &relogio, &maquina, &id)
+}
+
 // --- historico, retencao, retranscrever, exportar-csv -------------------------------------
 // --- configuracao-arquivo, sincronizacao --------------------------------------------------
 
