@@ -7,6 +7,7 @@ pub mod chaves;
 pub mod comandos;
 pub mod configuracao;
 pub mod ditado;
+pub mod limpeza;
 pub mod nucleo;
 pub mod permissoes;
 pub mod plataforma;
@@ -54,6 +55,12 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
             comandos::substituicoes_editar,
             comandos::substituicoes_ativar,
             comandos::substituicoes_remover,
+            comandos::limpeza_listar,
+            comandos::limpeza_adicionar,
+            comandos::limpeza_remover,
+            comandos::limpeza_opcoes_obter,
+            comandos::limpeza_opcoes_salvar,
+            comandos::limpeza_previa,
         ])
         .events(collect_events![
             ditado::efeitos_tauri::DitadoEstado,

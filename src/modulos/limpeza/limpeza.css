@@ -1,0 +1,124 @@
+.limpeza {
+  max-width: 882px;
+}
+.limpeza h1 {
+  font-size: 26px;
+}
+.limpeza .cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+}
+.limpeza .selo {
+  display: inline-flex;
+  padding: 2px 10px;
+  border-radius: var(--raio-pilula);
+  font-size: 12.5px;
+  font-weight: 600;
+  background: var(--cor-superficie-2);
+  color: var(--cor-texto);
+  border: 1px solid var(--cor-borda);
+  white-space: nowrap;
+}
+.limpeza .subtitulo {
+  font-size: 15px;
+  color: var(--cor-texto-suave);
+  margin: 4px 0 var(--espaco-5);
+}
+.limpeza .suave,
+.limpeza .dica {
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+}
+.limpeza .cartao {
+  margin-top: 0;
+}
+.limpeza form {
+  display: flex;
+  gap: var(--espaco-3);
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.limpeza .campo {
+  flex: 1;
+  min-width: 220px;
+}
+.limpeza .cartao .btn {
+  margin-top: 26px;
+}
+.limpeza .busca {
+  margin: var(--espaco-5) 0 var(--espaco-3);
+}
+.limpeza .lista-chips {
+  list-style: none;
+  padding: 0;
+  margin: var(--espaco-3) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espaco-2);
+}
+.limpeza .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 4px 4px 12px;
+  min-height: 38px;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-pilula);
+  background: var(--cor-superficie);
+}
+.limpeza .chip button {
+  border: 0;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+}
+.limpeza .chip button:hover {
+  background: var(--cor-erro-suave);
+  color: var(--cor-erro);
+}
+.limpeza .vazio {
+  text-align: center;
+  padding: var(--espaco-6) var(--espaco-4);
+}
+.limpeza .editar {
+  display: flex;
+  gap: var(--espaco-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.limpeza select,
+.limpeza textarea {
+  font: 400 15px var(--fonte-base);
+  padding: 8px var(--espaco-3);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-md);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+.limpeza textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+.limpeza .texto-bloco {
+  padding: var(--espaco-3);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md);
+  background: var(--cor-superficie-2);
+  min-height: 44px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.limpeza .rotulo {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  margin: var(--espaco-3) 0 6px;
+}

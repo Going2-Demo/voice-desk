@@ -6,6 +6,7 @@ use crate::chaves::cofre::Cofre;
 use crate::chaves::{EstadoChave, Provedor, groq, servico as chaves};
 use crate::ditado::efeitos_tauri::EfeitosTauri;
 use crate::ditado::servico::Ditado;
+use crate::limpeza::{self, ListaPreenchimento, OpcoesTexto, PalavraPreenchimento};
 use crate::nucleo::{ErroApp, relogio::Relogio};
 use crate::plataforma;
 use crate::substituicoes::{self, Substituicao};
@@ -359,6 +360,66 @@ pub fn substituicoes_remover(
     let c = banco(&bd)?;
     let maquina = crate::bandeja::maquina_id(&c)?;
     substituicoes::remover(&c, &relogio, &maquina, &id)
+}
+
+/// Lista de palavras de preenchimento (RF-09.2).
+#[tauri::command]
+#[specta::specta]
+pub fn limpeza_listar(bd: State<'_, Banco>) -> Result<ListaPreenchimento, ErroApp> {
+    let c = banco(&bd)?;
+    limpeza::listar(&c)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn limpeza_adicionar(
+    palavra: String,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<PalavraPreenchimento, ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    limpeza::adicionar(&c, &relogio, &maquina, &palavra)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn limpeza_remover(
+    id: String,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<(), ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    limpeza::remover(&c, &relogio, &maquina, &id)
+}
+
+/// Bloco "Texto do ditado" de Configurações › Geral (RF-09.1).
+#[tauri::command]
+#[specta::specta]
+pub fn limpeza_opcoes_obter(bd: State<'_, Banco>) -> Result<OpcoesTexto, ErroApp> {
+    let c = banco(&bd)?;
+    limpeza::opcoes_obter(&c)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn limpeza_opcoes_salvar(
+    opcoes: OpcoesTexto,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<OpcoesTexto, ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    limpeza::opcoes_salvar(&c, &relogio, &maquina, &opcoes)
+}
+
+/// Prévia ao vivo da limpeza, com as opções e a lista salvas.
+#[tauri::command]
+#[specta::specta]
+pub fn limpeza_previa(texto: String, bd: State<'_, Banco>) -> Result<String, ErroApp> {
+    let c = banco(&bd)?;
+    limpeza::previa(&c, &texto)
 }
 
 // --- historico, retencao, retranscrever, exportar-csv -------------------------------------

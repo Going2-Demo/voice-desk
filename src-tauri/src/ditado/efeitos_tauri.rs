@@ -88,6 +88,19 @@ impl EfeitosTauri {
             .unwrap_or_default()
     }
 
+    /// Limpeza e Enter do modo ativo; se a leitura falhar, o texto segue sem limpar e sem Enter.
+    fn aplicar_limpeza(&self, contexto: &mut Contexto) {
+        let banco = self.app.state::<Mutex<Connection>>();
+        let Ok(c) = banco.lock() else { return };
+        match crate::limpeza::config_do_modo(&c, contexto.modo_id.as_deref()) {
+            Ok((config, opcoes)) => {
+                contexto.config_limpeza = config;
+                contexto.enviar_enter = opcoes.enviar_enter;
+            }
+            Err(e) => tracing::warn!(evento = "limpeza_config_falhou", codigo = %e.codigo),
+        }
+    }
+
     /// Guarda o áudio e o item "falhou" no histórico (RF-02.3).
     fn registrar_falha(&self, contexto: &Contexto, erro: &ErroApp) {
         let caminhos = self.app.state::<Caminhos>();
@@ -236,6 +249,7 @@ impl Efeitos for Arc<EfeitosTauri> {
             contexto.config_transcricao = config;
             contexto.dica_vocabulario = este.dica_do_vocabulario();
             contexto.substituicoes = este.regras_de_substituicao();
+            este.aplicar_limpeza(&mut contexto);
             contexto.gravacao = gravacao;
             contexto.fabrica_transcritor = Some(crate::transcricao::fabrica_com_cofre(cofre));
             let resultado = pipeline::executar(&mut contexto).map(|_| ());
