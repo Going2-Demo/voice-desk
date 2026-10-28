@@ -1,0 +1,72 @@
+.substituicoes {
+  max-width: 882px;
+}
+.substituicoes h1 {
+  font-size: 26px;
+}
+.substituicoes .subtitulo {
+  font-size: 15px;
+  color: var(--cor-texto-suave);
+  margin: 4px 0 var(--espaco-5);
+}
+.substituicoes .suave {
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+}
+.substituicoes .cartao {
+  margin-top: 0;
+}
+.substituicoes .duas-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espaco-3);
+}
+.substituicoes .acoes {
+  display: flex;
+  gap: var(--espaco-2);
+  margin-top: var(--espaco-3);
+  flex-wrap: wrap;
+}
+.substituicoes .tabela-wrap {
+  margin-top: var(--espaco-5);
+  overflow-x: auto;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-md, 8px);
+}
+.substituicoes table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.substituicoes th {
+  text-align: left;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+  padding: 10px 14px;
+  background: var(--cor-superficie-2);
+}
+.substituicoes td {
+  padding: 0 14px;
+  height: 48px;
+  border-top: 1px solid var(--cor-borda);
+}
+.substituicoes tr:hover td {
+  background: var(--cor-superficie-2);
+}
+.substituicoes tr.desativada td:not(:nth-child(3)):not(:nth-child(4)) {
+  opacity: 0.55;
+}
+.substituicoes td .acoes {
+  margin: 0;
+  justify-content: flex-end;
+}
+.substituicoes .vazio {
+  text-align: center;
+  padding: var(--espaco-6) var(--espaco-4);
+}
+@media (max-width: 640px) {
+  .substituicoes .duas-col {
+    grid-template-columns: 1fr;
+  }
+}

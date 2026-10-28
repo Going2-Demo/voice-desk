@@ -77,6 +77,17 @@ impl EfeitosTauri {
             .flatten()
     }
 
+    /// Substituições ativas (F-08); sem elas (vazio ou erro de leitura) o texto segue sem troca.
+    fn regras_de_substituicao(&self) -> Vec<crate::substituicoes::Regra> {
+        let banco = self.app.state::<Mutex<Connection>>();
+        let Ok(c) = banco.lock() else {
+            return Vec::new();
+        };
+        crate::substituicoes::regras_ativas(&c)
+            .inspect_err(|e| tracing::warn!(evento = "substituicoes_falhou", codigo = %e.codigo))
+            .unwrap_or_default()
+    }
+
     /// Guarda o áudio e o item "falhou" no histórico (RF-02.3).
     fn registrar_falha(&self, contexto: &Contexto, erro: &ErroApp) {
         let caminhos = self.app.state::<Caminhos>();
@@ -224,6 +235,7 @@ impl Efeitos for Arc<EfeitosTauri> {
             contexto.modo_id = modo_id;
             contexto.config_transcricao = config;
             contexto.dica_vocabulario = este.dica_do_vocabulario();
+            contexto.substituicoes = este.regras_de_substituicao();
             contexto.gravacao = gravacao;
             contexto.fabrica_transcritor = Some(crate::transcricao::fabrica_com_cofre(cofre));
             let resultado = pipeline::executar(&mut contexto).map(|_| ());

@@ -44,6 +44,11 @@ export const commands = {
 	vocabularioAdicionar: (palavra: string) => typedError<Palavra, ErroApp_Serialize>(__TAURI_INVOKE("vocabulario_adicionar", { palavra })),
 	vocabularioEditar: (id: string, palavra: string) => typedError<Palavra, ErroApp_Serialize>(__TAURI_INVOKE("vocabulario_editar", { id, palavra })),
 	vocabularioRemover: (id: string) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("vocabulario_remover", { id })),
+	substituicoesListar: () => typedError<Substituicao[], ErroApp_Serialize>(__TAURI_INVOKE("substituicoes_listar")),
+	substituicoesAdicionar: (original: string, substituto: string) => typedError<Substituicao, ErroApp_Serialize>(__TAURI_INVOKE("substituicoes_adicionar", { original, substituto })),
+	substituicoesEditar: (id: string, original: string, substituto: string) => typedError<Substituicao, ErroApp_Serialize>(__TAURI_INVOKE("substituicoes_editar", { id, original, substituto })),
+	substituicoesAtivar: (id: string, ativa: boolean) => typedError<Substituicao, ErroApp_Serialize>(__TAURI_INVOKE("substituicoes_ativar", { id, ativa })),
+	substituicoesRemover: (id: string) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("substituicoes_remover", { id })),
 };
 
 /** Events */
@@ -188,6 +193,13 @@ export type Sobre = {
 	licenca: string,
 	/**  Página pública do projeto (RF-27.4). */
 	url_projeto: string,
+};
+
+export type Substituicao = {
+	id: string,
+	original: string,
+	substituto: string,
+	ativa: boolean,
 };
 
 export type Validade = 

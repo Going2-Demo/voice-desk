@@ -5,5 +5,6 @@ export const consultas = {
   atalhos: { global: ["atalhos", "global"] as const },
   permissoes: { estado: ["permissoes", "estado"] as const },
   vocabulario: { lista: ["vocabulario", "lista"] as const },
+  substituicoes: { lista: ["substituicoes", "lista"] as const },
   primeiroUso: { estado: ["primeiro-uso", "estado"] as const },
 };
