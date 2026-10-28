@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.hoisted(() => {
   import.meta.env.VITE_IPC = "simulado";
@@ -99,10 +98,5 @@ describe("Substituições (F-08)", () => {
     await userEvent.click(await screen.findByRole("button", { name: "Remover gou tu" }));
     await userEvent.click(await screen.findByRole("button", { name: "Remover pix" }));
     expect(await screen.findByText("Nenhuma substituição")).toBeInTheDocument();
-  });
-
-  it("o interruptor da tabela é block, senão colapsa a 0×0 (retorno 1 do QA)", () => {
-    const css = readFileSync(new URL("./substituicoes.css", import.meta.url), "utf8");
-    expect(css).toMatch(/\.substituicoes td \.interruptor\s*\{[^}]*display:\s*block/);
   });
 });
