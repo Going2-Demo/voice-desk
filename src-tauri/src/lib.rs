@@ -11,6 +11,7 @@ pub mod nucleo;
 pub mod permissoes;
 pub mod plataforma;
 pub mod primeiro_uso;
+pub mod substituicoes;
 pub mod transcricao;
 pub mod vocabulario;
 
@@ -48,6 +49,11 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
             comandos::vocabulario_adicionar,
             comandos::vocabulario_editar,
             comandos::vocabulario_remover,
+            comandos::substituicoes_listar,
+            comandos::substituicoes_adicionar,
+            comandos::substituicoes_editar,
+            comandos::substituicoes_ativar,
+            comandos::substituicoes_remover,
         ])
         .events(collect_events![
             ditado::efeitos_tauri::DitadoEstado,

@@ -8,6 +8,7 @@ use crate::ditado::efeitos_tauri::EfeitosTauri;
 use crate::ditado::servico::Ditado;
 use crate::nucleo::{ErroApp, relogio::Relogio};
 use crate::plataforma;
+use crate::substituicoes::{self, Substituicao};
 use crate::transcricao::{self, ConfigTranscricao};
 use crate::vocabulario::{self, ListaVocabulario, Palavra};
 use rusqlite::Connection;
@@ -299,6 +300,65 @@ pub fn vocabulario_remover(
     let c = banco(&bd)?;
     let maquina = crate::bandeja::maquina_id(&c)?;
     vocabulario::remover(&c, &relogio, &maquina, &id)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn substituicoes_listar(bd: State<'_, Banco>) -> Result<Vec<Substituicao>, ErroApp> {
+    let c = banco(&bd)?;
+    substituicoes::listar(&c)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn substituicoes_adicionar(
+    original: String,
+    substituto: String,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<Substituicao, ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    substituicoes::adicionar(&c, &relogio, &maquina, &original, &substituto)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn substituicoes_editar(
+    id: String,
+    original: String,
+    substituto: String,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<Substituicao, ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    substituicoes::editar(&c, &relogio, &maquina, &id, &original, &substituto)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn substituicoes_ativar(
+    id: String,
+    ativa: bool,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<Substituicao, ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    substituicoes::definir_ativa(&c, &relogio, &maquina, &id, ativa)
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn substituicoes_remover(
+    id: String,
+    bd: State<'_, Banco>,
+    relogio: State<'_, Relogio>,
+) -> Result<(), ErroApp> {
+    let c = banco(&bd)?;
+    let maquina = crate::bandeja::maquina_id(&c)?;
+    substituicoes::remover(&c, &relogio, &maquina, &id)
 }
 
 // --- historico, retencao, retranscrever, exportar-csv -------------------------------------
