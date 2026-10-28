@@ -49,6 +49,15 @@ export const commands = {
 	substituicoesEditar: (id: string, original: string, substituto: string) => typedError<Substituicao, ErroApp_Serialize>(__TAURI_INVOKE("substituicoes_editar", { id, original, substituto })),
 	substituicoesAtivar: (id: string, ativa: boolean) => typedError<Substituicao, ErroApp_Serialize>(__TAURI_INVOKE("substituicoes_ativar", { id, ativa })),
 	substituicoesRemover: (id: string) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("substituicoes_remover", { id })),
+	/**  Lista de palavras de preenchimento (RF-09.2). */
+	limpezaListar: () => typedError<ListaPreenchimento, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_listar")),
+	limpezaAdicionar: (palavra: string) => typedError<PalavraPreenchimento, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_adicionar", { palavra })),
+	limpezaRemover: (id: string) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_remover", { id })),
+	/**  Bloco "Texto do ditado" de Configurações › Geral (RF-09.1). */
+	limpezaOpcoesObter: () => typedError<OpcoesTexto, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_opcoes_obter")),
+	limpezaOpcoesSalvar: (opcoes: OpcoesTexto) => typedError<OpcoesTexto, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_opcoes_salvar", { opcoes })),
+	/**  Prévia ao vivo da limpeza, com as opções e a lista salvas. */
+	limpezaPrevia: (texto: string) => typedError<string, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_previa", { texto })),
 };
 
 /** Events */
@@ -163,6 +172,11 @@ export type EstadoPrimeiroUso = {
 
 export type Idioma = "pt-BR" | "en" | "auto";
 
+export type ListaPreenchimento = {
+	palavras: PalavraPreenchimento[],
+	limite: number,
+};
+
 export type ListaVocabulario = {
 	/**  Palavras que casam com a busca, as mais recentes primeiro. */
 	palavras: Palavra[],
@@ -173,7 +187,20 @@ export type ListaVocabulario = {
 	na_dica: number,
 };
 
+/**  Bloco "Texto do ditado" de Configurações › Geral. */
+export type OpcoesTexto = {
+	idioma: Idioma,
+	remover_preenchimento: boolean,
+	formatar: boolean,
+	enviar_enter: boolean,
+};
+
 export type Palavra = {
+	id: string,
+	palavra: string,
+};
+
+export type PalavraPreenchimento = {
 	id: string,
 	palavra: string,
 };

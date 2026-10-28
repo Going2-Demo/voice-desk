@@ -37,6 +37,8 @@ pub struct Contexto {
     pub dica_vocabulario: Option<String>,
     /// Substituições ativas aplicadas pela etapa `substituir` (F-08).
     pub substituicoes: Vec<crate::substituicoes::Regra>,
+    /// O que a etapa `limpar` liga e a lista de palavras de preenchimento (F-09).
+    pub config_limpeza: crate::limpeza::ConfigLimpeza,
     pub fabrica_transcritor: Option<FabricaCompartilhada>,
     pub transcricao_provedor: Option<ProvedorTranscricao>,
     pub transcricao_modelo: Option<String>,

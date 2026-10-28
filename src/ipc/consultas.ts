@@ -6,5 +6,10 @@ export const consultas = {
   permissoes: { estado: ["permissoes", "estado"] as const },
   vocabulario: { lista: ["vocabulario", "lista"] as const },
   substituicoes: { lista: ["substituicoes", "lista"] as const },
+  limpeza: {
+    lista: ["limpeza", "lista"] as const,
+    opcoes: ["limpeza", "opcoes"] as const,
+    previa: ["limpeza", "previa"] as const,
+  },
   primeiroUso: { estado: ["primeiro-uso", "estado"] as const },
 };

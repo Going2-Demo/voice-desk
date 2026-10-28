@@ -54,7 +54,7 @@ impl Idioma {
         }
     }
 
-    fn de_texto(t: &str) -> Self {
+    pub(crate) fn de_texto(t: &str) -> Self {
         match t {
             "en" => Self::En,
             "auto" => Self::Auto,
