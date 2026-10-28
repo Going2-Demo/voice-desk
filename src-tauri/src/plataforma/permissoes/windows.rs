@@ -34,6 +34,8 @@ pub fn acessibilidade() -> Situacao {
 
 pub fn pedir_microfone() {}
 
+pub fn pedir_acessibilidade() {}
+
 pub fn detalhe() -> String {
     String::new()
 }
