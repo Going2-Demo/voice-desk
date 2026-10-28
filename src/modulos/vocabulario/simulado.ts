@@ -4,6 +4,19 @@ import { ErroVocabulario } from "./erro";
 
 const LIMITE = 500;
 const SEMENTE = ["Going2", "Hortolândia", "Kubernetes", "LGPD", "Dokploy", "Voice Desk", "SLA"];
+const ORCAMENTO_DICA = 500;
+/** Como o núcleo: as mais recentes que cabem em 500 caracteres, separadas por ", ". */
+function naDica(): number {
+  let usados = 0;
+  let n = 0;
+  for (const i of itens) {
+    const custo = i.palavra.length + (n === 0 ? 0 : 2);
+    if (usados + custo > ORCAMENTO_DICA) break;
+    usados += custo;
+    n++;
+  }
+  return n;
+}
 const norm = (p: string) => p.trim().replace(/\s+/g, " ").toLowerCase();
 
 let itens: Palavra[] = [];
@@ -42,7 +55,7 @@ export const simulado: ApiVocabulario = {
       palavras: itens.filter((i) => norm(i.palavra).includes(termo)),
       total: itens.length,
       limite: LIMITE,
-      na_dica: itens.length,
+      na_dica: naDica(),
     };
   },
   async adicionar(bruta) {

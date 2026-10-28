@@ -3,6 +3,8 @@ import { type FormEvent, useRef, useState } from "react";
 import { consultas } from "../../ipc/consultas";
 import { api, type Palavra } from "./api";
 import { ErroVocabulario } from "./erro";
+import "../../compartilhado/tema/componentes.css";
+import "../../compartilhado/tema/formulario.css";
 import "./vocabulario.css";
 
 const mensagemDe = (e: unknown) =>
@@ -57,7 +59,7 @@ export default function Pagina() {
   const vazio = dados?.total === 0;
 
   return (
-    <section className="vocabulario">
+    <section className="vocabulario formulario-vd">
       <div className="cabecalho">
         <h1>Vocabulário</h1>
         {dados && (
@@ -66,14 +68,14 @@ export default function Pagina() {
           </span>
         )}
       </div>
-      <p className="suave">
+      <p className="subtitulo">
         Nomes, siglas e termos que a transcrição deve escrever certo. Vale para todos os ditados.
       </p>
       {lista.isPending && <p role="status">Carregando…</p>}
       {lista.isError && (
         <p role="alert">
           Não consegui ler o vocabulário.{" "}
-          <button type="button" onClick={() => lista.refetch()}>
+          <button type="button" className="btn" onClick={() => lista.refetch()}>
             Tentar de novo
           </button>
         </p>
@@ -102,7 +104,7 @@ export default function Pagina() {
                   {erroNova}
                 </span>
               </div>
-              <button type="submit" className="primario" disabled={adicionar.isPending}>
+              <button type="submit" className="btn primario" disabled={adicionar.isPending}>
                 Adicionar
               </button>
             </form>
@@ -123,7 +125,7 @@ export default function Pagina() {
                   provedor aceita uma dica curta.
                 </p>
               )}
-              <div className="campo">
+              <div className="campo busca">
                 <label htmlFor="v-busca">Buscar no vocabulário</label>
                 <input
                   id="v-busca"
@@ -136,7 +138,7 @@ export default function Pagina() {
               {dados.palavras.length === 0 ? (
                 <p className="suave" role="status">
                   Nenhuma palavra encontrada para “{busca}”.{" "}
-                  <button type="button" onClick={() => setBusca("")}>
+                  <button type="button" className="btn" onClick={() => setBusca("")}>
                     Limpar busca
                   </button>
                 </p>
@@ -226,10 +228,10 @@ function EditarPalavra({
         }}
         onKeyDown={(e) => e.key === "Escape" && aoFechar(false)}
       />
-      <button type="submit" className="primario" disabled={salvar.isPending}>
+      <button type="submit" className="btn primario" disabled={salvar.isPending}>
         Salvar
       </button>
-      <button type="button" onClick={() => aoFechar(false)}>
+      <button type="button" className="btn" onClick={() => aoFechar(false)}>
         Cancelar
       </button>
       <span className="erro-campo" id={`ve-erro-${palavra.id}`} role="alert">

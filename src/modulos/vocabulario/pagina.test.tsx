@@ -46,6 +46,19 @@ describe("Vocabulário (F-07)", () => {
     expect(await screen.findByText("“going2” já está no vocabulário.")).toBeInTheDocument();
   });
 
+  it("Enter no campo envia e mostra a duplicata", async () => {
+    desenhar();
+    await userEvent.type(await screen.findByLabelText("Adicionar palavra"), "going2{Enter}");
+    expect(await screen.findByText("“going2” já está no vocabulário.")).toBeInTheDocument();
+    expect(screen.getByLabelText("Adicionar palavra")).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("avisa quando só parte das palavras vai como dica", async () => {
+    reiniciarSimulado(Array.from({ length: 100 }, (_, i) => `termo-numero-${i}`));
+    desenhar();
+    expect(await screen.findByText(/palavras mais recentes vão como dica/)).toBeInTheDocument();
+  });
+
   it("campo vazio pede uma palavra", async () => {
     desenhar();
     await screen.findByText("Going2");
