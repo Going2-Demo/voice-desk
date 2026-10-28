@@ -10,31 +10,12 @@ body {
   flex-direction: column;
   gap: var(--espaco-2);
 }
-.caixa-rapida label {
-  font-weight: 600;
-}
 .caixa-rapida .linha {
   display: flex;
   gap: var(--espaco-2);
 }
-.caixa-rapida input {
+.caixa-rapida .linha input {
   flex: 1;
-  font: inherit;
-  padding: var(--espaco-2) var(--espaco-3);
-  border: 1px solid var(--cor-borda-forte);
-  border-radius: var(--raio-sm);
-}
-.caixa-rapida input[aria-invalid="true"] {
-  border-color: var(--cor-erro);
-}
-.caixa-rapida button {
-  font: inherit;
-  cursor: pointer;
-  background: var(--cor-primaria);
-  color: var(--cor-sobre-primaria);
-  border: 1px solid var(--cor-primaria);
-  border-radius: var(--raio-sm);
-  padding: var(--espaco-2) var(--espaco-3);
 }
 .caixa-rapida :focus-visible {
   outline: 2px solid var(--cor-foco);
