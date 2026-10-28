@@ -1,0 +1,61 @@
+/* Botão, campo e erro de campo do design 1.4, 1.5 e 2.4, para telas e janelas com `.formulario-vd`. */
+.formulario-vd .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: var(--raio-md);
+  border: 1px solid var(--cor-borda-forte);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font: 600 14px var(--fonte-base);
+  cursor: pointer;
+}
+.formulario-vd .btn:hover {
+  background: var(--cor-superficie-2);
+}
+.formulario-vd .btn.primario {
+  background: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: var(--cor-sobre-primaria);
+}
+.formulario-vd .btn.primario:hover {
+  background: var(--cor-primaria-hover);
+}
+.formulario-vd .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.formulario-vd .campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.formulario-vd .campo > label {
+  font: 600 14px var(--fonte-base);
+}
+.formulario-vd input[type="text"],
+.formulario-vd input[type="search"] {
+  font: 400 15px var(--fonte-base);
+  min-height: 40px;
+  padding: 0 var(--espaco-3);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-md);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
+.formulario-vd input[aria-invalid="true"] {
+  border-color: var(--cor-erro);
+}
+.formulario-vd .erro-campo {
+  color: var(--cor-erro);
+  font-size: 13px;
+  font-weight: 600;
+}
+@media (max-width: 720px) {
+  .formulario-vd .btn {
+    min-height: 44px;
+  }
+}

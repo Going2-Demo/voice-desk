@@ -30,28 +30,30 @@ export function CaixaRapida({ aoConcluir }: { aoConcluir?: () => void }) {
   };
 
   return (
-    <form className="caixa-rapida" onSubmit={enviar} noValidate>
-      <label htmlFor="caixa-palavra">Adicionar ao vocabulário</label>
-      <div className="linha">
-        <input
-          id="caixa-palavra"
-          type="text"
-          autoComplete="off"
-          placeholder="Ex.: Hortolândia"
-          // biome-ignore lint/a11y/noAutofocus: a janela existe só para digitar a palavra
-          autoFocus
-          value={palavra}
-          aria-invalid={erro ? true : undefined}
-          aria-describedby="caixa-aviso"
-          onChange={(e) => {
-            setPalavra(e.target.value);
-            setErro("");
-            setFeito("");
-          }}
-        />
-        <button type="submit" disabled={enviando}>
-          Adicionar
-        </button>
+    <form className="caixa-rapida formulario-vd" onSubmit={enviar} noValidate>
+      <div className="campo">
+        <label htmlFor="caixa-palavra">Adicionar ao vocabulário</label>
+        <div className="linha">
+          <input
+            id="caixa-palavra"
+            type="text"
+            autoComplete="off"
+            placeholder="Ex.: Hortolândia"
+            // biome-ignore lint/a11y/noAutofocus: a janela existe só para digitar a palavra
+            autoFocus
+            value={palavra}
+            aria-invalid={erro ? true : undefined}
+            aria-describedby="caixa-aviso"
+            onChange={(e) => {
+              setPalavra(e.target.value);
+              setErro("");
+              setFeito("");
+            }}
+          />
+          <button type="submit" className="btn primario" disabled={enviando}>
+            Adicionar
+          </button>
+        </div>
       </div>
       <p id="caixa-aviso" role={erro ? "alert" : "status"} className={erro ? "erro" : "ok"}>
         {erro || feito}
