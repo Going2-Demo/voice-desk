@@ -4,6 +4,8 @@ use std::ffi::c_void;
 #[link(name = "ApplicationServices", kind = "framework")]
 unsafe extern "C" {
     fn AXIsProcessTrusted() -> bool;
+    fn AXIsProcessTrustedWithOptions(opcoes: *const c_void) -> bool;
+    static kAXTrustedCheckOptionPrompt: *const c_void;
     fn AXUIElementCreateSystemWide() -> *const c_void;
     fn AXUIElementCopyAttributeValue(
         elemento: *const c_void,
@@ -20,6 +22,17 @@ unsafe extern "C" {
         codificacao: u32,
     ) -> *const c_void;
     fn CFRelease(objeto: *const c_void);
+    fn CFDictionaryCreate(
+        alocador: *const c_void,
+        chaves: *const *const c_void,
+        valores: *const *const c_void,
+        quantidade: isize,
+        callbacks_chaves: *const c_void,
+        callbacks_valores: *const c_void,
+    ) -> *const c_void;
+    static kCFBooleanTrue: *const c_void;
+    static kCFTypeDictionaryKeyCallBacks: c_void;
+    static kCFTypeDictionaryValueCallBacks: c_void;
 }
 
 /// `kAXErrorAPIDisabled`: o sistema recusa chamadas de acessibilidade a este processo.
@@ -163,6 +176,31 @@ pub fn pedir_microfone() {
         decisao_atual_do_microfone(classe, tipo_audio(), std::time::Duration::from_secs(60));
     }
     crate::audio::captura::sondar_entrada();
+}
+
+/// Pede a Acessibilidade ao sistema: `AXIsProcessTrustedWithOptions` com o aviso ligado registra
+/// este binário (com a identidade que está rodando) na lista de Acessibilidade e abre o diálogo
+/// que leva aos Ajustes. Entrada adicionada à mão pode ficar amarrada a outra identidade.
+pub fn pedir_acessibilidade() {
+    // SAFETY: monta um CFDictionary {AXTrustedCheckOptionPrompt: true} com os callbacks padrão
+    // do CoreFoundation, usa e libera; as constantes são símbolos dos frameworks já ligados.
+    unsafe {
+        let chaves = [kAXTrustedCheckOptionPrompt];
+        let valores = [kCFBooleanTrue];
+        let opcoes = CFDictionaryCreate(
+            std::ptr::null(),
+            chaves.as_ptr(),
+            valores.as_ptr(),
+            1,
+            &raw const kCFTypeDictionaryKeyCallBacks,
+            &raw const kCFTypeDictionaryValueCallBacks,
+        );
+        if opcoes.is_null() {
+            return;
+        }
+        AXIsProcessTrustedWithOptions(opcoes);
+        CFRelease(opcoes);
+    }
 }
 
 /// Valores crus lidos do sistema, para o log de diagnóstico (sem dado do usuário).

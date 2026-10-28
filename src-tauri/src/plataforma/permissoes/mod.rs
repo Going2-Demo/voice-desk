@@ -39,10 +39,11 @@ pub fn detalhe() -> String {
     sistema::detalhe()
 }
 
-/// Provoca o pedido do sistema (só o microfone tem diálogo próprio) e devolve a situação nova.
+/// Provoca o pedido do sistema (microfone e, no Mac, Acessibilidade) e devolve a situação nova.
 pub fn pedir(permissao: Permissao) -> Situacao {
-    if permissao == Permissao::Microfone {
-        sistema::pedir_microfone();
+    match permissao {
+        Permissao::Microfone => sistema::pedir_microfone(),
+        Permissao::Acessibilidade => sistema::pedir_acessibilidade(),
     }
     situacao(permissao)
 }
