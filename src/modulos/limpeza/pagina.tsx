@@ -48,6 +48,7 @@ export default function Pagina() {
   const remover = useMutation({
     mutationFn: (p: PalavraPreenchimento) => api.remover(p.id).then(() => p),
     onSuccess: (p) => {
+      setErroNova("");
       setAviso(`“${p.palavra}” removida.`);
       recarregar();
     },
@@ -66,6 +67,34 @@ export default function Pagina() {
   const dados = lista.data;
   const vazio = dados?.palavras.length === 0;
   const tudoDesligado = opcoes.data && !opcoes.data.remover_preenchimento && !opcoes.data.formatar;
+
+  const formulario = (
+    <form onSubmit={enviar} noValidate>
+      <div className="campo">
+        <label htmlFor="f-nova">Nova palavra</label>
+        <input
+          id="f-nova"
+          ref={campoNova}
+          type="text"
+          autoComplete="off"
+          placeholder="Ex.: basicamente"
+          value={nova}
+          aria-invalid={erroNova ? true : undefined}
+          aria-describedby="f-erro"
+          onChange={(e) => {
+            setNova(e.target.value);
+            setErroNova("");
+          }}
+        />
+        <span className="erro-campo" id="f-erro" role="alert">
+          {erroNova}
+        </span>
+      </div>
+      <button type="submit" className="btn primario" disabled={adicionar.isPending}>
+        Adicionar
+      </button>
+    </form>
+  );
 
   return (
     <section className="limpeza formulario-vd">
@@ -94,17 +123,22 @@ export default function Pagina() {
       )}
       {dados && (
         <>
-          <div className="cartao">
-            <h2>Palavras de preenchimento</h2>
-            <p className="dica">
-              Em português e inglês. Edite a lista como quiser. Uma entrada com “…” (como “é…”) só
-              sai quando a transcrição traz as reticências.
-            </p>
-            {vazio ? (
-              <p className="suave" role="status">
-                Lista vazia. Sem palavras de preenchimento, a limpeza só arruma a pontuação.
+          {vazio ? (
+            <div className="vazio">
+              <div className="grande" aria-hidden="true">
+                🧹
+              </div>
+              <h2>Lista vazia</h2>
+              <p>Sem palavras de preenchimento, a limpeza só arruma a pontuação.</p>
+              {formulario}
+            </div>
+          ) : (
+            <div className="cartao">
+              <h2>Palavras de preenchimento</h2>
+              <p className="dica">
+                Em português e inglês. Edite a lista como quiser. Uma entrada com “…” (como “é…”) só
+                sai quando a transcrição traz as reticências.
               </p>
-            ) : (
               <ul className="lista-chips" aria-label="Palavras de preenchimento">
                 {dados.palavras.map((p) => (
                   <li key={p.id} className="chip">
@@ -119,33 +153,9 @@ export default function Pagina() {
                   </li>
                 ))}
               </ul>
-            )}
-            <form onSubmit={enviar} noValidate>
-              <div className="campo">
-                <label htmlFor="f-nova">Nova palavra</label>
-                <input
-                  id="f-nova"
-                  ref={campoNova}
-                  type="text"
-                  autoComplete="off"
-                  placeholder="Ex.: basicamente"
-                  value={nova}
-                  aria-invalid={erroNova ? true : undefined}
-                  aria-describedby="f-erro"
-                  onChange={(e) => {
-                    setNova(e.target.value);
-                    setErroNova("");
-                  }}
-                />
-                <span className="erro-campo" id="f-erro" role="alert">
-                  {erroNova}
-                </span>
-              </div>
-              <button type="submit" className="btn primario" disabled={adicionar.isPending}>
-                Adicionar
-              </button>
-            </form>
-          </div>
+              {formulario}
+            </div>
+          )}
           <div className="cartao">
             <h2>Teste a limpeza</h2>
             <p className="dica">Digite uma frase como se tivesse falado e veja o resultado.</p>

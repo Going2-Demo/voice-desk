@@ -70,7 +70,23 @@ describe("Limpeza do texto (F-09)", () => {
   it("lista vazia mostra o estado vazio", async () => {
     reiniciarSimulado([]);
     desenhar();
-    expect(await screen.findByText(/Lista vazia/)).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Lista vazia" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Nova palavra")).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText("Nova palavra"), "basicamente{Enter}");
+    expect(
+      await screen.findByRole("list", { name: "Palavras de preenchimento" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Lista vazia" })).not.toBeInTheDocument();
+  });
+
+  it("o erro de palavra vazia some quando a lista muda", async () => {
+    desenhar();
+    await userEvent.click(await screen.findByRole("button", { name: "Adicionar" }));
+    expect(await screen.findByText("Digite uma palavra ou expressão.")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Remover hã" }));
+    await waitFor(() =>
+      expect(screen.queryByText("Digite uma palavra ou expressão.")).not.toBeInTheDocument(),
+    );
   });
 
   it("avisa que o texto sai sem alteração com tudo desligado", async () => {
