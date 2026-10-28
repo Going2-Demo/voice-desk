@@ -33,10 +33,10 @@ test("RF-08.1: editar e remover substituição", async ({ page }) => {
 test("RF-08.1: desativar e reativar", async ({ page }) => {
   const chave = page.getByRole("switch", { name: "Ativar “gou tu”" });
   await expect(chave).toBeChecked();
-  await chave.uncheck();
+  await chave.click();
   await expect(chave).not.toBeChecked();
   await expect(tabela(page).getByRole("row", { name: /gou tu/ })).toHaveClass(/desativada/);
-  await chave.check();
+  await chave.click();
   await expect(chave).toBeChecked();
 });
 
