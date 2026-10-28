@@ -61,6 +61,9 @@
   margin: 0;
   justify-content: flex-end;
 }
+.substituicoes td .interruptor {
+  display: block;
+}
 .substituicoes .vazio {
   text-align: center;
   padding: var(--espaco-6) var(--espaco-4);
