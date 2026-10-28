@@ -26,7 +26,7 @@ export function Secao() {
   };
 
   return (
-    <section className="cartao" aria-labelledby={`${id}-titulo`}>
+    <section className="cartao formulario-vd" aria-labelledby={`${id}-titulo`}>
       <h2 id={`${id}-titulo`}>Texto do ditado</h2>
       <p className="dica">Vale para todos os ditados.</p>
       <div className="campo" style={{ maxWidth: 320 }}>

@@ -46,6 +46,15 @@
   background: var(--cor-superficie);
   color: var(--cor-texto);
 }
+.formulario-vd select {
+  font: 400 15px var(--fonte-base);
+  min-height: 40px;
+  padding: 0 var(--espaco-3);
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: var(--raio-md);
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+}
 .formulario-vd input[aria-invalid="true"] {
   border-color: var(--cor-erro);
 }
