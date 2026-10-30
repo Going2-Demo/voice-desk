@@ -7,7 +7,7 @@
 
 O Voice Desk é um app de desktop (Mac e Windows) sem servidor próprio (PRD seções 10 e 11: sem servidor central, sem serviço pago). Não há aplicação para hospedar, então **o "deploy em dev" é gerar os instaladores de cada commit da `main` e deixá-los para a Marta baixar e testar nas máquinas reais**. Não usa Dokploy.
 
-Destino: **GitHub Actions** (build em runner `macos-14` e `windows-latest`) + **GitHub Releases** (versões) + **GitHub Pages** (página do projeto, F-27).
+Destino: **GitHub Actions** (build em runner `macos-15` e `windows-latest`) + **GitHub Releases** (versões) + **GitHub Pages** (página do projeto, F-27).
 Dev = pré-release automática `dev-<sha curto>` com os dois instaladores, marcada como *pre-release*. Versão pública = tag `vX.Y.Z` (fora do escopo do dev; só com aprovação do BD).
 
 | Opção | Prós | Contras | Veredito |
@@ -19,7 +19,7 @@ Dev = pré-release automática `dev-<sha curto>` com os dois instaladores, marca
 ## Componentes
 | Componente | Tipo | Nome | Build |
 |---|---|---|---|
-| Instalador Mac | artefato (.dmg) | `voice-desk-<versão>-mac.dmg` | runner `macos-14` |
+| Instalador Mac | artefato (.dmg) | `voice-desk-<versão>-mac.dmg` | runner `macos-15` |
 | Instalador Windows | artefato (.exe/.msi, sem admin: RNF-12) | `voice-desk-<versão>-win.exe` | runner `windows-latest` |
 | Página do projeto | site estático | GitHub Pages do repositório | `docs/site/` (a definir com o Otávio) |
 

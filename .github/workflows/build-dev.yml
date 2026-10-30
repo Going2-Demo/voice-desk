@@ -25,7 +25,7 @@ jobs:
       matrix:
         include:
           - {
-              os: macos-14,
+              os: macos-15,
               nome: mac,
               alvos: "aarch64-apple-darwin,x86_64-apple-darwin",
               args: "--target universal-apple-darwin",
@@ -102,7 +102,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: macos-14, nome: mac }
+          - { os: macos-15, nome: mac }
           - { os: windows-latest, nome: win }
     defaults:
       run:
