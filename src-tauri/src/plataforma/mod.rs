@@ -5,6 +5,7 @@
 pub mod area_transferencia;
 pub mod colagem;
 pub mod foco;
+pub mod midia;
 pub mod permissoes;
 pub mod teclado;
 

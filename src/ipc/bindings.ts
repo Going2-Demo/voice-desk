@@ -61,6 +61,8 @@ export const commands = {
 	limpezaOpcoesSalvar: (opcoes: OpcoesTexto) => typedError<OpcoesTexto, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_opcoes_salvar", { opcoes })),
 	/**  Prévia ao vivo da limpeza, com as opções e a lista salvas. */
 	limpezaPrevia: (texto: string) => typedError<string, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_previa", { texto })),
+	midiaPausarObter: () => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("midia_pausar_obter")),
+	midiaPausarDefinir: (ligado: boolean) => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("midia_pausar_definir", { ligado })),
 };
 
 /** Events */

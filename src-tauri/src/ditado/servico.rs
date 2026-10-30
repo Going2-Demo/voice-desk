@@ -53,6 +53,10 @@ pub trait Efeitos: Send + Sync + 'static {
     /// Maior amplitude capturada até agora, se a captura está aberta.
     fn pico_da_captura(&self) -> Option<f32>;
     fn escutar_esc(&self, ligar: bool);
+    /// Pausa a mídia que toca, se a preferência (F-25) está ligada.
+    fn pausar_midia(&self);
+    /// Retoma a mídia que o ditado pausou; sem nada pausado, não faz nada.
+    fn retomar_midia(&self);
     /// Confere, antes de gravar, o que a transcrição do modo ativo exige (ex.: chave cadastrada).
     fn conferir_transcricao(&self) -> Result<(), ErroApp>;
     /// Abre a tela de chaves (atalho do aviso "cadastre a chave").
@@ -146,6 +150,7 @@ impl<E: Efeitos> Ditado<E> {
         if acao == Acao::Cancelar {
             self.efeitos.escutar_esc(false);
             self.efeitos.descartar_captura();
+            self.efeitos.retomar_midia();
             self.efeitos.ocultar_gravador(0);
             *self.programa.lock().expect("programa") = None;
             tracing::info!(evento = "ditado_cancelado");
@@ -194,6 +199,7 @@ impl<E: Efeitos> Ditado<E> {
         *self.aviso_microfone.lock().expect("aviso") = aviso;
         self.efeitos.mostrar_gravador();
         self.efeitos.escutar_esc(true);
+        self.efeitos.pausar_midia();
         self.estado("gravando", &self.mensagem_gravando(MSG_GRAVANDO), 0);
         tracing::info!(evento = "ditado_iniciado");
     }
@@ -201,6 +207,7 @@ impl<E: Efeitos> Ditado<E> {
     fn falhar_ao_iniciar(&self, erro: &ErroApp) {
         self.efeitos.escutar_esc(false);
         self.efeitos.descartar_captura();
+        self.efeitos.retomar_midia();
         if let Ok(mut m) = self.maquina.lock() {
             m.falha_ao_iniciar();
         }
@@ -224,6 +231,7 @@ impl<E: Efeitos> Ditado<E> {
     fn parar(self: &Arc<Self>) {
         self.efeitos.escutar_esc(false);
         let gravacao = self.efeitos.parar_captura();
+        self.efeitos.retomar_midia();
         self.estado("processando", MSG_PROCESSANDO, 0);
         let contexto = Contexto {
             programa_em_foco: self.programa.lock().ok().and_then(|p| p.clone()),
@@ -329,6 +337,12 @@ mod testes {
         fn escutar_esc(&self, ligar: bool) {
             self.registra(&format!("esc:{ligar}"));
         }
+        fn pausar_midia(&self) {
+            self.registra("midia:pausar");
+        }
+        fn retomar_midia(&self) {
+            self.registra("midia:retomar");
+        }
         fn conferir_transcricao(&self) -> Result<(), ErroApp> {
             if *self.sem_chave.lock().unwrap() {
                 return Err(ErroApp::novo("chave_ausente", "Cadastre a chave do Groq"));
@@ -398,6 +412,27 @@ mod testes {
     }
 
     #[test]
+    fn pausa_a_midia_ao_iniciar_e_retoma_ao_parar() {
+        let (f, d) = montar();
+        d.atalho();
+        assert!(eventos(&f).contains(&"midia:pausar".to_string()));
+        assert!(!eventos(&f).contains(&"midia:retomar".to_string()));
+        d.atalho();
+        let ev = eventos(&f);
+        let parou = ev.iter().position(|e| e == "captura:parar").unwrap();
+        assert_eq!(ev[parou + 1], "midia:retomar");
+    }
+
+    #[test]
+    fn retoma_a_midia_se_a_captura_falha_ao_iniciar() {
+        let (f, d) = montar();
+        *f.sem_microfone.lock().unwrap() = true;
+        d.atalho();
+        assert!(!eventos(&f).contains(&"midia:pausar".to_string()));
+        assert!(eventos(&f).contains(&"midia:retomar".to_string()));
+    }
+
+    #[test]
     fn colado_termina_com_pronto() {
         let (f, d) = montar();
         d.atalho();
@@ -452,7 +487,10 @@ mod testes {
     fn fluxo_completo_mostra_grava_processa_e_some() {
         let (f, d) = montar();
         d.atalho();
-        assert_eq!(eventos(&f), ["captura:iniciar", "mostrar", "esc:true"]);
+        assert_eq!(
+            eventos(&f),
+            ["captura:iniciar", "mostrar", "esc:true", "midia:pausar"]
+        );
         assert_eq!(ultimo(&f).fase, "gravando");
         assert_eq!(ultimo(&f).programa.as_deref(), Some("Bloco de Notas"));
         d.atalho();
