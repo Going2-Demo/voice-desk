@@ -44,7 +44,8 @@ pub trait Efeitos: Send + Sync + 'static {
     fn ocultar_gravador(&self, depois_ms: u64);
     fn emitir_estado(&self, estado: &EstadoGravador);
     fn programa_em_foco(&self) -> Option<String>;
-    fn iniciar_captura(&self) -> Result<(), ErroApp>;
+    /// Abre o microfone escolhido; devolve o aviso a mostrar se caiu no padrão do sistema.
+    fn iniciar_captura(&self) -> Result<Option<String>, ErroApp>;
     /// Para a captura e devolve o áudio.
     fn parar_captura(&self) -> Option<Gravacao>;
     /// Para a captura e joga o áudio fora.
@@ -69,6 +70,7 @@ pub struct Ditado<E: Efeitos> {
     efeitos: E,
     maquina: Mutex<Maquina>,
     programa: Mutex<Option<String>>,
+    aviso_microfone: Mutex<Option<String>>,
 }
 
 /// Tempo sem sinal algum no microfone que indica falta de permissão (macOS entrega silêncio).
@@ -83,6 +85,7 @@ impl<E: Efeitos> Ditado<E> {
             efeitos,
             maquina: Mutex::new(Maquina::nova()),
             programa: Mutex::new(None),
+            aviso_microfone: Mutex::new(None),
         })
     }
 
@@ -102,6 +105,14 @@ impl<E: Efeitos> Ditado<E> {
             programa,
             acao: None,
         });
+    }
+
+    /// Mensagem do gravador enquanto grava; ganha o aviso do microfone, se houver (RF-23.2).
+    fn mensagem_gravando(&self, base: &str) -> String {
+        match self.aviso_microfone.lock().ok().and_then(|a| a.clone()) {
+            Some(aviso) => format!("{aviso} · {base}"),
+            None => base.to_string(),
+        }
     }
 
     /// O atalho do aviso no gravador foi clicado.
@@ -151,17 +162,16 @@ impl<E: Efeitos> Ditado<E> {
         let segundos = (decorrido / 1000) as u32;
         match acao {
             Acao::PararPorLimite => self.parar(),
-            Acao::AvisarLimite => self.estado("gravando", MSG_LIMITE, segundos),
+            Acao::AvisarLimite => {
+                self.estado("gravando", &self.mensagem_gravando(MSG_LIMITE), segundos)
+            }
             _ if self.fase() == Fase::Gravando => {
                 if decorrido >= SILENCIO_DIGITAL_MS && self.efeitos.pico_da_captura() == Some(0.0) {
                     self.falhar_ao_iniciar(&crate::audio::captura::erro_sem_microfone());
                 } else {
                     let aviso = decorrido >= super::maquina::AVISO_MS;
-                    self.estado(
-                        "gravando",
-                        if aviso { MSG_LIMITE } else { MSG_GRAVANDO },
-                        segundos,
-                    );
+                    let base = if aviso { MSG_LIMITE } else { MSG_GRAVANDO };
+                    self.estado("gravando", &self.mensagem_gravando(base), segundos);
                 }
             }
             _ => {}
@@ -170,17 +180,21 @@ impl<E: Efeitos> Ditado<E> {
 
     fn iniciar(self: &Arc<Self>) {
         *self.programa.lock().expect("programa") = self.efeitos.programa_em_foco();
-        if let Err(e) = self
+        let aviso = match self
             .efeitos
             .conferir_transcricao()
             .and_then(|()| self.efeitos.iniciar_captura())
         {
-            self.falhar_ao_iniciar(&e);
-            return;
-        }
+            Ok(aviso) => aviso,
+            Err(e) => {
+                self.falhar_ao_iniciar(&e);
+                return;
+            }
+        };
+        *self.aviso_microfone.lock().expect("aviso") = aviso;
         self.efeitos.mostrar_gravador();
         self.efeitos.escutar_esc(true);
-        self.estado("gravando", MSG_GRAVANDO, 0);
+        self.estado("gravando", &self.mensagem_gravando(MSG_GRAVANDO), 0);
         tracing::info!(evento = "ditado_iniciado");
     }
 
@@ -266,6 +280,7 @@ mod testes {
         eventos: Mutex<Vec<String>>,
         estados: Mutex<Vec<EstadoGravador>>,
         sem_microfone: Mutex<bool>,
+        aviso_captura: Mutex<Option<String>>,
         sem_chave: Mutex<bool>,
         pico: Mutex<Option<f32>>,
         pendente: Mutex<Option<Fim>>,
@@ -294,12 +309,12 @@ mod testes {
         fn programa_em_foco(&self) -> Option<String> {
             Some("Bloco de Notas".into())
         }
-        fn iniciar_captura(&self) -> Result<(), ErroApp> {
+        fn iniciar_captura(&self) -> Result<Option<String>, ErroApp> {
             self.registra("captura:iniciar");
             if *self.sem_microfone.lock().unwrap() {
                 return Err(crate::audio::captura::erro_sem_microfone());
             }
-            Ok(())
+            Ok(self.aviso_captura.lock().unwrap().clone())
         }
         fn parar_captura(&self) -> Option<Gravacao> {
             self.registra("captura:parar");
@@ -338,6 +353,31 @@ mod testes {
     fn terminar(f: &Falso) {
         let fim = f.pendente.lock().unwrap().take().unwrap();
         fim(Ok(Contexto::default()));
+    }
+
+    #[test]
+    fn microfone_escolhido_ausente_avisa_qual_esta_em_uso() {
+        let (f, d) = montar();
+        *f.aviso_captura.lock().unwrap() =
+            Some(crate::audio::dispositivo::aviso_ausente("Headset USB"));
+        d.atalho();
+        let e = f.estados.lock().unwrap().last().cloned().unwrap();
+        assert_eq!(e.fase, "gravando");
+        assert!(
+            e.mensagem
+                .contains("Usando o microfone padrão: “Headset USB” desconectado")
+        );
+        d.tique();
+        let e = f.estados.lock().unwrap().last().cloned().unwrap();
+        assert!(e.mensagem.contains("“Headset USB”"));
+    }
+
+    #[test]
+    fn microfone_normal_nao_traz_aviso() {
+        let (f, d) = montar();
+        d.atalho();
+        let e = f.estados.lock().unwrap().last().cloned().unwrap();
+        assert_eq!(e.mensagem, MSG_GRAVANDO);
     }
 
     #[test]

@@ -21,6 +21,8 @@ use tauri_plugin_opener::OpenerExt;
 
 /// Cofre de chaves registrado no estado do app (o do sistema; nos testes, um em memória).
 pub type CofreEstado = Arc<dyn Cofre>;
+use crate::audio::dispositivo::EstadoMicrofone;
+
 type Banco = Mutex<Connection>;
 
 fn banco<'a>(b: &'a Banco) -> Result<std::sync::MutexGuard<'a, Connection>, ErroApp> {
@@ -251,6 +253,28 @@ pub fn transcricao_salvar(
     let c = banco(&bd)?;
     let maquina = crate::bandeja::maquina_id(&c)?;
     transcricao::config::salvar(&c, &relogio, &maquina, &modo_id, &config)
+}
+
+// --- audio ----------------------------------------------------------------------------------
+
+#[tauri::command]
+#[specta::specta]
+pub fn audio_microfone_estado(bd: State<'_, Banco>) -> Result<EstadoMicrofone, ErroApp> {
+    let c = banco(&bd)?;
+    crate::audio::dispositivo::estado(&c)
+}
+
+/// `nome` = `None` volta ao padrão do sistema. A escolha é por máquina e não sincroniza.
+#[tauri::command]
+#[specta::specta]
+pub fn audio_definir_microfone(
+    nome: Option<String>,
+    bd: State<'_, Banco>,
+) -> Result<EstadoMicrofone, ErroApp> {
+    let c = banco(&bd)?;
+    let conectados = crate::audio::dispositivo::listar_entradas();
+    crate::audio::dispositivo::gravar(&c, nome.as_deref(), &conectados)?;
+    Ok(crate::audio::dispositivo::montar_estado(nome, conectados))
 }
 
 // --- bandeja, primeiro-uso ----------------------------------------------------------------

@@ -176,10 +176,15 @@ impl Efeitos for Arc<EfeitosTauri> {
         foco::programa_em_foco()
     }
 
-    fn iniciar_captura(&self) -> Result<(), ErroApp> {
+    fn iniciar_captura(&self) -> Result<Option<String>, ErroApp> {
         let app = self.app.clone();
+        let preferido = {
+            let banco = self.app.state::<Mutex<Connection>>();
+            let c = banco.lock().map_err(ErroApp::interno)?;
+            crate::audio::dispositivo::ler(&c)?
+        };
         let ultimo = Mutex::new((Instant::now(), 0.0_f32));
-        let captura = Captura::iniciar(move |nivel| {
+        let captura = Captura::iniciar(preferido, move |nivel| {
             let Ok(mut u) = ultimo.lock() else { return };
             u.1 = u.1.max(nivel);
             if u.0.elapsed() >= Duration::from_millis(50) {
@@ -187,11 +192,12 @@ impl Efeitos for Arc<EfeitosTauri> {
                 *u = (Instant::now(), 0.0);
             }
         })?;
+        let aviso = captura.aviso.clone();
         *self
             .captura
             .lock()
             .map_err(|_| ErroApp::interno("trava da captura"))? = Some(captura);
-        Ok(())
+        Ok(aviso)
     }
 
     fn parar_captura(&self) -> Option<Gravacao> {

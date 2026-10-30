@@ -21,6 +21,9 @@ export const commands = {
 	transcricaoObter: (modoId: string | null) => typedError<ConfigTranscricao, ErroApp_Serialize>(__TAURI_INVOKE("transcricao_obter", { modoId })),
 	/**  Grava provedor, modelo e idioma da transcrição do modo (RF-02.1 e RF-02.2). */
 	transcricaoSalvar: (modoId: string, config: ConfigTranscricao) => typedError<ConfigTranscricao, ErroApp_Serialize>(__TAURI_INVOKE("transcricao_salvar", { modoId, config })),
+	audioMicrofoneEstado: () => typedError<EstadoMicrofone_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("audio_microfone_estado")),
+	/**  `nome` = `None` volta ao padrão do sistema. A escolha é por máquina e não sincroniza. */
+	audioDefinirMicrofone: (nome: string | null) => typedError<EstadoMicrofone_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("audio_definir_microfone", { nome })),
 	bandejaEstado: () => typedError<EstadoIcone, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_estado")),
 	bandejaIniciarComOSistema: () => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_iniciar_com_o_sistema")),
 	bandejaDefinirIniciarComOSistema: (ligado: boolean) => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("bandeja_definir_iniciar_com_o_sistema", { ligado })),
@@ -157,6 +160,29 @@ export type EstadoGravador_Serialize = {
 };
 
 export type EstadoIcone = "parado" | "gravando" | "processando" | "erro";
+
+/**  Estado da tela de Configurações · Geral › Microfone. */
+export type EstadoMicrofone = EstadoMicrofone_Serialize | EstadoMicrofone_Deserialize;
+
+/**  Estado da tela de Configurações · Geral › Microfone. */
+export type EstadoMicrofone_Deserialize = {
+	/**  Dispositivos de entrada conectados agora. */
+	dispositivos: string[],
+	/**  Nome escolhido; `None` = padrão do sistema. */
+	escolhido?: string | null,
+	/**  O escolhido está conectado (sempre `true` no padrão do sistema). */
+	conectado: boolean,
+};
+
+/**  Estado da tela de Configurações · Geral › Microfone. */
+export type EstadoMicrofone_Serialize = {
+	/**  Dispositivos de entrada conectados agora. */
+	dispositivos: string[],
+	/**  Nome escolhido; `None` = padrão do sistema. */
+	escolhido: string | null,
+	/**  O escolhido está conectado (sempre `true` no padrão do sistema). */
+	conectado: boolean,
+};
 
 export type EstadoPermissoes = {
 	/**  `macos` ou `windows`: a tela escolhe os textos (Acessibilidade só no Mac). */
