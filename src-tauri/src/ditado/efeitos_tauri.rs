@@ -6,6 +6,7 @@ use super::servico::{Efeitos, EstadoGravador};
 use crate::audio::captura::{Captura, Gravacao};
 use crate::comandos::CofreEstado;
 use crate::nucleo::{ErroApp, caminhos::Caminhos};
+use crate::plataforma::midia::{self, PausaDeMidia};
 use crate::plataforma::{foco, teclado::EscutaEsc};
 use crate::transcricao::{self, ConfigTranscricao};
 use rusqlite::Connection;
@@ -36,6 +37,7 @@ pub struct EfeitosTauri {
     captura: Mutex<Option<Captura>>,
     escuta: Mutex<Option<EscutaEsc>>,
     geracao: AtomicU64,
+    midia: Arc<PausaDeMidia>,
     /// Ligado depois da montagem: o que fazer quando Esc é pressionado.
     pub ao_esc: OnceLock<Arc<dyn Fn() + Send + Sync>>,
 }
@@ -48,6 +50,7 @@ impl EfeitosTauri {
             captura: Mutex::new(None),
             escuta: Mutex::new(None),
             geracao: AtomicU64::new(0),
+            midia: Arc::new(PausaDeMidia::nova(midia::do_sistema())),
             ao_esc: OnceLock::new(),
         })
     }
@@ -212,6 +215,24 @@ impl Efeitos for Arc<EfeitosTauri> {
 
     fn pico_da_captura(&self) -> Option<f32> {
         self.captura.lock().ok()?.as_ref().map(Captura::pico)
+    }
+
+    fn pausar_midia(&self) {
+        let ligada = {
+            let banco = self.app.state::<Mutex<Connection>>();
+            banco.lock().ok().and_then(|c| midia::ler(&c).ok())
+        };
+        // Preferência ilegível: mantém o padrão (ligado). Fora da thread do atalho: o sistema
+        // de mídia pode demorar a responder.
+        if ligada.unwrap_or(true) {
+            let midia = Arc::clone(&self.midia);
+            std::thread::spawn(move || midia.pausar());
+        }
+    }
+
+    fn retomar_midia(&self) {
+        let midia = Arc::clone(&self.midia);
+        std::thread::spawn(move || midia.retomar());
     }
 
     fn escutar_esc(&self, ligar: bool) {

@@ -6,6 +6,7 @@ type Resultado<T> = Promise<
 
 const CONECTADOS = ["MacBook Pro — Microfone", "Headset USB Logitech H390"];
 let escolhido: string | null = null;
+let pausarMidia = true;
 
 const estado = (): EstadoMicrofone => ({
   dispositivos: CONECTADOS,
@@ -30,5 +31,10 @@ export const simulado = {
     }
     escolhido = nome;
     return Promise.resolve({ status: "ok", data: estado() });
+  },
+  midiaPausarObter: (): Resultado<boolean> => Promise.resolve({ status: "ok", data: pausarMidia }),
+  midiaPausarDefinir: (ligado: boolean): Resultado<boolean> => {
+    pausarMidia = ligado;
+    return Promise.resolve({ status: "ok", data: ligado });
   },
 };
