@@ -21,10 +21,16 @@ struct Dados {
 }
 
 pub struct Captura {
+    /// Aviso para o gravador: o microfone escolhido não estava conectado (RF-23.2).
+    pub aviso: Option<String>,
     parar: Arc<AtomicBool>,
     dados: Arc<Mutex<Dados>>,
     taxa_hz: u32,
     thread: Option<JoinHandle<()>>,
+}
+
+pub fn erro_nenhum_microfone() -> ErroApp {
+    ErroApp::novo("nenhum_microfone", "Nenhum microfone encontrado.")
 }
 
 pub fn erro_sem_microfone() -> ErroApp {
@@ -35,15 +41,19 @@ pub fn erro_sem_microfone() -> ErroApp {
 }
 
 impl Captura {
-    /// Abre o microfone padrão. `ao_nivel` recebe o nível (0..1) de cada bloco capturado.
-    pub fn iniciar(ao_nivel: impl Fn(f32) + Send + 'static) -> Result<Self, ErroApp> {
+    /// Abre o microfone `preferido` (ou o padrão do sistema, se ele não estiver conectado ou for
+    /// `None`). `ao_nivel` recebe o nível (0..1) de cada bloco capturado.
+    pub fn iniciar(
+        preferido: Option<String>,
+        ao_nivel: impl Fn(f32) + Send + 'static,
+    ) -> Result<Self, ErroApp> {
         let parar = Arc::new(AtomicBool::new(false));
         let dados = Arc::new(Mutex::new(Dados::default()));
-        let (tx, rx) = mpsc::sync_channel::<Result<u32, ErroApp>>(1);
+        let (tx, rx) = mpsc::sync_channel::<Result<(u32, Option<String>), ErroApp>>(1);
         let (p, d) = (Arc::clone(&parar), Arc::clone(&dados));
-        let thread = std::thread::spawn(move || match abrir(&d, ao_nivel) {
-            Ok((stream, taxa)) => {
-                let _ = tx.send(Ok(taxa));
+        let thread = std::thread::spawn(move || match abrir(&d, preferido.as_deref(), ao_nivel) {
+            Ok((stream, taxa, aviso)) => {
+                let _ = tx.send(Ok((taxa, aviso)));
                 while !p.load(Ordering::Relaxed) {
                     std::thread::sleep(std::time::Duration::from_millis(20));
                 }
@@ -54,7 +64,8 @@ impl Captura {
             }
         });
         match rx.recv() {
-            Ok(Ok(taxa_hz)) => Ok(Self {
+            Ok(Ok((taxa_hz, aviso))) => Ok(Self {
+                aviso,
                 parar,
                 dados,
                 taxa_hz,
@@ -105,7 +116,9 @@ impl Captura {
 /// Abre e fecha o microfone padrão sem guardar nada: serve para o sistema pedir a permissão
 /// e para saber se a entrada abre. `true` se abriu.
 pub fn sondar_entrada() -> bool {
-    Captura::iniciar(|_| {}).map(Captura::descartar).is_ok()
+    Captura::iniciar(None, |_| {})
+        .map(Captura::descartar)
+        .is_ok()
 }
 
 impl Drop for Captura {
@@ -114,13 +127,34 @@ impl Drop for Captura {
     }
 }
 
+/// O dispositivo a abrir e o aviso, se o escolhido não está conectado.
+fn escolher_dispositivo(
+    preferido: Option<&str>,
+) -> Result<(cpal::Device, Option<String>), ErroApp> {
+    let host = cpal::default_host();
+    let mut aviso = None;
+    if let Some(nome) = preferido {
+        let achado = host
+            .input_devices()
+            .ok()
+            .and_then(|mut ds| ds.find(|d| d.description().is_ok_and(|desc| desc.name() == nome)));
+        match achado {
+            Some(d) => return Ok((d, None)),
+            None => aviso = Some(super::dispositivo::aviso_ausente(nome)),
+        }
+    }
+    let padrao = host
+        .default_input_device()
+        .ok_or_else(erro_nenhum_microfone)?;
+    Ok((padrao, aviso))
+}
+
 fn abrir(
     dados: &Arc<Mutex<Dados>>,
+    preferido: Option<&str>,
     ao_nivel: impl Fn(f32) + Send + 'static,
-) -> Result<(cpal::Stream, u32), ErroApp> {
-    let dispositivo = cpal::default_host()
-        .default_input_device()
-        .ok_or_else(erro_sem_microfone)?;
+) -> Result<(cpal::Stream, u32, Option<String>), ErroApp> {
+    let (dispositivo, aviso) = escolher_dispositivo(preferido)?;
     let config = dispositivo.default_input_config().map_err(|e| {
         tracing::warn!(evento = "microfone_sem_configuracao", detalhe = %e);
         erro_sem_microfone()
@@ -174,7 +208,7 @@ fn abrir(
         tracing::warn!(evento = "microfone_nao_iniciou", detalhe = %e);
         erro_sem_microfone()
     })?;
-    Ok((stream, taxa))
+    Ok((stream, taxa, aviso))
 }
 
 /// Média dos canais de cada quadro.

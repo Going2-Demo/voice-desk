@@ -31,6 +31,8 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
             comandos::ditado_abrir_chaves,
             comandos::transcricao_obter,
             comandos::transcricao_salvar,
+            comandos::audio_microfone_estado,
+            comandos::audio_definir_microfone,
             bandeja::bandeja_estado,
             bandeja::bandeja_iniciar_com_o_sistema,
             bandeja::bandeja_definir_iniciar_com_o_sistema,
