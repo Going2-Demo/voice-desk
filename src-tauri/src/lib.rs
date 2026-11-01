@@ -65,6 +65,9 @@ pub fn construtor_ipc() -> Builder<tauri::Wry> {
             comandos::limpeza_previa,
             plataforma::midia::midia_pausar_obter,
             plataforma::midia::midia_pausar_definir,
+            audio::sons::sons_obter,
+            audio::sons::sons_definir,
+            audio::sons::sons_previa,
         ])
         .events(collect_events![
             ditado::efeitos_tauri::DitadoEstado,
