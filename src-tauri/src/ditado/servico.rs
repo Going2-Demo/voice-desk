@@ -28,6 +28,7 @@ pub const MSG_PROCESSANDO: &str = "Processando…";
 pub const MSG_AGUARDE: &str = "Aguarde: ainda processando";
 pub const MSG_LIMITE: &str = "Parando automaticamente em 30 s";
 pub const MSG_PRONTO: &str = "Pronto";
+pub const MSG_NENHUMA_FALA: &str = "Nenhuma fala detectada.";
 pub const MSG_SEM_FALA: &str = "Não ouvi fala. Tente de novo, falando mais perto do microfone.";
 
 /// Aviso de RF-03.4, com o atalho da plataforma.
@@ -256,6 +257,11 @@ impl<E: Efeitos> Ditado<E> {
                 // RF-03.4: o texto ficou na área de transferência.
                 self.efeitos.tocar_som(Momento::Fim);
                 self.estado("aviso", &mensagem_nao_colado(), 0);
+                self.efeitos.ocultar_gravador(OCULTAR_APOS_AVISO_MS);
+            }
+            Ok(contexto) if contexto.sem_fala => {
+                // RF-26.2: nada foi enviado nem colado.
+                self.estado("aviso", MSG_NENHUMA_FALA, 0);
                 self.efeitos.ocultar_gravador(OCULTAR_APOS_AVISO_MS);
             }
             Ok(contexto)
@@ -503,6 +509,22 @@ mod testes {
         let e = ultimo(&f);
         assert_eq!(e.fase, "aviso");
         assert_eq!(e.mensagem, MSG_SEM_FALA);
+    }
+
+    #[test]
+    fn ditado_sem_fala_avisa_nenhuma_fala_e_nao_toca_som_de_fim() {
+        let (f, d) = montar();
+        d.atalho();
+        d.atalho();
+        let fim = f.pendente.lock().unwrap().take().unwrap();
+        fim(Ok(Contexto {
+            sem_fala: true,
+            ..Contexto::default()
+        }));
+        let e = ultimo(&f);
+        assert_eq!(e.fase, "aviso");
+        assert_eq!(e.mensagem, MSG_NENHUMA_FALA);
+        assert!(!eventos(&f).iter().any(|x| x == "som:Fim"));
     }
 
     fn eventos(f: &Falso) -> Vec<String> {

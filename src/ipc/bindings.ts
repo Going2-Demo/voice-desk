@@ -63,6 +63,8 @@ export const commands = {
 	limpezaPrevia: (texto: string) => typedError<string, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_previa", { texto })),
 	midiaPausarObter: () => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("midia_pausar_obter")),
 	midiaPausarDefinir: (ligado: boolean) => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("midia_pausar_definir", { ligado })),
+	descartarSemFalaObter: () => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("descartar_sem_fala_obter")),
+	descartarSemFalaDefinir: (ligado: boolean) => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("descartar_sem_fala_definir", { ligado })),
 	sonsObter: () => typedError<PreferenciaSons_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("sons_obter")),
 	sonsDefinir: (ligado: boolean, som: string) => typedError<PreferenciaSons_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("sons_definir", { ligado, som })),
 	/**

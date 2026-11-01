@@ -2,5 +2,6 @@
 
 pub mod captura;
 pub mod dispositivo;
+pub mod fala;
 pub mod nivel;
 pub mod sons;
