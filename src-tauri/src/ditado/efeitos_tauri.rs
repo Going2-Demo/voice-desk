@@ -4,6 +4,7 @@ use super::etapas::Contexto;
 use super::pipeline;
 use super::servico::{Efeitos, EstadoGravador};
 use crate::audio::captura::{Captura, Gravacao};
+use crate::audio::sons::{self, Momento};
 use crate::comandos::CofreEstado;
 use crate::nucleo::{ErroApp, caminhos::Caminhos};
 use crate::plataforma::midia::{self, PausaDeMidia};
@@ -227,6 +228,21 @@ impl Efeitos for Arc<EfeitosTauri> {
         if ligada.unwrap_or(true) {
             let midia = Arc::clone(&self.midia);
             std::thread::spawn(move || midia.pausar());
+        }
+    }
+
+    fn tocar_som(&self, momento: Momento) {
+        let app = self.app.clone();
+        let tocar = move || {
+            let banco = app.state::<Mutex<Connection>>();
+            sons::tocar_se_ligado(&banco, &sons::Rodio, momento);
+        };
+        match momento {
+            // O de início termina antes de a captura abrir; o de fim não segura o ditado.
+            Momento::Inicio => tocar(),
+            Momento::Fim => {
+                std::thread::spawn(tocar);
+            }
         }
     }
 

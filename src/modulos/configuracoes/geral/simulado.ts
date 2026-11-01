@@ -1,4 +1,8 @@
-import type { EstadoMicrofone, ErroApp_Serialize } from "../../../ipc/bindings";
+import type {
+  EstadoMicrofone,
+  ErroApp_Serialize,
+  PreferenciaSons_Serialize,
+} from "../../../ipc/bindings";
 
 type Resultado<T> = Promise<
   { status: "ok"; data: T } | { status: "error"; error: ErroApp_Serialize }
@@ -7,6 +11,14 @@ type Resultado<T> = Promise<
 const CONECTADOS = ["MacBook Pro — Microfone", "Headset USB Logitech H390"];
 let escolhido: string | null = null;
 let pausarMidia = true;
+
+const SONS = [
+  { id: "gota", nome: "Gota" },
+  { id: "pulso", nome: "Pulso" },
+  { id: "clique_suave", nome: "Clique suave" },
+];
+let sons = { ligado: true, som: "gota" };
+const prefSons = (): PreferenciaSons_Serialize => ({ ...sons, opcoes: SONS });
 
 const estado = (): EstadoMicrofone => ({
   dispositivos: CONECTADOS,
@@ -37,4 +49,21 @@ export const simulado = {
     pausarMidia = ligado;
     return Promise.resolve({ status: "ok", data: ligado });
   },
+  sonsObter: (): Resultado<PreferenciaSons_Serialize> =>
+    Promise.resolve({ status: "ok", data: prefSons() }),
+  sonsDefinir: (ligado: boolean, som: string): Resultado<PreferenciaSons_Serialize> => {
+    if (!SONS.some((s) => s.id === som)) {
+      return Promise.resolve({
+        status: "error",
+        error: {
+          codigo: "som_invalido",
+          mensagem: "Este som não existe. Escolha um da lista.",
+          campo: "som",
+        },
+      });
+    }
+    sons = { ligado, som };
+    return Promise.resolve({ status: "ok", data: prefSons() });
+  },
+  sonsPrevia: (_som: string): Resultado<null> => Promise.resolve({ status: "ok", data: null }),
 };

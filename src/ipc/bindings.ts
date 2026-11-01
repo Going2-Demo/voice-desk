@@ -63,6 +63,13 @@ export const commands = {
 	limpezaPrevia: (texto: string) => typedError<string, ErroApp_Serialize>(__TAURI_INVOKE("limpeza_previa", { texto })),
 	midiaPausarObter: () => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("midia_pausar_obter")),
 	midiaPausarDefinir: (ligado: boolean) => typedError<boolean, ErroApp_Serialize>(__TAURI_INVOKE("midia_pausar_definir", { ligado })),
+	sonsObter: () => typedError<PreferenciaSons_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("sons_obter")),
+	sonsDefinir: (ligado: boolean, som: string) => typedError<PreferenciaSons_Serialize, ErroApp_Serialize>(__TAURI_INVOKE("sons_definir", { ligado, som })),
+	/**
+	 *  Prévia (RF-24.1): toca o som de início escolhido, mesmo que a escolha ainda não tenha sido
+	 *  salva. Com os sons desligados, o botão fica desabilitado na tela e aqui nada toca.
+	 */
+	sonsPrevia: (som: string) => typedError<null, ErroApp_Serialize>(__TAURI_INVOKE("sons_previa", { som })),
 };
 
 /** Events */
@@ -215,6 +222,11 @@ export type ListaVocabulario = {
 	na_dica: number,
 };
 
+export type OpcaoSom = {
+	id: string,
+	nome: string,
+};
+
 /**  Bloco "Texto do ditado" de Configurações › Geral. */
 export type OpcoesTexto = {
 	idioma: Idioma,
@@ -234,6 +246,25 @@ export type PalavraPreenchimento = {
 };
 
 export type PermissaoApp = "microfone" | "acessibilidade";
+
+/**  Preferência de sons: padrão ligado, som "Gota". */
+export type PreferenciaSons = PreferenciaSons_Serialize | PreferenciaSons_Deserialize;
+
+/**  Preferência de sons: padrão ligado, som "Gota". */
+export type PreferenciaSons_Deserialize = {
+	ligado: boolean,
+	som: string,
+	/**  `(id, nome)` dos sons que o usuário pode escolher. */
+	opcoes?: OpcaoSom[],
+};
+
+/**  Preferência de sons: padrão ligado, som "Gota". */
+export type PreferenciaSons_Serialize = {
+	ligado: boolean,
+	som: string,
+	/**  `(id, nome)` dos sons que o usuário pode escolher. */
+	opcoes: OpcaoSom[],
+};
 
 export type Provedor = "groq";
 

@@ -5,6 +5,7 @@ use super::colagem::ResultadoColagem;
 use super::etapas::Contexto;
 use super::maquina::{Acao, Fase, Maquina};
 use crate::audio::captura::Gravacao;
+use crate::audio::sons::Momento;
 use crate::nucleo::ErroApp;
 use serde::{Deserialize, Serialize};
 use specta::Type;
@@ -57,6 +58,9 @@ pub trait Efeitos: Send + Sync + 'static {
     fn pausar_midia(&self);
     /// Retoma a mídia que o ditado pausou; sem nada pausado, não faz nada.
     fn retomar_midia(&self);
+    /// Toca o som de início ou de fim, se a preferência (F-24) está ligada. O de início só volta
+    /// quando terminou de tocar, para a captura abrir depois e não gravá-lo (RF-24.2).
+    fn tocar_som(&self, momento: Momento);
     /// Confere, antes de gravar, o que a transcrição do modo ativo exige (ex.: chave cadastrada).
     fn conferir_transcricao(&self) -> Result<(), ErroApp>;
     /// Abre a tela de chaves (atalho do aviso "cadastre a chave").
@@ -188,6 +192,7 @@ impl<E: Efeitos> Ditado<E> {
         let aviso = match self
             .efeitos
             .conferir_transcricao()
+            .map(|()| self.efeitos.tocar_som(Momento::Inicio))
             .and_then(|()| self.efeitos.iniciar_captura())
         {
             Ok(aviso) => aviso,
@@ -249,6 +254,7 @@ impl<E: Efeitos> Ditado<E> {
         match resultado {
             Ok(contexto) if contexto.colagem == Some(ResultadoColagem::NaoColado) => {
                 // RF-03.4: o texto ficou na área de transferência.
+                self.efeitos.tocar_som(Momento::Fim);
                 self.estado("aviso", &mensagem_nao_colado(), 0);
                 self.efeitos.ocultar_gravador(OCULTAR_APOS_AVISO_MS);
             }
@@ -260,6 +266,7 @@ impl<E: Efeitos> Ditado<E> {
                 self.efeitos.ocultar_gravador(OCULTAR_APOS_AVISO_MS);
             }
             Ok(_) => {
+                self.efeitos.tocar_som(Momento::Fim);
                 self.estado("ok", MSG_PRONTO, 0);
                 self.efeitos.ocultar_gravador(OCULTAR_APOS_OK_MS);
             }
@@ -343,6 +350,9 @@ mod testes {
         fn retomar_midia(&self) {
             self.registra("midia:retomar");
         }
+        fn tocar_som(&self, momento: Momento) {
+            self.registra(&format!("som:{momento:?}"));
+        }
         fn conferir_transcricao(&self) -> Result<(), ErroApp> {
             if *self.sem_chave.lock().unwrap() {
                 return Err(ErroApp::novo("chave_ausente", "Cadastre a chave do Groq"));
@@ -409,6 +419,41 @@ mod testes {
         assert_eq!(e.mensagem, mensagem_nao_colado());
         assert!(e.mensagem.starts_with("Texto copiado; cole com "));
         assert_eq!(eventos(&f).last().unwrap(), "ocultar:4000");
+    }
+
+    #[test]
+    fn som_de_inicio_toca_antes_da_captura_abrir() {
+        let (f, d) = montar();
+        d.atalho();
+        let ev = eventos(&f);
+        let som = ev.iter().position(|e| e == "som:Inicio").unwrap();
+        let captura = ev.iter().position(|e| e == "captura:iniciar").unwrap();
+        assert!(som < captura);
+    }
+
+    #[test]
+    fn sem_chave_nao_toca_som_de_inicio() {
+        let (f, d) = montar();
+        *f.sem_chave.lock().unwrap() = true;
+        d.atalho();
+        assert!(!eventos(&f).contains(&"som:Inicio".to_string()));
+    }
+
+    #[test]
+    fn som_de_fim_toca_quando_o_texto_termina_e_nao_ao_cancelar() {
+        let (f, d) = montar();
+        d.atalho();
+        d.atalho();
+        terminar(&f);
+        assert_eq!(eventos(&f).iter().filter(|e| *e == "som:Fim").count(), 1);
+
+        let (f, d) = montar();
+        d.atalho();
+        f.agora.store(100, Ordering::Relaxed);
+        d.esc();
+        f.agora.store(200, Ordering::Relaxed);
+        d.esc();
+        assert!(!eventos(&f).contains(&"som:Fim".to_string()));
     }
 
     #[test]
@@ -489,7 +534,13 @@ mod testes {
         d.atalho();
         assert_eq!(
             eventos(&f),
-            ["captura:iniciar", "mostrar", "esc:true", "midia:pausar"]
+            [
+                "som:Inicio",
+                "captura:iniciar",
+                "mostrar",
+                "esc:true",
+                "midia:pausar"
+            ]
         );
         assert_eq!(ultimo(&f).fase, "gravando");
         assert_eq!(ultimo(&f).programa.as_deref(), Some("Bloco de Notas"));
