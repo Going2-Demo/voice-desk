@@ -11,6 +11,7 @@ type Resultado<T> = Promise<
 const CONECTADOS = ["MacBook Pro — Microfone", "Headset USB Logitech H390"];
 let escolhido: string | null = null;
 let pausarMidia = true;
+let descartarSemFala = true;
 
 const SONS = [
   { id: "gota", nome: "Gota" },
@@ -47,6 +48,12 @@ export const simulado = {
   midiaPausarObter: (): Resultado<boolean> => Promise.resolve({ status: "ok", data: pausarMidia }),
   midiaPausarDefinir: (ligado: boolean): Resultado<boolean> => {
     pausarMidia = ligado;
+    return Promise.resolve({ status: "ok", data: ligado });
+  },
+  descartarSemFalaObter: (): Resultado<boolean> =>
+    Promise.resolve({ status: "ok", data: descartarSemFala }),
+  descartarSemFalaDefinir: (ligado: boolean): Resultado<boolean> => {
+    descartarSemFala = ligado;
     return Promise.resolve({ status: "ok", data: ligado });
   },
   sonsObter: (): Resultado<PreferenciaSons_Serialize> =>

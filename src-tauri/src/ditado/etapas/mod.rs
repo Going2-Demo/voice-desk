@@ -39,6 +39,9 @@ pub struct Contexto {
     pub substituicoes: Vec<crate::substituicoes::Regra>,
     /// O que a etapa `limpar` liga e a lista de palavras de preenchimento (F-09).
     pub config_limpeza: crate::limpeza::ConfigLimpeza,
+    /// Descarte de ditado sem fala ligado (F-26) e resultado da etapa `descartar_sem_fala`.
+    pub descartar_sem_fala: bool,
+    pub sem_fala: bool,
     pub fabrica_transcritor: Option<FabricaCompartilhada>,
     pub transcricao_provedor: Option<ProvedorTranscricao>,
     pub transcricao_modelo: Option<String>,

@@ -93,6 +93,16 @@ impl EfeitosTauri {
     }
 
     /// Limpeza e Enter do modo ativo; se a leitura falhar, o texto segue sem limpar e sem Enter.
+    /// Preferência ilegível: mantém o padrão (ligado).
+    fn descartar_sem_fala_ligado(&self) -> bool {
+        let banco = self.app.state::<Mutex<Connection>>();
+        banco
+            .lock()
+            .ok()
+            .and_then(|c| crate::audio::fala::ler(&c).ok())
+            .unwrap_or(true)
+    }
+
     fn aplicar_limpeza(&self, contexto: &mut Contexto) {
         let banco = self.app.state::<Mutex<Connection>>();
         let Ok(c) = banco.lock() else { return };
@@ -293,6 +303,7 @@ impl Efeitos for Arc<EfeitosTauri> {
             contexto.dica_vocabulario = este.dica_do_vocabulario();
             contexto.substituicoes = este.regras_de_substituicao();
             este.aplicar_limpeza(&mut contexto);
+            contexto.descartar_sem_fala = este.descartar_sem_fala_ligado();
             contexto.gravacao = gravacao;
             contexto.fabrica_transcritor = Some(crate::transcricao::fabrica_com_cofre(cofre));
             let resultado = pipeline::executar(&mut contexto).map(|_| ());
