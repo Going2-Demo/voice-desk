@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "gerado_em": "2026-11-02T08:02:41-03:00",
+  "gerado_em": "2026-11-14T08:01:24-03:00",
   "_campos_timeline": "action=status_changed; details.from / details.to; created_at",
   "produto": {
     "nome": "VoiceDesk",
@@ -84,6 +84,66 @@
           "data": "2026-11-02",
           "escopo": 19,
           "concluidas": 19
+        },
+        {
+          "data": "2026-11-03",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-04",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-05",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-06",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-07",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-08",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-09",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-10",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-11",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-12",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-13",
+          "escopo": 19,
+          "concluidas": 19
+        },
+        {
+          "data": "2026-11-14",
+          "escopo": 19,
+          "concluidas": 19
         }
       ]
     },
@@ -150,6 +210,66 @@
           "data": "2026-11-02",
           "escopo": 4,
           "concluidas": 4
+        },
+        {
+          "data": "2026-11-03",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-04",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-05",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-06",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-07",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-08",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-09",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-10",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-11",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-12",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-13",
+          "escopo": 4,
+          "concluidas": 4
+        },
+        {
+          "data": "2026-11-14",
+          "escopo": 4,
+          "concluidas": 4
         }
       ]
     },
@@ -214,6 +334,66 @@
         },
         {
           "data": "2026-11-02",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-03",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-04",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-05",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-06",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-07",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-08",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-09",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-10",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-11",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-12",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-13",
+          "escopo": 3,
+          "concluidas": 3
+        },
+        {
+          "data": "2026-11-14",
           "escopo": 3,
           "concluidas": 3
         }
@@ -340,6 +520,150 @@
       "done": 26,
       "blocked": 0,
       "in_review": 0
+    },
+    {
+      "data": "2026-11-03",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-04",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-05",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-06",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-07",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-08",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-09",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-10",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-11",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-12",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-13",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
+    },
+    {
+      "data": "2026-11-14",
+      "backlog": 0,
+      "todo": 0,
+      "in_progress": 0,
+      "revisao_codigo": 0,
+      "deploy_dev": 0,
+      "em_teste": 0,
+      "done": 26,
+      "blocked": 0,
+      "in_review": 0
     }
   ],
   "vazao_semanal": [
@@ -355,6 +679,11 @@
     },
     {
       "semana": "S45",
+      "ano": 2026,
+      "concluidas": 0
+    },
+    {
+      "semana": "S46",
       "ano": 2026,
       "concluidas": 0
     }
